@@ -3,6 +3,7 @@ package org.eventhub.main.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.engine.internal.Cascade;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -59,7 +60,7 @@ public class Event {
     @Column(name = "location")
     private String location;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     private List<Photo> photos;
 
     @ManyToOne

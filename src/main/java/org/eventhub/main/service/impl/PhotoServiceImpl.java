@@ -34,8 +34,9 @@ public class PhotoServiceImpl implements PhotoService {
     private final PhotoMapper photoMapper;
     private final EventService eventService;
     private final UserService userService;
-    private final BlobContainerClient blobContainerClient;
+    private final BlobContainerClient blobContainerClientEvent;
 
+    private final BlobContainerClient blobContainerClientUser;
     @Autowired
     public PhotoServiceImpl(PhotoRepository photoRepository, PhotoMapper photoMapper, EventService eventService, UserService userService){
         this.photoRepository = photoRepository;
@@ -43,7 +44,8 @@ public class PhotoServiceImpl implements PhotoService {
         this.eventService = eventService;
         this.userService = userService;
 
-        this.blobContainerClient = BlobContainerClientSingleton.getInstance().getBlobContainerClient();
+        this.blobContainerClientEvent = BlobContainerClientSingleton.getInstance().getBlobContainerClientEvent();
+        this.blobContainerClientUser = BlobContainerClientSingleton.getInstance().getBlobContainerClientUser();
     }
     @Override
     public PhotoResponse create(PhotoRequest photoRequest) {
@@ -76,7 +78,7 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     public void deleteEventImage(UUID eventId, UUID imageId) {
         String blobName = this.readById(imageId).getPhotoName();
-        BlockBlobClient blockBlobClient = this.blobContainerClient.getBlobClient(blobName).getBlockBlobClient();
+        BlockBlobClient blockBlobClient = this.blobContainerClientEvent.getBlobClient(blobName).getBlockBlobClient();
         blockBlobClient.delete();
         eventService.deleteImage(eventId, this.readByIdEntity(imageId));
         photoRepository.delete(readByIdEntity(imageId));
@@ -85,7 +87,7 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     public void deleteProfileImage(UUID userId, UUID imageId){
             String blobName = this.readById(imageId).getPhotoName();
-            BlockBlobClient blockBlobClient = this.blobContainerClient.getBlobClient(blobName).getBlockBlobClient();
+            BlockBlobClient blockBlobClient = this.blobContainerClientUser.getBlobClient(blobName).getBlockBlobClient();
             blockBlobClient.delete();
             userService.deleteImage(userId, this.readByIdEntity(imageId));
             photoRepository.delete(readByIdEntity(imageId));
@@ -107,7 +109,7 @@ public class PhotoServiceImpl implements PhotoService {
                     photo.setId(UUID.randomUUID());
 
                     String fileExtension = StringUtils.substringAfterLast(file.getOriginalFilename(), ".");
-                    BlockBlobClient blockBlobClient = this.blobContainerClient.getBlobClient(photo.getId().toString() + "." + fileExtension).getBlockBlobClient();
+                    BlockBlobClient blockBlobClient = this.blobContainerClientEvent.getBlobClient("event" + photo.getId().toString() + "." + fileExtension).getBlockBlobClient();
                     blockBlobClient.upload(dataStream, file.getSize());
 
                     photo.setPhotoName(blockBlobClient.getBlobName());
@@ -131,7 +133,7 @@ public class PhotoServiceImpl implements PhotoService {
             photo.setId(UUID.randomUUID());
 
             String fileExtension = StringUtils.substringAfterLast(file.getOriginalFilename(), ".");
-            BlockBlobClient blockBlobClient = this.blobContainerClient.getBlobClient(photo.getId().toString() + "." + fileExtension).getBlockBlobClient();
+            BlockBlobClient blockBlobClient = this.blobContainerClientUser.getBlobClient("user" + photo.getId().toString() + "." + fileExtension).getBlockBlobClient();
             blockBlobClient.upload(dataStream, file.getSize());
 
             photo.setPhotoName(blockBlobClient.getBlobName());

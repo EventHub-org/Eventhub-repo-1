@@ -5,34 +5,43 @@ import com.azure.storage.blob.sas.BlobSasPermission;
 import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
 import org.eventhub.main.dto.PhotoRequest;
 import org.eventhub.main.dto.PhotoResponse;
+import org.eventhub.main.exception.AccessIsDeniedException;
 import org.eventhub.main.exception.NullDtoReferenceException;
 import org.eventhub.main.exception.NullEntityReferenceException;
 import org.eventhub.main.model.Photo;
-import org.eventhub.main.repository.EventRepository;
 import org.eventhub.main.utility.BlobContainerClientSingleton;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 
 @Service
 public class PhotoMapper {
-    private final BlobContainerClient blobContainerClient;
+    private final BlobContainerClient blobContainerClientEvent;
+    private final BlobContainerClient blobContainerClientUser;
     public PhotoMapper(){
-        this.blobContainerClient = BlobContainerClientSingleton.getInstance().getBlobContainerClient();
+        this.blobContainerClientEvent = BlobContainerClientSingleton.getInstance().getBlobContainerClientEvent();
+        this.blobContainerClientUser = BlobContainerClientSingleton.getInstance().getBlobContainerClientUser();
     }
     public PhotoResponse entityToResponse(Photo photo) {
         if (photo == null) {
-            throw new NullEntityReferenceException("Event Photo can't be null");
+            throw new NullEntityReferenceException("Photo can't be null");
         }
-
         OffsetDateTime expiryTime = OffsetDateTime.now().plusDays(1);
         BlobSasPermission sasPermission = new BlobSasPermission()
                 .setReadPermission(true);
         BlobServiceSasSignatureValues sasSignatureValues = new BlobServiceSasSignatureValues(expiryTime, sasPermission)
                 .setStartTime(OffsetDateTime.now().minusMinutes(5));
 
-        String sasToken = blobContainerClient.generateSas(sasSignatureValues);
+        String sasToken;
+        if(photo.getPhotoName().startsWith("event")) {
+            sasToken = blobContainerClientEvent.generateSas(sasSignatureValues);
+        }
+        else if(photo.getPhotoName().startsWith("user")){
+            sasToken = blobContainerClientUser.generateSas(sasSignatureValues);
+        }
+        else{
+            throw new AccessIsDeniedException("Failed to generate sas token");
+        }
 
         return PhotoResponse.builder()
                 .id(photo.getId())
