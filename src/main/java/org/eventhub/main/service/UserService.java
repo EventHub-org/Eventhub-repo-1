@@ -2,6 +2,7 @@ package org.eventhub.main.service;
 
 import org.eventhub.main.dto.UserResponse;
 import org.eventhub.main.dto.UserRequest;
+import org.eventhub.main.model.Photo;
 import org.eventhub.main.model.User;
 
 import java.util.List;
@@ -22,4 +23,7 @@ public interface UserService {
     List<UserResponse> getAll();
 
     User findByEmail(String email);
+
+    void addImage(UUID id, Photo image);
+    void deleteImage(UUID userId, Photo image);
 }

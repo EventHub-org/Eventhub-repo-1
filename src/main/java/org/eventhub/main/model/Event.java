@@ -3,9 +3,6 @@ package org.eventhub.main.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import org.hibernate.annotations.Array;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -62,8 +59,8 @@ public class Event {
     @Column(name = "location")
     private String location;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-    private List<EventPhoto> photos;
+    @OneToMany
+    private List<Photo> photos;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")

@@ -3,11 +3,11 @@ package org.eventhub.main.mapper;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.sas.BlobSasPermission;
 import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
-import org.eventhub.main.dto.EventPhotoRequest;
-import org.eventhub.main.dto.EventPhotoResponse;
+import org.eventhub.main.dto.PhotoRequest;
+import org.eventhub.main.dto.PhotoResponse;
 import org.eventhub.main.exception.NullDtoReferenceException;
 import org.eventhub.main.exception.NullEntityReferenceException;
-import org.eventhub.main.model.EventPhoto;
+import org.eventhub.main.model.Photo;
 import org.eventhub.main.repository.EventRepository;
 import org.eventhub.main.utility.BlobContainerClientSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +16,13 @@ import org.springframework.stereotype.Service;
 import java.time.OffsetDateTime;
 
 @Service
-public class EventPhotoMapper {
-    private final EventRepository eventRepository;
+public class PhotoMapper {
     private final BlobContainerClient blobContainerClient;
-    @Autowired
-    public EventPhotoMapper(EventRepository eventRepository){
-        this.eventRepository = eventRepository;
+    public PhotoMapper(){
         this.blobContainerClient = BlobContainerClientSingleton.getInstance().getBlobContainerClient();
     }
-    public EventPhotoResponse entityToResponse(EventPhoto eventPhoto) {
-        if (eventPhoto == null) {
+    public PhotoResponse entityToResponse(Photo photo) {
+        if (photo == null) {
             throw new NullEntityReferenceException("Event Photo can't be null");
         }
 
@@ -37,26 +34,23 @@ public class EventPhotoMapper {
 
         String sasToken = blobContainerClient.generateSas(sasSignatureValues);
 
-        return EventPhotoResponse.builder()
-                .id(eventPhoto.getId())
-                .photoName(eventPhoto.getPhotoName())
-                .photoUrl(eventPhoto.getPhotoUrl() +"?"+sasToken)
-                .eventId(eventPhoto.getEvent().getId())
+        return PhotoResponse.builder()
+                .id(photo.getId())
+                .photoName(photo.getPhotoName())
+                .photoUrl(photo.getPhotoUrl() +"?"+sasToken)
                 .build();
     }
-
-    public EventPhoto requestToEntity(EventPhotoRequest request, EventPhoto eventPhoto){
+    public Photo requestToEntity(PhotoRequest request, Photo photo){
         if(request == null){
             throw new NullDtoReferenceException("Request can't be null");
         }
-        if(eventPhoto == null){
+        if(photo == null){
             throw new NullEntityReferenceException("Event Photo can't be null");
         }
 
-        eventPhoto.setPhotoUrl(request.getPhotoUrl());
-        eventPhoto.setPhotoName(request.getPhotoName());
-        eventPhoto.setEvent(eventRepository.findById(request.getEventId()).orElseThrow(()->new NullEntityReferenceException("Event can't be null")));
-        return eventPhoto;
+        photo.setPhotoUrl(request.getPhotoUrl());
+        photo.setPhotoName(request.getPhotoName());
+        return photo;
     }
 
 }

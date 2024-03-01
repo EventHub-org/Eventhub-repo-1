@@ -54,8 +54,6 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "profile_image", nullable = false)
-    private String profileImage;
 
     @Column(name = "description", nullable = false)
     private String description;
@@ -80,4 +78,6 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Participant> userParticipants;
 
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private List<Photo> profileImages;
 }
