@@ -4,11 +4,12 @@ import org.eventhub.main.dto.UserResponse;
 import org.eventhub.main.dto.UserRequest;
 import org.eventhub.main.model.Photo;
 import org.eventhub.main.model.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     UserResponse create(UserRequest userRequest);
 
