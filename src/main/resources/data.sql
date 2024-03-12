@@ -4633,11 +4633,6 @@ INSERT INTO events (id, title, max_participants, created_at, start_at, expire_at
 --INSERT INTO photos (id, photo_name, photo_url) VALUES ('8673b573-b6c0-4b4d-ad69-3b707cb12184', 'eventdefault', 'eventdefault.png');
 --INSERT INTO photos (id, photo_name, photo_url) VALUES ('1bf2051b-5b01-4d0c-9b3d-e659baa8c85d', 'userPhoto 3', 'Photo 3 Url');
 
---INSERT INTO users_profile_images(profile_images_id,user_id) VALUES ('80691a78-29db-47d1-a244-6fe7f05b89a8', '9a070957-1eb8-4c23-a5f7-d448168e7166');
---INSERT INTO users_profile_images(profile_images_id,user_id) VALUES ('80691a78-29db-47d1-a244-6fe7f05b89a8', '7bdef2ef-50cb-4977-a4f3-aebf0f63c7fc');
---INSERT INTO users_profile_images(profile_images_id,user_id) VALUES ('80691a78-29db-47d1-a244-6fe7f05b89a8', 'd878867a-fb11-4b24-b87b-18d94feafa18');
---INSERT INTO users_profile_images(profile_images_id,user_id) VALUES ('80691a78-29db-47d1-a244-6fe7f05b89a8', '70ba17bc-b7e3-473f-ab22-7689f1a41360');
-
 
 
 INSERT INTO event_categories (event_id, category_id) VALUES ('94597192-f3e0-437a-9098-0e21c4abd792', 'd40fbb2f-64ee-4d1f-92a2-c303d047f2dc');
