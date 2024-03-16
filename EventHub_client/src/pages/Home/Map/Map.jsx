@@ -72,21 +72,20 @@ const Map = ({ center }) => {
       >
 
         <></>
-        {events && events.map(event => (
-          <Marker
-            key={event.eventID}
-            position={{ lat: Number(event.latitude), lng: Number(event.longitude) }}
-
-            icon={{ url: '/images/pin.svg', 
-            scaledSize: new window.google.maps.Size(40, 40) }}
-            onClick={() => onMarkerClick(event)
-            }
-          />
-        ))}
+        {events && events.map(event => {
+          return (
+            <Marker
+              key={event.id}
+              position={{ lat: Number(event.latitude), lng: Number(event.longitude) }}
+              icon={{ url: '/images/pin.svg', scaledSize: new window.google.maps.Size(40, 40) }}
+              onClick={() => onMarkerClick(event)}
+            />
+          );
+        })}
         {selectedEvent && (
           <InfoWindow
             position={{ lat: Number(selectedEvent.latitude), lng: Number(selectedEvent.longitude) }}
-            onCloseClick={() => setSelectedEvent(null)} 
+            onCloseClick={() => setSelectedEvent(null)}
           >
             <div>
               <h3>{selectedEvent.title}</h3>
