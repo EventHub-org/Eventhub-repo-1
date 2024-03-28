@@ -47,7 +47,6 @@ const Map = ({ center }) => {
   useEffect(() => {
     getEventsData()
       .then(data => {
-        console.log("Event Data", data);
         setEvents(data)
       })
   }, [])
