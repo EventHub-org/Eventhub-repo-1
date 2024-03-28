@@ -2,7 +2,7 @@ package org.eventhub.main.mapper;
 
 import org.eventhub.main.dto.EventFullInfoResponse;
 import org.eventhub.main.dto.EventRequest;
-import org.eventhub.main.dto.EventResponse;
+import org.eventhub.main.dto.EventResponseXY;
 import org.eventhub.main.exception.NullDtoReferenceException;
 import org.eventhub.main.exception.NullEntityReferenceException;
 import org.eventhub.main.model.Event;
@@ -69,8 +69,8 @@ public class EventMapper {
         return response;
     }
 
-    public EventResponse entityToResponse(Event event){
-        return EventResponse.builder()
+    public EventResponseXY entityToResponse(Event event){
+        return EventResponseXY.builder()
                 .id(event.getId())
                 .latitude(event.getLatitude())
                 .longitude(event.getLongitude())

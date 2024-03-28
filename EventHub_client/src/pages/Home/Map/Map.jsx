@@ -79,7 +79,7 @@ const Map = ({ center }) => {
 
             icon={{ url: '/images/pin.svg', 
             scaledSize: new window.google.maps.Size(40, 40) }}
-            onClick={() => onMarkeчrClick(event)
+            onClick={() => onMarkerClick(event)
             }
           />
         ))}

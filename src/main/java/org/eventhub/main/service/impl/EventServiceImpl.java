@@ -140,7 +140,7 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
     }
     @Override
-    public List<EventResponse> getAll(){
+    public List<EventResponseXY> getAll(){
         return eventRepository.findAll()
                 .stream()
                 .map(eventMapper::entityToResponse)

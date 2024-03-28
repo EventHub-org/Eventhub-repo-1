@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class EventResponse {
+public class EventResponseXY {
     @NotNull
     private UUID id;
 
@@ -22,10 +22,10 @@ public class EventResponse {
     @NotNull
     private BigDecimal longitude;
 
-    public EventResponse() {
+    public EventResponseXY() {
     }
 
-    public EventResponse(UUID id, BigDecimal latitude, BigDecimal longitude) {
+    public EventResponseXY(UUID id, BigDecimal latitude, BigDecimal longitude) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;

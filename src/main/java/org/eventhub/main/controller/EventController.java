@@ -54,7 +54,7 @@ public class EventController {
     }
 
     @GetMapping("/events")
-    public ResponseEntity<List<EventResponse>> getAll(){
+    public ResponseEntity<List<EventResponseXY>> getAll(){
         log.info("**/get all events");
         return new ResponseEntity<>(eventService.getAll(), HttpStatus.OK);
     }
