@@ -1,7 +1,7 @@
 @import '../../../App.css';
 
 .filterContainer{
-    background-color: var(--popup-background) !important; 
+    background-color: var(--primary-popup-background) !important; 
 }
 
 .filterButtonContainer{

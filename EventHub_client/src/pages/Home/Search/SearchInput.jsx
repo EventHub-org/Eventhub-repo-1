@@ -1,10 +1,9 @@
 import React from 'react';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import styles from './searchInput.module.css';
 
 const SearchInput = ({ searchValue, handleInputChange, handleSearch, showResults }) => {
   const inputClassName = showResults ? styles.searchInputWithResults : styles.searchInput;
-
   return (
     <form className={styles.searchForm} onSubmit={handleSearch}>
       <input
@@ -14,6 +13,11 @@ const SearchInput = ({ searchValue, handleInputChange, handleSearch, showResults
         value={searchValue}
         onChange={handleInputChange}
       />
+      {showResults && searchValue && (
+          <button type="button" className={styles.clearButton} onClick={() => handleInputChange({ target: { value: '' } })}>
+            <CloseOutlined className={styles.clearIcon} />
+          </button>
+        )}
       <button type="submit" className={styles.searchButton}>
         <SearchOutlined className={styles.searchIcon} />
       </button>
