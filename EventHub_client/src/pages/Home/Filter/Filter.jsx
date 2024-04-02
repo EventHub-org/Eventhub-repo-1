@@ -11,7 +11,7 @@ const { Option } = Select;
 
 
 const EventFilter = () => {
-  const [filterParams, setFilterParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams('');
 
   const [isOpen, setIsOpen] = useState(false);
  
@@ -34,7 +34,6 @@ const EventFilter = () => {
         console.error('Error fetching categories:', error);
       }
     }
-  
     fetchCategories();
   }, []);
 
@@ -56,12 +55,15 @@ const EventFilter = () => {
       show_filter: true,
       min_participants: minParticipants || 0,
       max_participants: maxParticipants || 0,
-      start_at: dateRange[0],
-      expire_at: dateRange[1],
+      start_at: dateRange[0] || '',
+      expire_at: dateRange[1] || '',
       location: location || '',
       category_requests: categories
     }
-    setFilterParams(filterData);
+
+    
+    setSearchParams(filterData);
+    window.location.reload();
     try{
       toggleMenu();
      }
