@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useSearchParams } from 'react-router-dom';
 import AuthContext from "../../context/authProvider";
 import { Link } from 'react-router-dom';
 import {Map} from "./Map/Map";
@@ -11,7 +12,9 @@ import LoginRegisterButton from "./ProfileORlogin/LoginRegisterButton";
 import SearchEvents from  "./Search/Search"
 import CreateEventButton from './CreateEvent/CreateEventButton'
 import EventFilter from "./Filter/Filter";
+import FilteredEvents from "./Filter/FilteredEvents";
 import MyEvents from './MyEvents/MyEvents'
+
 
 const MAP_API_KEY =  process.env.REACT_APP_GOOGLE_MAPS_API_KEY
 
@@ -22,7 +25,8 @@ const defaultCenter = {
 const libraries = [ "places" ];
 const Home = () => {
   const { auth, setAuth } = useAuth();
-  
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: MAP_API_KEY,
@@ -42,6 +46,7 @@ const Home = () => {
           {/* <CreateEventButton /> */}
           <EventFilter />
           <MyEvents />
+          {searchParams.get('show_filter') && <FilteredEvents/>}
         </>
       ) : (
         <h1>Loading</h1>

@@ -86,5 +86,10 @@ public class EventController {
 
         return new ResponseEntity<>(new OperationResponse("Event with title '"+title+"' deleted successfully"), HttpStatus.OK);
     }
+    @PostMapping("/events/filter")
+    public ResponseEntity<List<EventSearchResponse>> filter(@RequestBody EventFilterRequest request) {
+        log.info("**/get filtered events");
+        return new ResponseEntity<>(eventService.filterEvents(request), HttpStatus.OK);
+    }
 }
 

@@ -9,6 +9,8 @@ import org.eventhub.main.mapper.EventMapper;
 import org.eventhub.main.model.Embedding;
 import org.eventhub.main.model.Event;
 import org.eventhub.main.model.Photo;
+import org.eventhub.main.model.Category;
+
 import org.eventhub.main.repository.EventRepository;
 import org.eventhub.main.service.EventService;
 
@@ -20,8 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -162,5 +166,42 @@ public class EventServiceImpl implements EventService {
     public EventSearchResponse readByIdSearch(UUID id){
         Event event = eventRepository.findById(id).orElseThrow( () -> new EntityNotFoundException("Non existing id: " + id));
         return eventMapper.entityToSearchResponse(event);
+    }
+
+    @Override
+    public List<EventSearchResponse> filterEvents(EventFilterRequest filterRequest) {
+
+        Stream<Event> stream = this.eventRepository.findAll().stream();
+        if (!filterRequest.getLocation().isBlank()) {
+            stream = stream.filter(event -> event.getLocation().equals(filterRequest.getLocation()));
+        }
+        if (filterRequest.getMinParticipants() > 2) {
+            stream = stream.filter(event -> event.getMaxParticipants() >= filterRequest.getMinParticipants());
+        }
+        if (filterRequest.getMaxParticipants() > 2) {
+            stream = stream.filter(event -> event.getMaxParticipants() <= filterRequest.getMaxParticipants());
+        }
+        if (filterRequest.getStartAt() != null) {
+            stream = stream.filter(event -> !event.getStartAt().isBefore(filterRequest.getStartAt()));
+        }
+        if (filterRequest.getExpireAt() != null) {
+            stream = stream.filter(event -> !event.getExpireAt().isAfter(filterRequest.getExpireAt()));
+        }
+        if (!filterRequest.getCategoryRequests().isEmpty()) {
+            Set<String> filterCategories = filterRequest.getCategoryRequests()
+                    .stream()
+                    .map(CategoryRequest::getName)
+                    .collect(Collectors.toSet());
+
+            stream = stream.filter(event -> {
+                Set<String> eventCategories = event.getCategories()
+                        .stream()
+                        .map(Category::getName)
+                        .collect(Collectors.toSet());
+                return eventCategories.containsAll(filterCategories);
+            });
+        }
+        return stream.map(eventMapper::entityToSearchResponse)
+                .collect(Collectors.toList());
     }
 }
