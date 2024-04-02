@@ -5,6 +5,7 @@ import { FilterOutlined } from '@ant-design/icons';
 import { RoundButton } from '../../../components/Buttons/RoundButton/roundButton';
 import styles from './Filter.module.css';
 import PrimaryButton from '../../../components/Buttons/PrimaryButton/PrimaryButton';
+import FilteredEvents from './FilteredEvents';
 import { getCategories } from '../../../api/getCategories';
 import '../../../App.css'
 const { Option } = Select;
@@ -14,6 +15,7 @@ const EventFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams('');
 
   const [isOpen, setIsOpen] = useState(false);
+  const [showResult, setShowResult] = useState(true);
  
   const [categories, setCategories] = useState([]);
   const [minParticipants, setMinParticipants] = useState();
@@ -48,6 +50,10 @@ const EventFilter = () => {
   const toggleMenu = () => {
     resetFilter();
     setIsOpen(!isOpen);
+    setShowResult(!showResult);
+    if(showResult){
+      setSearchParams('');
+    }
   };
 
   const handleApplyButtonClick = async () => {
@@ -61,9 +67,8 @@ const EventFilter = () => {
       category_requests: categories
     }
 
-    
     setSearchParams(filterData);
-    window.location.reload();
+
     try{
       toggleMenu();
      }
@@ -121,6 +126,8 @@ const EventFilter = () => {
           <RoundButton icon={<FilterOutlined />} onClick={toggleMenu} />
         </div>
       </Dropdown>
+
+      {showResult && searchParams.get('show_filter') && <FilteredEvents/>}
     </div>
   );
 };
