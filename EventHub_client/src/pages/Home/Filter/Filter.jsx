@@ -48,13 +48,14 @@ const EventFilter = () => {
 
   const handleClose = () => {
     setShowResult(false);
+    setSearchParams('');
   }
 
   const toggleMenu = () => {
     resetFilter();
     setIsOpen(!isOpen);
     if(showResult){
-      setShowResult(!showResult);
+      handleClose();
     }
   };
 
