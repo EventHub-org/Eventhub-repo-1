@@ -13,9 +13,8 @@ const { Option } = Select;
 
 const EventFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams('');
-
   const [isOpen, setIsOpen] = useState(false);
-  const [showResult, setShowResult] = useState(true);
+  const [showResult, setShowResult] = useState(false);
  
   const [categories, setCategories] = useState([]);
   const [minParticipants, setMinParticipants] = useState();
@@ -47,12 +46,15 @@ const EventFilter = () => {
     setDateRange([null, null]);
   }
 
+  const handleClose = () => {
+    setShowResult(false);
+  }
+
   const toggleMenu = () => {
     resetFilter();
     setIsOpen(!isOpen);
-    setShowResult(!showResult);
     if(showResult){
-      setSearchParams('');
+      setShowResult(!showResult);
     }
   };
 
@@ -68,13 +70,8 @@ const EventFilter = () => {
     }
 
     setSearchParams(filterData);
-
-    try{
-      toggleMenu();
-     }
-     catch(err){
-        console.log("Something went wrong in event filter");
-     }
+    toggleMenu();
+    setShowResult(!showResult);
   };
 
   return (
@@ -127,7 +124,7 @@ const EventFilter = () => {
         </div>
       </Dropdown>
 
-      {showResult && searchParams.get('show_filter') && <FilteredEvents/>}
+      {!isOpen && showResult && <FilteredEvents handleClose={handleClose}/>}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import axios from "./axios";
 import queryString from 'query-string';
-const FILTER_URL = 'users/events/filter'
+const FILTER_URL = 'events/filter'
 
 
 export const getFilteredEvents = async () =>{

@@ -6,10 +6,8 @@ import ListEvents from '../../../components/ListEvents/ListEvents';
 import EmptyFilteredEvents from './EmptyFilteredEvents.jsx';
 import CloseWindowButton from '../../../components/Buttons/CloseWindowButton/CloseWindowButton';
 
-const FilteredEvents = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
+const FilteredEvents = ({handleClose}) => {
     const [eventsData, setEventsData] = useState([]);
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,7 +25,7 @@ const FilteredEvents = () => {
         <div className={styles.FilterResultContainer}>
             <div className={styles.Heading}>
                 <h2>Events</h2>
-                <CloseWindowButton onClick={()=>{setSearchParams('')}}/>
+                <CloseWindowButton onClick={()=>{handleClose()}}/>
             </div>
             <hr />
             {(eventsData.length > 0)?
