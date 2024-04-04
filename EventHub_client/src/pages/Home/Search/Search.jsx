@@ -59,6 +59,7 @@ const SearchEvents = () => {
     <div className={`${styles.SearchContainer} ${showResults ? styles.active : styles.inactive}`}>
       <div className={styles.SearchInput} >
         <SearchInput
+          searchedValue={searchedValue}
           searchValue={searchValue}
           handleInputChange={handleInputChange}
           handleSearch={handleSearch}
@@ -67,7 +68,7 @@ const SearchEvents = () => {
         />
       </div>
       
-      {showResults&&searchValue ? (( 
+      {showResults&&searchedValue ? (( 
         <div className={styles.ResultsContainer}>
           {eventsData.length === 0 ? (
             <p className={styles.NoResultsText}>No results found for "{searchedValue}"</p>
