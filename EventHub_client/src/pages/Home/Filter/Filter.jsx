@@ -38,6 +38,11 @@ const EventFilter = () => {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    setShowResult(searchParams.has('filter'));
+  }, [showResult, searchParams]);
+  
+
   const resetFilter = () =>{
     setCategories([]);
     setMinParticipants();
@@ -54,14 +59,11 @@ const EventFilter = () => {
   const toggleMenu = () => {
     resetFilter();
     setIsOpen(!isOpen);
-    if(showResult){
-      handleClose();
-    }
   };
 
   const handleApplyButtonClick = async () => {
     const filterData = {
-      show_filter: true,
+      filter: true,
       min_participants: minParticipants || 0,
       max_participants: maxParticipants || 0,
       start_at: dateRange[0] || '',
@@ -71,8 +73,8 @@ const EventFilter = () => {
     }
 
     setSearchParams(filterData);
+    setShowResult(false);
     toggleMenu();
-    setShowResult(!showResult);
   };
 
   return (
@@ -125,7 +127,7 @@ const EventFilter = () => {
         </div>
       </Dropdown>
 
-      {!isOpen && showResult && <FilteredEvents handleClose={handleClose}/>}
+      {showResult && <FilteredEvents handleClose={handleClose}/>}
     </div>
   );
 };
