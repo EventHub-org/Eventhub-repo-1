@@ -3,7 +3,7 @@ import { SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import styles from './searchInput.module.css';
 
 const SearchInput = ({ searchValue, handleInputChange, handleSearch, showResults, handleClearButtonClick }) => {
-  const inputClassName = showResults ? styles.searchInputWithResults : styles.searchInput;
+  const inputClassName = showResults&&searchValue ? styles.searchInputWithResults : styles.searchInput;
 
 
   return (
