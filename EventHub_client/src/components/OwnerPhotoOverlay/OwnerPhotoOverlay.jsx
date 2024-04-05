@@ -25,7 +25,7 @@ const OwnerPhotoOverlay = ({
       <div className={styles["crown-container"]}>
         <RiVipCrownLine className={styles["crown-icon"]} />
       </div>
-      {showPopUp && <ParticipantInfoPopUp participant={owner} />}
+      {/* {showPopUp && <ParticipantInfoPopUp participant={owner} />} */}
     </div>
   );
 };

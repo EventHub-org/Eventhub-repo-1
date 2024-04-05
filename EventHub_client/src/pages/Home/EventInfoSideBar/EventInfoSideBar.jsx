@@ -203,12 +203,12 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                         src={participant.participant_photo.photo_url}
                         alt="Participant Img"
                       />
-                      {hoveredParticipant &&
+                      {/* {hoveredParticipant &&
                         hoveredParticipant.id === participant.user_id && (
                           <ParticipantInfoPopUp
                             participant={hoveredParticipant}
                           />
-                        )}
+                        )} */}
                     </div>
                   ))}
                   {isShowMoreParticipants && (
