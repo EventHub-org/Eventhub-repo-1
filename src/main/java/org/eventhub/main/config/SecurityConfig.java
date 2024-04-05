@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .disable()
                 .cors(c -> c.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests()
-                .requestMatchers("/authentication/**")
+                .requestMatchers("/authentication/**", "/categories", "/search", "/events/filter")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
