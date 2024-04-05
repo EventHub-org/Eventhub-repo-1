@@ -46,7 +46,13 @@ const EventFilter = () => {
     } catch (error) {
         console.log('Error fetching filtered events', error);
     }
-};
+  };
+
+  useEffect(() => {
+    if(!eventsData){
+      setSearchParams('');
+    }
+  }, [eventsData]);
 
   const resetFilter = () =>{
     setCategories([]);
