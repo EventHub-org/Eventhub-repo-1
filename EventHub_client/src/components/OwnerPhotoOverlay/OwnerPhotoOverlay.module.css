@@ -6,8 +6,13 @@
   font-family: var(--primary-font-family);
   border: solid 1px var(--third-color);
   margin-top: 15px;
+  margin-bottom: 2%;
   border-radius: 10px;
   overflow: hidden;
+}
+
+.owner-container:hover {
+  background-color: var(--third-color-hover);
   cursor: pointer;
 }
 

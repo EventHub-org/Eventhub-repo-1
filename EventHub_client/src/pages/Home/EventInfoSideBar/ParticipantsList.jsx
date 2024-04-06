@@ -43,18 +43,19 @@ const ParticipantsList = ({ handleGoBackToSideBar, handleCloseWindow }) => {
 
         <div className={styles["participants-container"]}>
           {owner && (
-            <div className={styles["participant-container"]}>
-              <OwnerPhotoOverlay owner={owner} />
+            // <div className={styles["participant-container"]}>
+            //   <OwnerPhotoOverlay owner={owner} />
 
-              <div className={styles["participant-info-container"]}>
-                <div className={styles["full-name"]}>
-                  <p>{owner.first_name}</p>
-                  <p>{owner.last_name}</p>
-                  <p className={styles["creator-text"]}> - creator</p>
-                </div>
-                <p className={styles["email"]}>{owner.email}</p>
-              </div>
-            </div>
+            //   <div className={styles["participant-info-container"]}>
+            //     <div className={styles["full-name"]}>
+            //       <p>{owner.first_name}</p>
+            //       <p>{owner.last_name}</p>
+            //       <p className={styles["creator-text"]}> - creator</p>
+            //     </div>
+            //     <p className={styles["email"]}>{owner.email}</p>
+            //   </div>
+            // </div>
+            <OwnerPhotoOverlay owner={owner} />
           )}
           {participants.map((participant) => (
             <div
