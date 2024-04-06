@@ -50,8 +50,8 @@
   margin-bottom: 2%;
   display: flex;
   align-items: center;
-  padding: 3%;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 .participant-container:hover {
@@ -60,9 +60,8 @@
 }
 
 .participant-photo {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
+  width: 72px;
+  height: 100%;
 }
 
 .participant-info-container {
