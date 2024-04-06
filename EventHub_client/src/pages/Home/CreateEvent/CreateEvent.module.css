@@ -35,7 +35,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    margin-top: 20px; /* Простір між рядками фотографій */
+    margin: 20px 30px;
   }
   
   .photo {
@@ -50,7 +50,6 @@
     width: 100%;
     height: 100%;
     object-fit: cover; /* Заповнює область фотографії */
-    border-radius: 8px; /* Округлість країв фотографій */
   }
   
   .addPhotoLabel {
@@ -58,15 +57,66 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: white;
-    font-size: 14px;
-    background-color: rgba(0, 0, 0, 0.5); /* Прозорість кнопки додавання */
+    color: var(--text-secondary-color);
+    font-size: 16px;
+    font-family: var(--primary-font-family);
     padding: 5px 10px;
-    border-radius: 4px;
     cursor: pointer;
-    visibility: hidden; /* Початково ховаємо текст "Add photo" */
+    border-bottom: 2px solid transparent; /* Додаємо початковий невидимий нижній бордер */
+    transition: font-size 0.3s; /* Додаємо плавний перехід для зміни розміру шрифту */
   }
   
-  .photo:hover .addPhotoLabel {
-    visibility: visible; /* Показуємо текст "Add photo" при наведенні на фотографію */
+  .addPhotoLabel:hover {
+    border-bottom: 2px solid var(--text-secondary-color);
+    font-size: 17px; /* Збільшуємо розмір шрифту при наведенні */
+  }
+  
+
+  .miniContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 8px;
+    gap: 4px;
+    position: absolute;
+    width: 64px;
+    height: 21px;
+    left: 0;
+    bottom: 0;
+    background: var(--primary-color);
+    border-radius: 0 4px 0 0;
+  }
+  .mainPhotoText{
+    font-size: 14px;
+    font-family: var(--primary-font-family);
+    color: white;
+  }
+  .cameraIcon{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+  }
+
+  .photoActions {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex; /* Застосовуємо flexbox для гнучкого розміщення */
+    justify-content: center; /* Центруємо елементи по горизонталі */
+    align-items: center; /* Центруємо елементи по вертикалі */
+    gap: 10px; /* Додаємо відступ між іконками */
+  }
+
+
+  
+  .actionIcon {
+    margin: 0 5px; /* Додайте бажаний відступ між іконками */
+  }
+  
+  .actionIcon:hover {
+    transform: scale(1.1); /* Збільшуємо розмір іконки при наведенні */
   }
