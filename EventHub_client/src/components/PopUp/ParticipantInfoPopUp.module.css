@@ -94,7 +94,7 @@ hr {
 
 @media (width < 1280px) {
   .pop-up-container {
-    top: -265%;
+    top: -215%;
     height: 162px;
   }
 
