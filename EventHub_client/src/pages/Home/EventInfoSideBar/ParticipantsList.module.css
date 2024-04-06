@@ -93,3 +93,33 @@
   position: absolute;
   top: 1px;
 }
+
+@media (width < 1280px) {
+  .participants-list-container {
+    font-size: var(--xxs-size);
+  }
+
+  .participant-container {
+    height: 60px;
+  }
+
+  .participant-photo {
+    width: 60px;
+    height: 100%;
+  }
+}
+
+@media (width >= 1280px) and (width < 1700px) {
+  .participants-list-container {
+    font-size: var(--xs-size);
+  }
+
+  .participant-container {
+    height: 60px;
+  }
+
+  .participant-photo {
+    width: 60px;
+    height: 100%;
+  }
+}

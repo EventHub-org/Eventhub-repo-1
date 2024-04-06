@@ -237,10 +237,52 @@
   height: 100%;
 }
 
-/* @media (max-width: 1230px) {
-  .participant-img {
-    width: 60px;
-    height: 60px;
-    background-color: red;
+@media (width < 1280px) {
+  .header {
+    font-size: var(--sm-size);
   }
-} */
+
+  .heading {
+    font-size: var(--md-size);
+  }
+
+  .date-range-container,
+  .location {
+    font-size: var(--sm-size);
+  }
+
+  .location {
+    font-size: var(--xs-size);
+  }
+
+  .spots {
+    font-size: var(--md-size);
+  }
+
+  .action-btn {
+    font-size: var(--md-size);
+  }
+}
+
+@media (width >= 1280px) and (width < 1700px) {
+  .heading {
+    font-size: var(--md-size);
+  }
+
+  .date-range-container,
+  .location {
+    font-size: var(--md-size);
+  }
+
+  .location {
+    font-size: var(--xs-size);
+  }
+
+  .spots {
+    font-size: var(--md-size);
+  }
+
+  .action-btn {
+    font-size: var(--md-size);
+  }
+}
