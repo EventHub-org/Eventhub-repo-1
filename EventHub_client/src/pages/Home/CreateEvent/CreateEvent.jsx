@@ -4,7 +4,11 @@ import useAuth from '../../../hooks/useAuth';
 import styles from './CreateEvent.module.css';
 import { CameraOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import CloseWindowButton from '../../../components/Buttons/CloseWindowButton/CloseWindowButton';
+import { Input, Select, DatePicker,Checkbox } from 'antd';
+import { MinusCircleOutlined } from '@ant-design/icons';
 
+const { TextArea } = Input;
+const { Option } = Select;
 
 const FullSizePhotoModal = ({ photoUrl, onClose }) => {
   return (
@@ -113,7 +117,75 @@ const CreateEvent = () => {
           </div>
         ))}
       </div>
-      
+      <div className={styles.ParamsContainer}>
+        {/* Перший рядок */}
+        <div className={styles.row}>
+          <div className={styles.ParamContainer}>
+            <div className={styles.ParamLabel}>Name</div>
+            <Input
+              placeholder="Name"
+              className={styles.Param}
+            />
+          </div>
+          <div className={styles.ParamContainer}>
+            <div className={styles.ParamLabel}>Categories</div>
+            <Select
+              className={styles.Param}
+              placeholder="Categories"
+              mode="multiple"
+              maxTagCount={2}
+              maxTagPlaceholder={<MinusCircleOutlined />}
+            >
+              <Option key="1">Category 1</Option>
+              <Option key="2">Category 2</Option>
+              {/* Додайте інші категорії за потреби */}
+            </Select>
+          </div>
+        </div>
+        {/* Другий рядок */}
+        <div className={styles.row}>
+          <div className={styles.ParamContainer}>
+            <div className={styles.ParamLabel}>Location</div>
+            <Input
+              placeholder="Location"
+              className={styles.Param}
+            />
+          </div>
+          <div className={styles.ParamContainer}>
+            <div className={styles.ParamLabel}>Participants</div>
+            <Input
+              placeholder="Participants"
+              className={styles.Param}
+            />
+          </div>
+        </div>
+        {/* Третій рядок */}
+        <div className={styles.row}>
+          <div className={styles.ParamContainer} >
+            <div className={styles.ParamLabel}>Start date and time - End date and time</div>
+            <DatePicker.RangePicker
+              showTime={{ format: 'HH:mm' }}
+              format="YYYY-MM-DD HH:mm"
+              placeholder={['Start date and time', 'End date and time']}
+              style={{ width: '100%', height: "4vh", zIndex: 999 }}
+            />
+          </div>
+        </div>
+      </div>
+      <div className={styles.DescriptionContainer}>
+        <div className={styles.ParamLabel}>Description</div>
+        <TextArea
+          autoSize={{ minRows: 3, maxRows: 6 }}
+          style={{
+            width: '100%',
+            maxWidth: '50vw',
+          }}
+          placeholder="Enter description..."
+        />
+      </div>
+      <div className={styles.ParticipationContainer}>
+        <Checkbox className={styles.Checkbox}>I don’t take part in this event</Checkbox>
+      </div>
     </div>
   );
 };
