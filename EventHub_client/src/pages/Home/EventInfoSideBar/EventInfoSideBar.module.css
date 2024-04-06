@@ -238,6 +238,11 @@
 }
 
 @media (width < 1280px) {
+  .side-bar-container {
+    margin-top: 0;
+    height: 500px;
+  }
+
   .header {
     font-size: var(--sm-size);
   }
@@ -265,6 +270,10 @@
 }
 
 @media (width >= 1280px) and (width < 1700px) {
+  .side-bar-container {
+    margin-top: 0;
+    height: 500px;
+  }
   .heading {
     font-size: var(--md-size);
   }
