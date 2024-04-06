@@ -235,3 +235,11 @@
   width: 35%;
   height: 100%;
 }
+
+/* @media (max-width: 1230px) {
+  .participant-img {
+    width: 60px;
+    height: 60px;
+    background-color: red;
+  }
+} */
