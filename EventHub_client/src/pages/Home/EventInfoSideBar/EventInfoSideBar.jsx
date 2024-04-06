@@ -146,6 +146,15 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                 ))}
               </div>
 
+              {/* Owner */}
+              {owner && (
+                <OwnerPhotoOverlay
+                  owner={owner}
+                  // onMouseEnter={() => setHoveredParticipant(owner)}
+                  // onMouseLeave={() => setHoveredParticipant(null)}
+                />
+              )}
+
               {/* Date */}
               <h3 className={styles["heading"]}>Date and time</h3>
               <div className={styles["date-container"]}>
@@ -184,11 +193,6 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   className={styles["participants-photos"]}
                   onMouseLeave={() => setHoveredParticipant(null)}
                 >
-                  <OwnerPhotoOverlay
-                    owner={owner}
-                    onMouseEnter={() => setHoveredParticipant(owner)}
-                    // onMouseLeave={() => setHoveredParticipant(null)}
-                  />
                   {participantsToShow.map((participant) => (
                     <div
                       className={styles["item"]}
