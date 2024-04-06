@@ -158,7 +158,8 @@
 }
 .participants-photos .item {
   margin-right: 10px;
-  position: relative;
+
+  /* position: relative; */
 }
 
 /* .participants-photos .participant-img {

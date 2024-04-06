@@ -1,14 +1,8 @@
-import ParticipantInfoPopUp from "../PopUp/ParticipantInfoPopUp";
 import styles from "./OwnerPhotoOverlay.module.css";
 
 import { RiVipCrownLine } from "react-icons/ri";
 
-const OwnerPhotoOverlay = ({
-  owner,
-  onMouseEnter,
-  onMouseLeave,
-  showPopUp,
-}) => {
+const OwnerPhotoOverlay = ({ owner, onMouseEnter, onMouseLeave }) => {
   return (
     <div
       className={styles["owner-photo"]}
@@ -25,7 +19,6 @@ const OwnerPhotoOverlay = ({
       <div className={styles["crown-container"]}>
         <RiVipCrownLine className={styles["crown-icon"]} />
       </div>
-      {/* {showPopUp && <ParticipantInfoPopUp participant={owner} />} */}
     </div>
   );
 };

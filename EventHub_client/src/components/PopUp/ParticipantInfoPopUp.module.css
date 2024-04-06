@@ -1,15 +1,17 @@
 .pop-up-container {
   display: flex;
   flex-direction: column;
-  width: 750%;
-  height: 600%;
+  width: 450px;
+  height: 350px;
   background-color: var(--popup-background);
   position: absolute;
-  left: -500%;
+  /* right: -100%; */
+  top: 63%;
   font-family: var(--primary-font-family);
   padding: 15px;
   border-radius: 5px;
   box-shadow: 0px 5px 6px 1px var(--third-color);
+  z-index: 995;
 }
 
 .header-container {

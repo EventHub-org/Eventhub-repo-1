@@ -180,12 +180,14 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
               {/* Participants */}
               <h3 className={styles["heading"]}>Participants</h3>
               <div className={styles["participant-container"]}>
-                <div className={styles["participants-photos"]}>
+                <div
+                  className={styles["participants-photos"]}
+                  onMouseLeave={() => setHoveredParticipant(null)}
+                >
                   <OwnerPhotoOverlay
                     owner={owner}
-                    onMouseEnter={() => setShowOwnerPopUp(true)}
-                    onMouseLeave={() => setShowOwnerPopUp(false)}
-                    showPopUp={showOwnerPopUp}
+                    onMouseEnter={() => setHoveredParticipant(owner)}
+                    // onMouseLeave={() => setHoveredParticipant(null)}
                   />
                   {participantsToShow.map((participant) => (
                     <div
@@ -196,7 +198,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                           setHoveredParticipant(data);
                         });
                       }}
-                      onMouseLeave={() => setHoveredParticipant(null)}
+                      // onMouseLeave={() => setHoveredParticipant(null)}
                     >
                       <img
                         className={styles["participant-img"]}
@@ -222,6 +224,10 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                         />
                       </button>
                     </div>
+                  )}
+
+                  {hoveredParticipant && (
+                    <ParticipantInfoPopUp participant={hoveredParticipant} />
                   )}
                 </div>
               </div>
@@ -258,6 +264,10 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
               </div>
             </motion.div>
           )}
+
+          {/* {hoveredParticipant && (
+            <ParticipantInfoPopUp participant={hoveredParticipant} />
+          )} */}
 
           {showAllParticipants && (
             <ParticipantsList
