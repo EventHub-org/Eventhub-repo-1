@@ -55,9 +55,9 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
     event &&
       getParticipants(event.id).then((data) => {
         console.log("Data: ", data);
-        if (data.length > 2) {
+        if (data.length > 5) {
           setIsShowMoreParticipants(true);
-          setParticipantsToShow(data.slice(0, 4));
+          setParticipantsToShow(data.slice(0, 5));
         } else {
           setParticipantsToShow(data);
         }

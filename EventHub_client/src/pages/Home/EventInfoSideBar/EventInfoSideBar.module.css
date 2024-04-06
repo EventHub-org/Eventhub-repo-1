@@ -14,7 +14,7 @@
   padding: 20px;
   z-index: 990;
   right: 0;
-  top: 10%;
+  top: 80px;
   position: absolute;
   overflow: auto;
   display: flex;
@@ -141,6 +141,8 @@
 
 .participants-photos {
   display: flex;
+  /* gap: 10px; */
+  overflow-x: auto;
 }
 .participants-photos .item {
   margin-right: 10px;
