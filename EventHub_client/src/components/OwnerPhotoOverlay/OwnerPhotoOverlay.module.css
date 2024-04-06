@@ -3,6 +3,7 @@
   align-items: center;
   width: 100%;
   height: 72px;
+  min-height: 72px;
   font-family: var(--primary-font-family);
   border: solid 1px var(--third-color);
   margin-top: 15px;
