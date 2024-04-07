@@ -14,10 +14,11 @@ const OwnerPhotoOverlay = ({ owner, onMouseEnter, onMouseLeave }) => {
       />
       <div className={styles["info-container"]}>
         <div className={styles["full-name-container"]}>
-          {`${owner.first_name} ${owner.last_name}`}
-          <p>- creator</p>
+          <p className={styles["full-name"]}>{owner.first_name}</p>
+          <p className={styles["full-name"]}>{owner.last_name}</p>
+          <p className={styles["creator-text"]}>- creator</p>
         </div>
-        <div className={styles["email"]}>{owner.email}</div>
+        <p className={styles["email"]}>{owner.email}</p>
       </div>
     </div>
   );
