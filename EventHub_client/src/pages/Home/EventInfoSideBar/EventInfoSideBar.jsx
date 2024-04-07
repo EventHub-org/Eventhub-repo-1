@@ -55,7 +55,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
     event &&
       getParticipants(event.id).then((data) => {
         console.log("Data: ", data);
-        if (data.length > 2) {
+        if (data.length > 5) {
           setIsShowMoreParticipants(true);
           setParticipantsToShow(data.slice(0, 5));
         } else {
@@ -142,13 +142,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
               </div>
 
               {/* Owner */}
-              {owner && (
-                <OwnerPhotoOverlay
-                  owner={owner}
-                  // onMouseEnter={() => setHoveredParticipant(owner)}
-                  // onMouseLeave={() => setHoveredParticipant(null)}
-                />
-              )}
+              {owner && <OwnerPhotoOverlay owner={owner} />}
 
               {/* Date */}
               <h3 className={styles["heading"]}>Date and time</h3>
@@ -197,19 +191,12 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                           setHoveredParticipant(data);
                         });
                       }}
-                      // onMouseLeave={() => setHoveredParticipant(null)}
                     >
                       <img
                         className={styles["participant-img"]}
                         src={participant.participant_photo.photo_url}
                         alt="Participant Img"
                       />
-                      {/* {hoveredParticipant &&
-                        hoveredParticipant.id === participant.user_id && (
-                          <ParticipantInfoPopUp
-                            participant={hoveredParticipant}
-                          />
-                        )} */}
                     </div>
                   ))}
                   {isShowMoreParticipants && (

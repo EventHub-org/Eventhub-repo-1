@@ -2,11 +2,11 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 33%;
+  height: 350px;
   background-color: var(--popup-background);
   position: absolute;
   /* right: -100%; */
-  top: -440%;
+  top: -560%;
   font-family: var(--primary-font-family);
   padding: 15px;
   border-radius: 5px;
@@ -79,7 +79,6 @@
   align-self: flex-end;
   width: 150px;
   height: 30px;
-  margin-top: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -94,7 +93,7 @@ hr {
 
 @media (width < 1280px) {
   .pop-up-container {
-    top: -215%;
+    top: -385%;
     height: 162px;
   }
 
@@ -130,7 +129,6 @@ hr {
   .show-more-btn {
     width: 110px;
     height: 20px;
-    margin-top: 0;
     font-size: var(--xxs-size);
     display: flex;
     justify-content: center;
@@ -138,9 +136,13 @@ hr {
   }
 }
 
-@media (width >= 1280px) {
+@media (width >= 1280px) and (width < 1700px) {
   .pop-up-container {
-    height: 390px;
-    top: -615%;
+    height: 350px;
+    top: -820%;
+  }
+
+  .show-more-btn {
+    position: relative;
   }
 }
