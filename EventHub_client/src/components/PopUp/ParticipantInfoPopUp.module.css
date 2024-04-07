@@ -96,8 +96,7 @@ hr {
   left: 0;
   height: 20px;
   bottom: -17px;
-  opacity: 0.2;
-  background-color: red;
+  opacity: 0;
   width: 100%;
 }
 
