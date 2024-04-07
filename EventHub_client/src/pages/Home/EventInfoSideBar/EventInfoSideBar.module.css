@@ -234,6 +234,22 @@
   height: 100%;
 }
 
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--primary-popup-background);
+  border-radius: 100vw;
+  margin-block: 30px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--third-color);
+  border-radius: 100vw;
+}
+
 @media (width < 1280px) {
   .side-bar-container {
     margin-top: 0;
