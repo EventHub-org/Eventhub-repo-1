@@ -64,6 +64,7 @@ const ParticipantInfoPopUp = ({ participant, onMouseEnter, onMouseLeave }) => {
       <PrimaryButton className={styles["show-more-btn"]}>
         Show more
       </PrimaryButton>
+      <div className={styles["transparent-div"]}>&nbsp;</div>
     </motion.div>
   );
 };
