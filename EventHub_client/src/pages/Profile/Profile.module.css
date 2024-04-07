@@ -1,0 +1,10 @@
+*{
+    box-sizing: border-box;
+}
+.MainContent{
+    height: 725px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
