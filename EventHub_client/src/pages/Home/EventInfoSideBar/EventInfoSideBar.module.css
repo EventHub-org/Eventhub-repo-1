@@ -247,21 +247,20 @@
     font-size: var(--md-size);
   }
 
-  .date-range-container,
-  .location {
-    font-size: var(--sm-size);
-  }
-
-  .location {
+  .date-range-container {
     font-size: var(--xs-size);
   }
 
+  .location {
+    font-size: var(--xxs-size);
+  }
+
   .spots {
-    font-size: var(--md-size);
+    font-size: var(--sm-size);
   }
 
   .action-btn {
-    font-size: var(--md-size);
+    font-size: var(--sm-size);
   }
 }
 
@@ -281,7 +280,12 @@
     font-size: var(--md-size);
   }
 
-  .date-range-container,
+  .date-range-container {
+    font-size: var(--xs-size);
+    /* border: solid; */
+    width: 140px;
+  }
+
   .location {
     font-size: var(--sm-size);
     /* border: solid; */
@@ -298,10 +302,10 @@
   }
 
   .spots {
-    font-size: var(--md-size);
+    font-size: var(--sm-size);
   }
 
   .action-btn {
-    font-size: var(--md-size);
+    font-size: var(--sm-size);
   }
 }
