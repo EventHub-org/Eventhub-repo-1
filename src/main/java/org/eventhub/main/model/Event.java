@@ -24,7 +24,7 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotBlank(message = "Name is mandatory")
+    @NotBlank(message = "Title is mandatory")
     @Size(max = 20, min = 5,
     message = "Name length cannot be greater than 20 symbols")
     @Column(name = "title", unique = true)
