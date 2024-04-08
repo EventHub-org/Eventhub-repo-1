@@ -5,7 +5,7 @@ import CloseWindowButton from '../../../components/Buttons/CloseWindowButton/Clo
 import ListEvents from '../../../components/ListEvents/ListEvents';
 import { getCheckbuttonsEvents } from '../../../api/getCheckbuttonsEvents';
 
-const EventList = ({handleButtonClick}) => {
+const EventList = ({handleButtonClose}) => {
     const [events, setEvents] = useState([])
     const [checkboxMy, setCheckboxMy] = useState(false);
     const [checkboxJoined, setCheckboxJoined] = useState(false);
@@ -35,7 +35,7 @@ const EventList = ({handleButtonClick}) => {
 
         <div className={styles.Heading}>
             <h2>Events</h2>
-            <CloseWindowButton onClick={()=>{handleButtonClick()}}/>                
+            <CloseWindowButton onClick={()=>{handleButtonClose()}}/>                
         </div>
 
         <div className={styles.CheckboxContainer}>
