@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate,useSearchParams } from 'react-router-dom';
 import useAuth from '../../../hooks/useAuth';
 import styles from './CreateEvent.module.css';
 import { CameraOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
@@ -28,12 +28,13 @@ const CreateEvent = () => {
   const [addedPhotos, setAddedPhotos] = useState(0);
   const [hoveredPhotoIndex, setHoveredPhotoIndex] = useState(-1);
   const [fullSizePhotoIndex, setFullSizePhotoIndex] = useState(-1);
+  const [searchParams,setsearchParams] = useSearchParams();
+  const [isCreateEvent, setIsCreateEvent] = useState(false);
 
-  const handleClick = () => {
-    if (!auth.token) {
-      navigate('/login');
-    }
-  };
+  useEffect(() => {
+    const createEventParam = searchParams.get('create_event');
+    setIsCreateEvent(createEventParam === 'true');
+  }, [searchParams]);
 
   const handlePhotoUpload = (index, event) => {
     const file = event.target.files[0];
@@ -63,13 +64,19 @@ const CreateEvent = () => {
   const handleCloseFullSizePhoto = () => {
     setFullSizePhotoIndex(-1);
   };
+  const handleCloseButton = () =>{
+    setsearchParams({});
+  }
 
   return (
+    <>
+    {isCreateEvent &&
+    <div className={styles.backdrop}>
     <div className={styles.mainContainer}>
       <div className={styles.createEventHeader}>
         <h2>Create Event</h2>
         <div className={styles.CloseButton}>
-          <CloseWindowButton />
+          <CloseWindowButton onClick={handleCloseButton}/>
         </div>
       </div>
       <div className={styles.photoContainer}>
@@ -175,7 +182,7 @@ const CreateEvent = () => {
       <div className={styles.DescriptionContainer}>
         <div className={styles.ParamLabel}>Description</div>
         <TextArea
-          autoSize={{ minRows: 3, maxRows: 6}}
+          autoSize={{ minRows: 2, maxRows: 6}}
 
           placeholder="Enter description..."
         />
@@ -183,7 +190,12 @@ const CreateEvent = () => {
       <div className={styles.ParticipationContainer}>
         <Checkbox className={styles.Checkbox}>I don’t take part in this event</Checkbox>
       </div>
-    </div>
+      <div className={styles.CreateButtonContainer}>
+        <button className={styles.CreateButton}>Create Event</button>
+      </div>
+      </div>
+    </div>}
+    </>
   );
 };
 

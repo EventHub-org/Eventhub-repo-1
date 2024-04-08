@@ -1,19 +1,29 @@
 @import '../../../App.css';
 
-
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* напівпрозорий чорний колір */
+    z-index: 98; /* підніміть поверх інших елементів */
+  }
 .mainContainer {
     width: 44vw;
-    height: 91vh;
+    height: auto;
+    max-height: 91vh;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: var(--secondary-popup-background);
+    background-color: var(--primary-popup-background);
     box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(10px);
     border-radius: 8px;
     z-index: 99; 
-
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .createEventHeader {
@@ -157,5 +167,41 @@
     margin: 0 30px 0px 30px;
 }
 .ParticipationContainer{
-    margin: 0 30px 0px 30px;
+    margin: 8px 30px 0px 30px;
 }
+
+.CreateButtonContainer{
+    height: 4.69vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 16px 30px 16px 30px;
+    bottom: 16px;
+}
+.CreateButton{
+    /* Frame 427321175 */
+background: var(--primary-color);
+box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.25);
+border-radius: 25px;
+color: white;
+width: 100%;
+height: 100%;
+margin: 0 auto;
+font-family: var(--primary-font-family);
+font-weight:lighter;
+font-size: 18px;
+transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+border: none;
+}
+.CreateButton:hover {
+    background-color: var(--primary-color-hover); 
+    box-shadow: 2px 2px 2px 2px rgba(0.1, 0.1, 0.1, 0.2); 
+    border: none;
+  }
+  
+  .CreateButton:active {
+    transform: scale(1.01); 
+    box-shadow: none; 
+  }
+
+

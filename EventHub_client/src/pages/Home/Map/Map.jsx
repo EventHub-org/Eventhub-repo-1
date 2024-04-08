@@ -7,7 +7,8 @@ import { getEventsDataSearch } from '../../../api/getEventsData';
 import { light } from "./Theme"
 import { getFilteredEvents } from '../../../api/getFilteredEvents';
 import GetLocationByCoordinates from "../../../api/getLocationByCoordinates"
-
+import useAuth from "../../../hooks/useAuth";
+import { message } from 'antd';
 
 
 const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
@@ -35,7 +36,7 @@ const defaultOption = {
 const Map = ({ center }) => {
 
   const mapRef = useRef(undefined)
-
+  const { auth, setAuth } = useAuth();
   const onLoad = useCallback(function callback(map) {
     mapRef.current = map;
   }, [])
@@ -48,6 +49,7 @@ const Map = ({ center }) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const [showMarker, setShowMarker] = useState(false);
 
 
 
@@ -92,16 +94,23 @@ const Map = ({ center }) => {
     setSelectedEvent(null);
   };
   const handleMapClick = async event => {
+    if (!auth.token) {
+      message.info('You need to login to create an event');
+      return;
+    }
+
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
     setSearchParams({ create_event: true, latitude: lat, longitude:lng })
     const locationData = await GetLocationByCoordinates(lat, lng);
     if (locationData) {
-      setSelectedPlace(locationData);
       console.log(locationData);
+      setSelectedPlace(locationData);
+      setShowMarker(true); // Показати маркер
+      setTimeout(() => setShowMarker(false), 5000); // Приховати маркер через 5 секунд
     } else {
       console.log('Error fetching location data');
-    }
+      }
   };
   return (
     <div className={styles.mapcontainer}>
@@ -137,7 +146,7 @@ const Map = ({ center }) => {
             </div>
           </InfoWindow>
         )}
-        {selectedPlace && (
+        {selectedPlace && showMarker&&(
           <Marker
             position={{ lat: selectedPlace.lat, lng: selectedPlace.lng }}
             icon={{ url: '/images/pin.svg', scaledSize: new window.google.maps.Size(40, 40) }}
