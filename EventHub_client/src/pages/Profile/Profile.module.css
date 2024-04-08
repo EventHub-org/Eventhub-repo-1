@@ -2,9 +2,10 @@
     box-sizing: border-box;
 }
 .MainContent{
-    height: 725px;
+    height: 727px;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    padding: 0;
 }

@@ -1,4 +1,12 @@
 .Header{
-    height: 100px;
-    border: 3px solid black;
+    background-color: #EEE;
+    height: 96px;
+    border: 1px solid #EEE;
+    margin: 0 0; /* Adjusted margin to remove top margin */
+}
+
+.Logo{
+    width: 260px;
+    height: 64px;
+    margin: 16px 20px 0;
 }
