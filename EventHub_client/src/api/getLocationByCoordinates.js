@@ -10,8 +10,9 @@ const GetLocationByCoordinates = async (lat, lng) => {
         key: MAP_API_KEY, // додайте ваш ключ API
       },
     });
-
+    
     const { status, results } = response.data;
+    console.log(results)
     if (status === 'OK') {
       const addressComponents = results[0].address_components;
       let city = '';

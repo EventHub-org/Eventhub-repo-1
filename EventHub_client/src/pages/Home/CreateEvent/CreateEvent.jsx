@@ -175,11 +175,8 @@ const CreateEvent = () => {
       <div className={styles.DescriptionContainer}>
         <div className={styles.ParamLabel}>Description</div>
         <TextArea
-          autoSize={{ minRows: 3, maxRows: 6 }}
-          style={{
-            width: '100%',
-            maxWidth: '50vw',
-          }}
+          autoSize={{ minRows: 3, maxRows: 6}}
+
           placeholder="Enter description..."
         />
       </div>

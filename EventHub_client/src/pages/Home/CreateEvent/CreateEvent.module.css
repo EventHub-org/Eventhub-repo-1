@@ -39,8 +39,8 @@
   }
   
   .photo {
-    width: 12.8vw; /* Ширина фотографії */
-    height: 10.1vh; /* Висота фотографії */
+    width: 12.7vw; /* Ширина фотографії */
+    height: 13.87vh; /* Висота фотографії */
     background-color: var(--primary-2-popup-background);
     position: relative; /* Для розміщення тексту і кнопки додавання */
     margin-bottom: 20px;
