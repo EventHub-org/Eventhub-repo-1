@@ -186,8 +186,10 @@ const CreateEvent = () => {
     setSelectedCategories([])
     setParticipants('')
     setDateRange(null)
+    setPhotos(new Array(6).fill(null));
+    setAddedPhotos(0)
+    
     setsearchParams({});
-    setPhotos(null)
   }
 
 
@@ -317,8 +319,9 @@ const CreateEvent = () => {
       setWithOwner(false)
       setSelectedCategories([])
       setParticipants('')
+      setPhotos(new Array(6).fill(null));
+      setAddedPhotos(0)
       setDateRange(null)
-      setPhotos(null)
     } catch (error) {
       console.error('Error submitting event:', error);
       message.error('Failed to create event. Please try again later.');
