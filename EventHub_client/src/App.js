@@ -19,7 +19,9 @@ function App() {
       <Router>
         <div>
           <Routes>
-            <Route path="/" element={<Home/>}/>
+            <Route path="/" element={<Home />}>
+              <Route path="event/:ownerId/:eventId" />
+            </Route>
             <Route path="/register" element={<SignUp/>}/>
             <Route path="/login" element={<LogIn/>}/> 
             <Route path="/profile/:userId" element={<Profile/>}>
@@ -30,6 +32,5 @@ function App() {
       </Router>
       
     );
-}
 
-export default App;
+export default App
