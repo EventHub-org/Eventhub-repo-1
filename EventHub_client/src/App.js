@@ -5,7 +5,6 @@ import styles from "./App.css"
 import './App.css';
 import Profile from "./pages/Profile/Profile.jsx"
 import UserInfo from "./pages/Profile/UserInfo/UserInfo.jsx"
-
 import {
   BrowserRouter as Router,
   Routes,
@@ -32,5 +31,6 @@ function App() {
       </Router>
       
     );
+  }
 
 export default App

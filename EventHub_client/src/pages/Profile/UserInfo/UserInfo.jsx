@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getFullUserInfo } from "../../../api/getFullUserInfo";
+import { getUserById } from "../../../api/getUserById";
 import getIdFromToken from "../../../jwt/getIdFromToken";
 import UserImages from "../../../components/UserImages/UserImages";
 import ChangePasswordButton from "../../../components/Buttons/EditPasswordButton/ChangePasswordButton";
@@ -16,7 +16,7 @@ const UserInfo = () => {
   useEffect(() => {
     async function fetchUser() {
       try {
-        const response = await getFullUserInfo(userId);
+        const response = await getUserById(userId);
         setUser(response);
       } catch (error) {
         console.error("Error fetching user:", error);
