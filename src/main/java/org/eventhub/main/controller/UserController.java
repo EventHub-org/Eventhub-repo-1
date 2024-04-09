@@ -35,12 +35,6 @@ public class UserController {
         return userService.getAll();
     }
 
-    @GetMapping("/{user_id}")
-    public ResponseEntity<UserResponse> read(@PathVariable("user_id") UUID userId){
-        log.info("**/get full info about user");
-        return new ResponseEntity<>(userService.readById(userId), HttpStatus.OK);
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserResponse> create(@Validated @RequestBody UserRequest userRequest, BindingResult result) {

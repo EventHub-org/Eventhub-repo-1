@@ -1,5 +1,5 @@
-*{
-    box-sizing: border-box;
+* {
+  box-sizing: border-box;
 }
 
 .FilterResultContainer{
@@ -34,3 +34,4 @@
 .ListEvents{
     overflow-y: auto;
 }
+

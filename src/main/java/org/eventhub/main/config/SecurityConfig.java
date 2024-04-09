@@ -47,7 +47,11 @@ public class SecurityConfig {
                 .disable()
                 .cors(c -> c.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests()
+<<<<<<< HEAD
                 .requestMatchers("/authentication/**", "/**")
+=======
+                .requestMatchers("/authentication/**", "/categories", "/search", "/events/filter", "/users/events")
+>>>>>>> main
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -60,20 +64,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/v1/auth/**").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authenticationProvider(authenticationProvider)
-//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-//        return http.build();
-//
-//
-//    }
 }
