@@ -16,7 +16,7 @@ const UserImages = ({ images }) => {
   return (
     <div className={styles.UserImages}>
       <div className={styles.ImageContainer}>
-        <img className={styles.Image} src={images[imageIndex].photo_url} alt="" />
+        <img className={styles.Image} src={images[imageIndex].photo_url} alt={images[imageIndex].photo_name} />
         <div className={styles.NavigationButtons}>
           <button className={styles.PrevButton} onClick={showPrev}>
             <SlArrowLeft />

@@ -18,7 +18,6 @@ const UserInfo = () => {
         async function fetchUser() {
           try {
             const response = await getFullUserInfo(userId);
-            console.log(response);
             setUser(response);
           } catch (error) {
             console.error('Error fetching user:', error);
@@ -32,7 +31,9 @@ const UserInfo = () => {
       }, [userId]);
     
     if(loading){
-        return <p>Loading...</p>;
+        return (
+            <div className={styles.Loading}><p>Loading...</p></div>
+        );
     }
     return(
         <div className={styles.UserInfo}>
@@ -41,7 +42,7 @@ const UserInfo = () => {
                 <div className={styles.AboutUser}>
                     <div className={styles.Header}>
                         <p className={styles.MainCaption}>{user.first_name + ' ' + user.last_name}</p>
-                        <p className={styles.SecondaryCaption}>{'@' + user.first_name.slice(0,2) + user.last_name}</p>
+                        <p className={styles.SecondaryCaption}>{'@' + user.username}</p>
                     </div>
                     <div className={styles.Information}>
                         <p className={styles.InformationText}>Basic information</p>

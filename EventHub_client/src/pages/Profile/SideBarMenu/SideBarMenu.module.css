@@ -1,23 +1,23 @@
-*{
+* {
     box-sizing: border-box;
 }
-.SideBarMenu{
+
+.SideBarMenu {
     height: 100%;
     flex: 1;
-    border: 1px solid #AAA;
+    border: 1.5px solid #AAA;
     border-bottom: none;
-    padding: 0;
+    padding-left: 16px;
 }
 
-.Option{
+.Option {
     font-family: var(--primary-font-family);
-    width: 324px;
     height: 48px;
     text-decoration: none;
     list-style: none;
     font-size: 20px;
     line-height: 24px;
-    margin: 16px 0 0  26px;
+    margin: 26px 0 0;
     padding: 0;
 }
 
@@ -25,16 +25,16 @@
     margin-top: 46px;
 }
 
-.Link{
+.Link {
     display: block;
     color: #AAA;
     text-decoration: none;
-    border-bottom: 1px solid #AAA;
+    border-bottom: 1.5px solid #AAA;
     padding: 5px 2px 0;
     margin: 0;
 }
 
-.Link:hover{
+.Link:hover {
     color: #000;
     background-color: #EEE;
     border-bottom: 2px solid #000;
