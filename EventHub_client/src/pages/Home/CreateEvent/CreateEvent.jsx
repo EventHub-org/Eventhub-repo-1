@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import useAuth from '../../../hooks/useAuth';
+import {useSearchParams } from 'react-router-dom';
 import styles from './CreateEvent.module.css';
 import { CameraOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import CloseWindowButton from '../../../components/Buttons/CloseWindowButton/CloseWindowButton';
-import { Input, Select, DatePicker, Checkbox, AutoComplete,message} from 'antd';
+import { Input, Select, DatePicker, Checkbox, AutoComplete, message } from 'antd';
 import { getCategories } from '../../../api/getCategories';
 import { MinusCircleOutlined } from '@ant-design/icons';
 import { jwtDecode } from 'jwt-decode'
@@ -14,8 +13,8 @@ import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
 } from "use-places-autocomplete";
-import {sendDataWithoutPhotos} from '../../../api/sendEventData';
-import {sendPhotosToServer} from '../../../api/sendEventData';
+import { sendDataWithoutPhotos } from '../../../api/sendEventData';
+import { sendPhotosToServer } from '../../../api/sendEventData';
 const { TextArea } = Input;
 const { Option } = Select;
 const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
@@ -33,24 +32,24 @@ const FullSizePhotoModal = ({ photoUrl, onClose }) => {
 
 
 const PlacesAutocomplete = ({ onSelectLocation }) => {
-  const [defaultLocation, setDefaultLocation] = useState('');
-  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const lat = searchParams.get('latitude');
     const lng = searchParams.get('longitude');
-
     const fetchDefaultLocation = async () => {
       try {
         const location = await GetLocationByCoordinates(lat, lng);
-        console.log(typeof(location))
-        setDefaultLocation(location);
-        
+        if (location) {
+          const defaultAddress = [location.city, location.street, location.houseNumber].join(', ');
+          setValue(defaultAddress);
+
+        }
       } catch (error) {
         console.error('Error getting location:', error);
       }
     };
-
     if (lat && lng) {
       fetchDefaultLocation();
     }
@@ -74,7 +73,8 @@ const PlacesAutocomplete = ({ onSelectLocation }) => {
   };
 
   const handleSelect = (value) => {
-    setValue(value, false);
+    setValue(value)
+
     clearSuggestions();
 
     // Get latitude and longitude via utility functions
@@ -105,7 +105,6 @@ const PlacesAutocomplete = ({ onSelectLocation }) => {
       placeholder="Where are you going?"
       className={styles.Param}
       defaultActiveFirstOption={false}
-      defaultValue={"sasadsd"}
     />
   );
 };
@@ -127,7 +126,7 @@ const CreateEvent = () => {
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [location, setLocation] = useState('');
-  const [withOwner,setWithOwner] = useState(true);
+  const [withOwner, setWithOwner] = useState(true);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [participants, setParticipants] = useState('');
   const [dateRange, setDateRange] = useState(null);
@@ -178,7 +177,17 @@ const CreateEvent = () => {
   };
 
   const handleCloseButton = () => {
+    setTitle('')
+    setDescription('')
+    setLatitude(0)
+    setLongitude(0)
+    setLocation('')
+    setWithOwner(false)
+    setSelectedCategories([])
+    setParticipants('')
+    setDateRange(null)
     setsearchParams({});
+    setPhotos(null)
   }
 
 
@@ -191,7 +200,7 @@ const CreateEvent = () => {
     const address = value.address;
     const latitude = value.lat;
     const longitude = value.lng;
-  
+
     setLocation(address);
     setLatitude(latitude);
     setLongitude(longitude);
@@ -212,56 +221,108 @@ const CreateEvent = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-  
+
     const offset = date.getTimezoneOffset();
     date.setHours(date.getHours() - offset / 60);
     return date.toISOString();
-};
+  };
 
+  const validateFields = () => {
+  
+    if (title.length < 5 || title.length > 20) {
+      message.error('Event name must be between 5 and 20 characters');
+      return false;
+    }
+  
+    // Перевірка поля "Кількість учасників"
+    if (!participants || isNaN(participants) || participants < 2 || participants > 20000) {
+      message.error('Number of participants must be a number between 2 and 20,000');
+      return false;
+    }
+  
+    
+    if (!dateRange) {
+      message.error('Start and End date cannot be empty');
+      return false;
+    }
+ 
+    if (!description || description.trim() === '') {
+      message.error('Event description cannot be empty');
+      return false;
+    } else if (description.length > 255) {
+      message.error('Event description cannot exceed 255 characters');
+      return false;
+    }
+    if (selectedCategories.length === 0) {
+      message.error('At least one category must be selected');
+      return false;
+    }
+
+
+  
+
+    return true;
+  }
   const handleSubmit = async () => {
-    const startAt = formatDate(dateRange[0]);
-    const expireAt = formatDate(dateRange[1]);
-    const authToken = localStorage.getItem('token');
-    console.log("Категорії",selectedCategories)
+    try {
+      if (!validateFields()) {
+        return; 
+      }
+      const startAt = formatDate(dateRange[0]);
+      const expireAt = formatDate(dateRange[1]);
+      const authToken = localStorage.getItem('token');
+      console.log("Категорії", selectedCategories)
 
-    const user = jwtDecode(authToken);
-    const user_id = user.id;
-    const eventData = {
-       title: title,
-       max_participants: participants,
-       start_at: startAt,
-       expire_at: expireAt,
+      const user = jwtDecode(authToken);
+      const user_id = user.id;
+      const eventData = {
+        title: title,
+        max_participants: participants,
+        start_at: startAt,
+        expire_at: expireAt,
         description: description,
         latitude: latitude,
         longitude: longitude,
         location: location,
         with_owner: withOwner,
-      // category_requests: selectedCategories,
-       current_count: 0,
-       owner_id: user_id,
-      
+        // category_requests: selectedCategories,
+        current_count: 0,
+        owner_id: user_id,
+
         category_requests: [
-            {
-                name: "Sport"
-            },
-            {
-                name: "Charity"
-            }
+          {
+            name: "Sport"
+          },
+          {
+            name: "Charity"
+          }
         ],
-        
-    
-    };
-    console.log("Event Data:", eventData);
-    const textDataResponse = await sendDataWithoutPhotos(eventData,user_id);
-    
-    const eventId = textDataResponse.id;
-    console.log("Event Id from server", eventId);
-    console.log(typeof(photos[0]), photos[0])
-    // const photoDataResponse = await sendPhotosToServer(photos,eventId);
-    // console.log("Photo response data: ",photoDataResponse)
-    
-    message.success('Event successfully created');
-    setsearchParams({});
+      };
+      console.log("Event Data:", eventData);
+      const textDataResponse = await sendDataWithoutPhotos(eventData, user_id);
+
+      const eventId = textDataResponse.id;
+      console.log("Event Id from server", eventId);
+      console.log(typeof (photos[0]), photos[0])
+      // const photoDataResponse = await sendPhotosToServer(photos,eventId);
+      // console.log("Photo response data: ",photoDataResponse)
+
+      message.success('Event successfully created');
+      setsearchParams({});
+      setTitle('')
+      setDescription('')
+      setLatitude(0)
+      setLongitude(0)
+      setLocation('')
+      setWithOwner(false)
+      setSelectedCategories([])
+      setParticipants('')
+      setDateRange(null)
+      setPhotos(null)
+    } catch (error) {
+      console.error('Error submitting event:', error);
+      message.error('Failed to create event. Please try again later.');
+    }
   };
 
 
@@ -355,7 +416,7 @@ const CreateEvent = () => {
                 <div className={styles.ParamContainer}>
                   <div className={styles.ParamLabel}>Location</div>
                   <PlacesAutocomplete
-                  onSelectLocation={handleLocationChange}
+                    onSelectLocation={handleLocationChange}
                   />
                 </div>
                 <div className={styles.ParamContainer}>
@@ -394,8 +455,8 @@ const CreateEvent = () => {
             </div>
             <div className={styles.ParticipationContainer}>
               <Checkbox className={styles.Checkbox}
-              checked={withOwner}
-              onChange={handleCheckboxChange}
+                checked={withOwner}
+                onChange={handleCheckboxChange}
               >I take part in this event</Checkbox>
             </div>
             <div className={styles.CreateButtonContainer}>
