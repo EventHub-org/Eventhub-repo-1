@@ -11,16 +11,16 @@ const SideBarMenu = () =>{
     const userId = getIdFromToken();
 
     const options = [
-        { name: 'account', icon: <FiUser /> },
-        { name: 'events', icon: <HiOutlineLocationMarker /> },
-        { name: 'friends', icon: <LuUsers /> }
+        { name: 'Account', icon: <FiUser />, source:`/profile/${userId}/account` },
+        { name: 'Events', icon: <HiOutlineLocationMarker />, source: '/'},
+        { name: 'Friends', icon: <LuUsers /> }
     ];
     
     return(
         <ul className={styles.SideBarMenu}>
             {options.map((option) =>{
-                    return <li className={styles.Option}><Link className={styles.Link} key={option} to={`/profile/${userId}/${option.name}`}>
-                        {option.icon} {option.name[0].toUpperCase() + option.name.slice(1)}
+                    return <li className={styles.Option}><Link className={styles.Link} key={option} to={option.source}>
+                        {option.icon} {option.name}
                     </Link></li>
                 })}
             <li className={styles.Option}><Link className={styles.Link} key='logout' to={'/login'}><FiLogOut /> Logout</Link></li>
