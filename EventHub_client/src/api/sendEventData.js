@@ -12,6 +12,7 @@ export const sendDataWithoutPhotos = async (eventData, owner_id) => {
         }
     })
     try {
+        console.log(eventData);
         const response = await authAxios.post(`/users/${owner_id}/events`, eventData);
         return response.data;
     } catch (error) {
@@ -21,22 +22,26 @@ export const sendDataWithoutPhotos = async (eventData, owner_id) => {
     }
 };
 
-export const sendPhotosToServer = async (files, event_id) => {
+function isFormDataEmpty(formData) {
+    const entries = formData.entries();
+    return entries.next().done;
+}
 
+export const sendPhotosToServer = async (formData, event_id) => {
+    console.log("Images: ", formData);
     const accessToken = localStorage.getItem('token')
     const authAxios = axios.create({
         headers: {
             Authorization: `Bearer ${accessToken}`,
             'Access-Control-Allow-Origin': '*',
-            "Access-Control-Allow-Headers": "content-type",
             "Access-Control-Allow-Credentials": "true"
         }
     })
     try {
-
-        const response = await authAxios.post(`/events/${event_id}/photos/upload`, files);
-
+        if(isFormDataEmpty(formData)) return;
+        const response = await authAxios.post(`/events/${event_id}/photos/upload`, formData);
         return response.data;
+
     } catch (error) {
         console.error('Error uploading photos to server:', error);
 

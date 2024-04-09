@@ -132,7 +132,7 @@ const CreateEvent = () => {
   const [participants, setParticipants] = useState('');
   const [dateRange, setDateRange] = useState(null);
 
-
+  const [formData, setFormData] = useState(new FormData());
   useEffect(() => {
     // Отримання категорії з серверу під час завантаження компонента
     const fetchCategories = async () => {
@@ -151,10 +151,20 @@ const CreateEvent = () => {
     setIsCreateEvent(createEventParam === 'true');
   }, [searchParams]);
 
+  const resetCreate = () =>{
+    // to implements
+  }
+
   const handlePhotoUpload = (index, event) => {
     const file = event.target.files[0];
     const newPhotos = [...photos];
     newPhotos[index] = URL.createObjectURL(file);
+
+    //
+    formData.append('files', file);
+    setFormData(formData);
+    //
+
     setPhotos(newPhotos);
     setAddedPhotos(addedPhotos + 1);
   };
@@ -229,27 +239,16 @@ const CreateEvent = () => {
     const eventData = {
        title: title,
        max_participants: participants,
-       start_at: startAt,
-       expire_at: expireAt,
+       start_at: new Date(startAt),
+       expire_at: new Date(expireAt),
         description: description,
         latitude: latitude,
         longitude: longitude,
-        location: location,
+        location: "psnflk",
         with_owner: withOwner,
-      // category_requests: selectedCategories,
+        category_requests:  selectedCategories.map(category => ({name: category})),
        current_count: 0,
        owner_id: user_id,
-      
-        category_requests: [
-            {
-                name: "Sport"
-            },
-            {
-                name: "Charity"
-            }
-        ],
-        
-    
     };
     console.log("Event Data:", eventData);
     const textDataResponse = await sendDataWithoutPhotos(eventData,user_id);
@@ -257,10 +256,14 @@ const CreateEvent = () => {
     const eventId = textDataResponse.id;
     console.log("Event Id from server", eventId);
     console.log(typeof(photos[0]), photos[0])
-    // const photoDataResponse = await sendPhotosToServer(photos,eventId);
+    const photoDataResponse = await sendPhotosToServer(formData,eventId);
     // console.log("Photo response data: ",photoDataResponse)
     
     message.success('Event successfully created');
+    console.log("Form data: ", formData);
+    
+    setFormData(new FormData());
+    setPhotos(new Array(6).fill(null));
     setsearchParams({});
   };
 
@@ -345,7 +348,7 @@ const CreateEvent = () => {
                     onChange={handleCategoryChange}
                   >
                     {categories.map(category => (
-                      <Option key={category.id}>{category.name}</Option>
+                      <Option key={category.id} value={category.name}>{category.name}</Option>
                     ))}
                   </Select>
                 </div>
