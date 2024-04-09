@@ -44,6 +44,7 @@ const PlacesAutocomplete = ({ onSelectLocation }) => {
         if (location) {
           const defaultAddress = [location.city, location.street, location.houseNumber].join(', ');
           setValue(defaultAddress);
+          onSelectLocation({ address: defaultAddress, lat, lng });
 
         }
       } catch (error) {
@@ -271,7 +272,10 @@ const CreateEvent = () => {
       return false;
     }
 
-
+    if (!location || location.trim() === '') {
+      message.error('Event location cannot be empty');
+      return false;
+    }
   
 
     return true;
