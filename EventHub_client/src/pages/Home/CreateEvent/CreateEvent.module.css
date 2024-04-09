@@ -10,7 +10,9 @@
     z-index: 98; /* підніміть поверх інших елементів */
   }
 .mainContainer {
-    width: 44vw;
+    width: 100%;
+    max-width: 44vw;
+    
     height: auto;
     max-height: 91vh;
     position: absolute;
@@ -23,8 +25,12 @@
     border-radius: 8px;
     z-index: 99; 
     overflow-y: auto;
+    
     overflow-x: hidden;
+    
   }
+
+
 
   .createEventHeader {
     width: 42vw;
@@ -205,3 +211,26 @@ border: none;
   }
 
 
+  .autocompleteList {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #d9d9d9;
+    border-top: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px; /* Задайте максимальну висоту для прокрутки, якщо список занадто довгий */
+    overflow-y: auto; /* Дозволяє прокрутку, якщо список виходить за межі */
+    width: 100%; /* Забезпечуємо, що ширина списку буде відповідати ширині інпута */
+  }
+  
+  .autocompleteItem {
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .autocompleteItem:hover {
+    background-color: #f0f0f0;
+  }

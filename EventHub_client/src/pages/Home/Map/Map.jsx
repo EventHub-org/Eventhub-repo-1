@@ -104,7 +104,6 @@ const Map = ({ center }) => {
     setSearchParams({ create_event: true, latitude: lat, longitude:lng })
     const locationData = await GetLocationByCoordinates(lat, lng);
     if (locationData) {
-      console.log(locationData);
       setSelectedPlace(locationData);
       setShowMarker(true); // Показати маркер
       setTimeout(() => setShowMarker(false), 5000); // Приховати маркер через 5 секунд

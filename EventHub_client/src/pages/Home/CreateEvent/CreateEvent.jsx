@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate,useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import useAuth from '../../../hooks/useAuth';
 import styles from './CreateEvent.module.css';
 import { CameraOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import CloseWindowButton from '../../../components/Buttons/CloseWindowButton/CloseWindowButton';
-import { Input, Select, DatePicker,Checkbox } from 'antd';
+import { Input, Select, DatePicker, Checkbox, AutoComplete,message} from 'antd';
+import { getCategories } from '../../../api/getCategories';
 import { MinusCircleOutlined } from '@ant-design/icons';
+import { jwtDecode } from 'jwt-decode'
+import GetLocationByCoordinates from "../../../api/getLocationByCoordinates"
 
+import usePlacesAutocomplete, {
+  getGeocode,
+  getLatLng,
+} from "use-places-autocomplete";
+import {sendDataWithoutPhotos} from '../../../api/sendEventData';
+import {sendPhotosToServer} from '../../../api/sendEventData';
 const { TextArea } = Input;
 const { Option } = Select;
+const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
 
 const FullSizePhotoModal = ({ photoUrl, onClose }) => {
   return (
@@ -21,16 +31,121 @@ const FullSizePhotoModal = ({ photoUrl, onClose }) => {
   );
 };
 
+
+const PlacesAutocomplete = ({ onSelectLocation }) => {
+  const [defaultLocation, setDefaultLocation] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const lat = searchParams.get('latitude');
+    const lng = searchParams.get('longitude');
+
+    const fetchDefaultLocation = async () => {
+      try {
+        const location = await GetLocationByCoordinates(lat, lng);
+        console.log(typeof(location))
+        setDefaultLocation(location);
+        
+      } catch (error) {
+        console.error('Error getting location:', error);
+      }
+    };
+
+    if (lat && lng) {
+      fetchDefaultLocation();
+    }
+  }, []);
+
+  const {
+    ready,
+    value,
+    suggestions: { status, data },
+    setValue,
+    clearSuggestions,
+  } = usePlacesAutocomplete({
+    requestOptions: {
+      /* Define search scope here */
+    },
+    debounce: 300,
+  });
+
+  const handleInput = (value) => {
+    setValue(value);
+  };
+
+  const handleSelect = (value) => {
+    setValue(value, false);
+    clearSuggestions();
+
+    // Get latitude and longitude via utility functions
+    getGeocode({ address: value }).then((results) => {
+      const { lat, lng } = getLatLng(results[0]);
+      console.log("📍 Coordinates: ", { lat, lng });
+      onSelectLocation({ address: value, lat, lng });
+    });
+  };
+
+  const options = data.map((suggestion) => ({
+    value: suggestion.description,
+    label: (
+      <div>
+        <strong>{suggestion.structured_formatting.main_text}</strong>
+        <small>{suggestion.structured_formatting.secondary_text}</small>
+      </div>
+    ),
+  }));
+
+  return (
+    <AutoComplete
+      options={options}
+      onSelect={handleSelect}
+      onSearch={handleInput}
+      value={value}
+      disabled={!ready}
+      placeholder="Where are you going?"
+      className={styles.Param}
+      defaultActiveFirstOption={false}
+      defaultValue={"sasadsd"}
+    />
+  );
+};
+
+
+
+
 const CreateEvent = () => {
-  const navigate = useNavigate();
-  const { auth, setAuth } = useAuth();
   const [photos, setPhotos] = useState(new Array(6).fill(null));
   const [addedPhotos, setAddedPhotos] = useState(0);
   const [hoveredPhotoIndex, setHoveredPhotoIndex] = useState(-1);
   const [fullSizePhotoIndex, setFullSizePhotoIndex] = useState(-1);
-  const [searchParams,setsearchParams] = useSearchParams();
+  const [searchParams, setsearchParams] = useSearchParams();
   const [isCreateEvent, setIsCreateEvent] = useState(false);
+  const [categories, setCategories] = useState([]);
 
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
+  const [location, setLocation] = useState('');
+  const [withOwner,setWithOwner] = useState(true);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [participants, setParticipants] = useState('');
+  const [dateRange, setDateRange] = useState(null);
+
+
+  useEffect(() => {
+    // Отримання категорії з серверу під час завантаження компонента
+    const fetchCategories = async () => {
+      try {
+        const categoriesData = await getCategories();
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
   useEffect(() => {
     const createEventParam = searchParams.get('create_event');
     setIsCreateEvent(createEventParam === 'true');
@@ -61,140 +176,233 @@ const CreateEvent = () => {
   const handleFullSizePhoto = (index) => {
     setFullSizePhotoIndex(index);
   };
-  const handleCloseFullSizePhoto = () => {
-    setFullSizePhotoIndex(-1);
-  };
-  const handleCloseButton = () =>{
+
+  const handleCloseButton = () => {
     setsearchParams({});
   }
 
+
+  const handleCategoryChange = (values) => {
+
+    setSelectedCategories(values);
+  };
+
+  const handleLocationChange = (value) => {
+    const address = value.address;
+    const latitude = value.lat;
+    const longitude = value.lng;
+  
+    setLocation(address);
+    setLatitude(latitude);
+    setLongitude(longitude);
+  };
+
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
+
+  const handleCheckboxChange = (e) => {
+    setWithOwner(!withOwner);
+  };
+
+  const handleDateChange = (dates) => {
+    setDateRange(dates);
+  };
+
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+  
+    const offset = date.getTimezoneOffset();
+    date.setHours(date.getHours() - offset / 60);
+    return date.toISOString();
+};
+
+  const handleSubmit = async () => {
+    const startAt = formatDate(dateRange[0]);
+    const expireAt = formatDate(dateRange[1]);
+    const authToken = localStorage.getItem('token');
+    console.log("Категорії",selectedCategories)
+
+    const user = jwtDecode(authToken);
+    const user_id = user.id;
+    const eventData = {
+       title: title,
+       max_participants: participants,
+       start_at: startAt,
+       expire_at: expireAt,
+        description: description,
+        latitude: latitude,
+        longitude: longitude,
+        location: location,
+        with_owner: withOwner,
+      // category_requests: selectedCategories,
+       current_count: 0,
+       owner_id: user_id,
+      
+        category_requests: [
+            {
+                name: "Sport"
+            },
+            {
+                name: "Charity"
+            }
+        ],
+        
+    
+    };
+    console.log("Event Data:", eventData);
+    const textDataResponse = await sendDataWithoutPhotos(eventData,user_id);
+    
+    const eventId = textDataResponse.id;
+    console.log("Event Id from server", eventId);
+    console.log(typeof(photos[0]), photos[0])
+    // const photoDataResponse = await sendPhotosToServer(photos,eventId);
+    // console.log("Photo response data: ",photoDataResponse)
+    
+    message.success('Event successfully created');
+    setsearchParams({});
+  };
+
+
   return (
     <>
-    {isCreateEvent &&
-    <div className={styles.backdrop}>
-    <div className={styles.mainContainer}>
-      <div className={styles.createEventHeader}>
-        <h2>Create Event</h2>
-        <div className={styles.CloseButton}>
-          <CloseWindowButton onClick={handleCloseButton}/>
-        </div>
-      </div>
-      <div className={styles.photoContainer}>
-        {photos.map((photo, index) => (
-          <div
-            key={index}
-            className={styles.photo}
-            onMouseEnter={() => setHoveredPhotoIndex(index)}
-            onMouseLeave={() => setHoveredPhotoIndex(-1)}
-          >
-            {index === 0 && (
-              <div className={styles.miniContainer}>
-                <span className={styles.mainPhotoText}>Main</span>
+      {isCreateEvent &&
+        <div className={styles.backdrop}>
+          <div className={styles.mainContainer}>
+            <div className={styles.createEventHeader}>
+              <h2>Create Event</h2>
+              <div className={styles.CloseButton}>
+                <CloseWindowButton onClick={handleCloseButton} />
               </div>
-            )}
-            {photo ? (
-              <>
-                <img src={photo} alt={`Photo ${index}`} />
-                {hoveredPhotoIndex === index && (
-                  <div className={styles.photoActions}>
-                    <div className={styles.actionIcon}>
-                      <DeleteOutlined onClick={() => handlePhotoDelete(index)} style={{ fontSize: '24px', color: '#FF0000', cursor: 'pointer' }} />
+            </div>
+            <div className={styles.photoContainer}>
+              {photos.map((photo, index) => (
+                <div
+                  key={index}
+                  className={styles.photo}
+                  onMouseEnter={() => setHoveredPhotoIndex(index)}
+                  onMouseLeave={() => setHoveredPhotoIndex(-1)}
+                >
+                  {index === 0 && (
+                    <div className={styles.miniContainer}>
+                      <span className={styles.mainPhotoText}>Main</span>
                     </div>
-                    <div className={styles.actionIcon}>
-                      <EyeOutlined onClick={() => handleFullSizePhoto(index)} style={{ fontSize: '24px', color: '#FFFFF', cursor: 'pointer' }} />
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                {addedPhotos === index && (
-                  <label className={styles.addPhotoLabel}>
-                    <input type="file" accept="image/*" onChange={(event) => handlePhotoUpload(index, event)} style={{ display: 'none' }} />
-                    Add Photo
-                  </label>
-                )}
-                {addedPhotos !== index && (
-                  <div className={styles.cameraIcon}>
-                    <CameraOutlined style={{ fontSize: '24px', color: '#AAAAAA', cursor: 'pointer' }} />
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        ))}
-      </div>
-      <div className={styles.ParamsContainer}>
-        {/* Перший рядок */}
-        <div className={styles.row}>
-          <div className={styles.ParamContainer}>
-            <div className={styles.ParamLabel}>Name</div>
-            <Input
-              placeholder="Name"
-              className={styles.Param}
-            />
-          </div>
-          <div className={styles.ParamContainer}>
-            <div className={styles.ParamLabel}>Categories</div>
-            <Select
-              className={styles.Param}
-              placeholder="Categories"
-              mode="multiple"
-              maxTagCount={2}
-              maxTagPlaceholder={<MinusCircleOutlined />}
-            >
-              <Option key="1">Category 1</Option>
-              <Option key="2">Category 2</Option>
-              {/* Додайте інші категорії за потреби */}
-            </Select>
-          </div>
-        </div>
-        {/* Другий рядок */}
-        <div className={styles.row}>
-          <div className={styles.ParamContainer}>
-            <div className={styles.ParamLabel}>Location</div>
-            <Input
-              placeholder="Location"
-              className={styles.Param}
-            />
-          </div>
-          <div className={styles.ParamContainer}>
-            <div className={styles.ParamLabel}>Participants</div>
-            <Input
-              placeholder="Participants"
-              className={styles.Param}
-            />
-          </div>
-        </div>
-        {/* Третій рядок */}
-        <div className={styles.row}>
-          <div className={styles.ParamContainer} >
-            <div className={styles.ParamLabel}>Start date and time - End date and time</div>
-            <DatePicker.RangePicker
-              showTime={{ format: 'HH:mm' }}
-              format="YYYY-MM-DD HH:mm"
-              placeholder={['Start date and time', 'End date and time']}
-              style={{ width: '100%', height: "4vh", zIndex: 999 }}
-            />
-          </div>
-        </div>
-      </div>
-      <div className={styles.DescriptionContainer}>
-        <div className={styles.ParamLabel}>Description</div>
-        <TextArea
-          autoSize={{ minRows: 2, maxRows: 6}}
+                  )}
+                  {photo ? (
+                    <>
+                      <img src={photo} alt={`Photo ${index}`} />
+                      {hoveredPhotoIndex === index && (
+                        <div className={styles.photoActions}>
+                          <div className={styles.actionIcon}>
+                            <DeleteOutlined onClick={() => handlePhotoDelete(index)} style={{ fontSize: '24px', color: '#FF0000', cursor: 'pointer' }} />
+                          </div>
+                          <div className={styles.actionIcon}>
+                            <EyeOutlined onClick={() => handleFullSizePhoto(index)} style={{ fontSize: '24px', color: '#FFFFF', cursor: 'pointer' }} />
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {addedPhotos === index && (
+                        <label className={styles.addPhotoLabel}>
+                          <input type="file" accept="image/*" onChange={(event) => handlePhotoUpload(index, event)} style={{ display: 'none' }} />
+                          Add Photo
+                        </label>
+                      )}
+                      {addedPhotos !== index && (
+                        <div className={styles.cameraIcon}>
+                          <CameraOutlined style={{ fontSize: '24px', color: '#AAAAAA', cursor: 'pointer' }} />
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className={styles.ParamsContainer}>
+              {/* Перший рядок */}
+              <div className={styles.row}>
+                <div className={styles.ParamContainer}>
+                  <div className={styles.ParamLabel}>Name</div>
+                  <Input
+                    placeholder="Name"
+                    className={styles.Param}
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                </div>
+                <div className={styles.ParamContainer}>
+                  <div className={styles.ParamLabel}>Categories</div>
+                  <Select
+                    className={styles.Param}
+                    placeholder="Categories"
+                    mode="multiple"
+                    maxTagCount={3}
+                    maxTagPlaceholder={<MinusCircleOutlined />}
+                    value={selectedCategories}
+                    onChange={handleCategoryChange}
+                  >
+                    {categories.map(category => (
+                      <Option key={category.id}>{category.name}</Option>
+                    ))}
+                  </Select>
+                </div>
+              </div>
+              {/* Другий рядок */}
+              <div className={styles.row}>
+                <div className={styles.ParamContainer}>
+                  <div className={styles.ParamLabel}>Location</div>
+                  <PlacesAutocomplete
+                  onSelectLocation={handleLocationChange}
+                  />
+                </div>
+                <div className={styles.ParamContainer}>
+                  <div className={styles.ParamLabel}>Participants</div>
+                  <Input
+                    placeholder="Participants"
+                    className={styles.Param}
+                    value={participants}
+                    onChange={(e) => setParticipants(e.target.value)}
+                  />
+                </div>
+              </div>
+              {/* Третій рядок */}
+              <div className={styles.row}>
+                <div className={styles.ParamContainer} >
+                  <div className={styles.ParamLabel}>Start date and time - End date and time</div>
+                  <DatePicker.RangePicker
+                    showTime={{ format: 'HH:mm' }}
+                    format="YYYY-MM-DD HH:mm"
+                    placeholder={['Start date and time', 'End date and time']}
+                    style={{ width: '100%', height: "4vh", zIndex: 999 }}
+                    onChange={handleDateChange}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={styles.DescriptionContainer}>
+              <div className={styles.ParamLabel}>Description</div>
+              <TextArea
+                autoSize={{ minRows: 2, maxRows: 5 }}
 
-          placeholder="Enter description..."
-        />
-      </div>
-      <div className={styles.ParticipationContainer}>
-        <Checkbox className={styles.Checkbox}>I don’t take part in this event</Checkbox>
-      </div>
-      <div className={styles.CreateButtonContainer}>
-        <button className={styles.CreateButton}>Create Event</button>
-      </div>
-      </div>
-    </div>}
+                placeholder="Enter description..."
+                value={description}
+                onChange={handleDescriptionChange}
+              />
+            </div>
+            <div className={styles.ParticipationContainer}>
+              <Checkbox className={styles.Checkbox}
+              checked={withOwner}
+              onChange={handleCheckboxChange}
+              >I take part in this event</Checkbox>
+            </div>
+            <div className={styles.CreateButtonContainer}>
+              <button className={styles.CreateButton} onClick={handleSubmit} >Create Event</button>
+            </div>
+          </div>
+        </div>}
     </>
   );
 };
