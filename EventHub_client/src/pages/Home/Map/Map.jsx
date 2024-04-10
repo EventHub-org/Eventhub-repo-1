@@ -5,6 +5,8 @@ import styles from './Map.module.css'
 import { useSearchParams, useParams } from 'react-router-dom';
 import { getEventsDataSearch } from '../../../api/getEventsData';
 import { light } from "./Theme"
+
+import { useNavigate } from 'react-router-dom';
 import { getFilteredEvents } from '../../../api/getFilteredEvents';
 import GetLocationByCoordinates from "../../../api/getLocationByCoordinates"
 import useAuth from "../../../hooks/useAuth";
@@ -36,7 +38,13 @@ const defaultOption = {
 const Map = ({ center }) => {
 
   const mapRef = useRef(undefined)
+<<<<<<< HEAD
   const { auth, setAuth } = useAuth();
+=======
+
+  const navigate = useNavigate();
+
+>>>>>>> main
   const onLoad = useCallback(function callback(map) {
     mapRef.current = map;
   }, [])
@@ -47,11 +55,17 @@ const Map = ({ center }) => {
 
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
+<<<<<<< HEAD
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [showMarker, setShowMarker] = useState(false);
 
 
+=======
+
+  
+  const [searchParams] = useSearchParams();
+>>>>>>> main
 
   useEffect(() => {
     const searchValue = searchParams.get('search');
@@ -88,6 +102,7 @@ const Map = ({ center }) => {
   }, [searchParams]);
   const onMarkerClick = (event) => {
     setSelectedEvent(event);
+    navigate(`/event/${event.owner_id}/${event.id}`);
   };
 
   const onMapClick = () => {
@@ -124,6 +139,7 @@ const Map = ({ center }) => {
       >
 
         <></>
+<<<<<<< HEAD
         {events && events.map(event => {
           return (
             <Marker
@@ -151,7 +167,23 @@ const Map = ({ center }) => {
             icon={{ url: '/images/pin.svg', scaledSize: new window.google.maps.Size(40, 40) }}
           />
         )}
+=======
+        
+        {events && events.map(event => (
+          <Marker
+            key={event.eventID}
+            position={{ lat: Number(event.latitude), lng: Number(event.longitude) }}
+
+            icon={{ url: '/images/pin.svg', 
+            scaledSize: new window.google.maps.Size(40, 40) }}
+            onClick={() => onMarkerClick(event)
+            }
+          />
+        ))}
+        
+>>>>>>> main
       </GoogleMap>
+      
     </div>
   );
 }
