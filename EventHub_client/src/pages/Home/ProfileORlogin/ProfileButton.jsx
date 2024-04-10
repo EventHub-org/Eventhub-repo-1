@@ -7,7 +7,7 @@ import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import ProfileInfo from "../../../components/ProfileInfo/ProfileInfo";
 import styles from "./Buttons.module.css";
 
-const MenuButton = () => {
+const MenuButton = ({ user }) => {
   const { setAuth } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -29,7 +29,7 @@ const MenuButton = () => {
     <Dropdown
       overlay={
         <Menu className={styles.customMenu} onClick={handleMenuClick}>
-          <Link to={`/profile/9a070957-1eb8-4c23-a5f7-d448168e7166/account`}>
+          <Link to={`/profile/${user.id}/account`}>
             <Menu.Item icon={<UserOutlined />} key="profile">
               Profile
             </Menu.Item>
@@ -43,11 +43,7 @@ const MenuButton = () => {
       visible={isOpen}
       onVisibleChange={toggleMenu}
     >
-      <ProfileInfo
-        nickname="Your Nickname"
-        email="example@example.com"
-        onProfileClick={toggleMenu}
-      />
+      <ProfileInfo userId={user.id} onProfileClick={toggleMenu} />
     </Dropdown>
   );
 };
