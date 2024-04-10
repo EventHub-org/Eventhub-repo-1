@@ -4,9 +4,9 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { LuUsers } from "react-icons/lu";
 import { FiLogOut } from "react-icons/fi";
 import getIdFromToken from "../../../jwt/getIdFromToken";
-import styles from "./SideBarMenu.module.css";
+import styles from "./ProfileSideBarMenu.module.css";
 
-const SideBarMenu = () => {
+const ProfileSideBarMenu = () => {
   const userId = getIdFromToken();
 
   const options = [
@@ -34,4 +34,4 @@ const SideBarMenu = () => {
   );
 };
 
-export default SideBarMenu;
+export default ProfileSideBarMenu;

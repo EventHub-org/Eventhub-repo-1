@@ -1,6 +1,6 @@
 import { useOutlet } from "react-router-dom";
 import Header from "./Header/Header.jsx";
-import SideBarMenu from "./SideBarMenu/SideBarMenu.jsx";
+import SideBarMenu from "./ProfileSideBarMenu/ProfileSideBarMenu.jsx";
 import EmptySpace from "./EmptySpace/EmptySpace.jsx";
 import styles from "./Profile.module.css";
 
