@@ -4,17 +4,13 @@ import { MdOutlineEmail } from "react-icons/md";
 import { SlLocationPin } from "react-icons/sl";
 import { CiCalendar } from "react-icons/ci";
 import PrimaryButton from "../Buttons/PrimaryButton/PrimaryButton";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { motion } from "framer-motion";
 
-const ParticipantInfoPopUp = ({ participant, onMouseEnter, onMouseLeave }) => {
-  const navigate = useNavigate();
-
+const ParticipantInfoPopUp = ({ participant }) => {
   return (
     <motion.div
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
       className={styles["pop-up-container"]}
       initial={{
         opacity: 0,
@@ -64,12 +60,11 @@ const ParticipantInfoPopUp = ({ participant, onMouseEnter, onMouseLeave }) => {
         <hr />
       </div>
       <div className={styles["description"]}>{participant.description}</div>
-      <PrimaryButton
-        className={styles["show-more-btn"]}
-        onClick={navigate(`/profile/${participant.id}/account`)}
-      >
-        Show more
-      </PrimaryButton>
+      <Link to={`/profile/${participant.id}/account`}>
+        <PrimaryButton className={styles["show-more-btn"]}>
+          Show more
+        </PrimaryButton>
+      </Link>
       <div className={styles["transparent-div"]}>&nbsp;</div>
     </motion.div>
   );
