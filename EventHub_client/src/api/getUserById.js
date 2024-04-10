@@ -2,7 +2,6 @@ import axios from "./axios";
 
 export const getUserById = async (userId) => {
   try {
-    // const response = await axios.get(`events/${eventId}/participants/photos`, { headers: {"Authorization" : `Bearer ${localStorage.getItem('token')}`} })
     const accessToken = localStorage.getItem("token");
 
     const authAxios = axios.create({

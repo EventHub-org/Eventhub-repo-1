@@ -12,7 +12,6 @@ const SideBarMenu = () => {
   const options = [
     { name: "Account", icon: <FiUser />, source: `/profile/${userId}/account` },
     { name: "Events", icon: <HiOutlineLocationMarker />, source: "/" },
-    { name: "Friends", icon: <LuUsers /> },
   ];
 
   return (
