@@ -10,7 +10,7 @@ import MenuButton from "./ProfileORlogin/ProfileButton";
 import LoginRegisterButton from "./ProfileORlogin/LoginRegisterButton";
 
 import SearchEvents from "./Search/Search";
-import CreateEventButton from "./CreateEvent/CreateEventButton";
+import CreateEvent from "./CreateEvent/CreateEvent";
 import EventFilter from "./Filter/Filter";
 import FilteredEvents from "./Filter/FilteredEvents";
 import MyEvents from "./MyEvents/MyEvents";
@@ -54,7 +54,7 @@ const Home = () => {
           )}
 
           <SearchEvents />
-          {/* <CreateEventButton /> */}
+          <CreateEvent />
           <EventFilter />
           <MyEvents />
 
