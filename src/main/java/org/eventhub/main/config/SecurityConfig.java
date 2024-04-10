@@ -47,11 +47,7 @@ public class SecurityConfig {
                 .disable()
                 .cors(c -> c.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests()
-<<<<<<< HEAD
-                .requestMatchers("/authentication/**", "/**")
-=======
                 .requestMatchers("/authentication/**", "/categories", "/search", "/events/filter", "/users/events")
->>>>>>> main
                 .permitAll()
                 .anyRequest()
                 .authenticated()
