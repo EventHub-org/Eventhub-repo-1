@@ -167,6 +167,11 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.show-more-participants-btn:hover {
+  background-color: var(--primary-color-hover);
 }
 
 .show-more-participants-btn-icon {
