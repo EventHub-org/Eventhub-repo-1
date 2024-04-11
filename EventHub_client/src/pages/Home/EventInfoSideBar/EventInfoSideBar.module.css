@@ -170,7 +170,7 @@
 }
 
 .show-more-participants-btn-icon {
-  color: var(--popup-background);
+  color: var(--primary-popup-background);
   font-size: 2.5em;
 }
 
@@ -285,7 +285,7 @@
   }
 
   .show-more-participants-btn-icon {
-    color: var(--popup-background);
+    color: var(--primary-popup-background);
     font-size: 2em;
   }
 
@@ -355,7 +355,7 @@
   }
 
   .show-more-participants-btn-icon {
-    color: var(--popup-background);
+    color: var(--primary-popup-background);
     font-size: 2em;
   }
 

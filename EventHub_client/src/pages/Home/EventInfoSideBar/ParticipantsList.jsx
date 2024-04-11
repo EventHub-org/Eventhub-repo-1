@@ -37,8 +37,14 @@ const ParticipantsList = ({ handleGoBackToSideBar, handleCloseWindow }) => {
     event && (
       <div className={styles["participants-list-container"]}>
         <div className={styles["header"]}>
-          <GoBackButton onClick={handleGoBackToSideBar} />
-          <CloseWindowButton onClick={handleCloseWindow} />
+          <GoBackButton
+            className={styles["back-btn"]}
+            onClick={handleGoBackToSideBar}
+          />
+          <CloseWindowButton
+            className={styles["back-btn"]}
+            onClick={handleCloseWindow}
+          />
         </div>
 
         <div className={styles["participants-container"]}>
