@@ -1,7 +1,7 @@
 .btn {
   all: unset;
-  width: 35px;
-  height: 35px;
+  width: 3.5vh;
+  height: 3.5vh;
   background: transparent;
   cursor: pointer;
   border-radius: 10px;
