@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "./ParticipantsList.module.css";
 
 import { getUserParticipants } from "../../../api/getUserParticipants";
@@ -50,25 +50,23 @@ const ParticipantsList = ({ handleGoBackToSideBar, handleCloseWindow }) => {
         <div className={styles["participants-container"]}>
           {owner && <OwnerPhotoOverlay owner={owner} />}
           {participants.map((participant) => (
-            <Link style={{ all: "unset" }}>
-              <div
-                key={participant.id}
-                className={styles["participant-container"]}
-              >
-                <img
-                  className={styles["participant-photo"]}
-                  src={participant.participant_photo.photo_url}
-                  alt="User participant img"
-                />
-                <div className={styles["participant-info-container"]}>
-                  <div className={styles["full-name"]}>
-                    <p>{participant.first_name}</p>
-                    <p>{participant.last_name}</p>
-                  </div>
-                  <p className={styles["email"]}>{participant.email}</p>
+            <div
+              key={participant.id}
+              className={styles["participant-container"]}
+            >
+              <img
+                className={styles["participant-photo"]}
+                src={participant.participant_photo.photo_url}
+                alt="User participant img"
+              />
+              <div className={styles["participant-info-container"]}>
+                <div className={styles["full-name"]}>
+                  <p>{participant.first_name}</p>
+                  <p>{participant.last_name}</p>
                 </div>
+                <p className={styles["email"]}>{participant.email}</p>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </div>

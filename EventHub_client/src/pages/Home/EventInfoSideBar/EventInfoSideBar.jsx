@@ -61,8 +61,11 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
         } else {
           setParticipantsToShow(data);
         }
-
-        if (aboutText.current.scrollHeight > aboutText.current.clientHeight) {
+        setShowAllParticipants(false);
+        if (
+          !showAllParticipants &&
+          aboutText.current.scrollHeight > aboutText.current.clientHeight
+        ) {
           setIsOverflowAboutText(true);
         }
       });
