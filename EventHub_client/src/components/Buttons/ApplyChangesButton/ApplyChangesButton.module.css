@@ -1,0 +1,15 @@
+.ApplyChangesButton{
+    font-family: var(--primary-font-family);
+    font-size: 20px;
+    color: #FFF;
+    width: 220px;
+    height: 48px;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+.ApplyChangesButton:hover{
+    background-color: var(--primary-color-hover);
+}

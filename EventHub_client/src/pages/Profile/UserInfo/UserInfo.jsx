@@ -5,6 +5,7 @@ import getIdFromToken from "../../../jwt/getIdFromToken";
 import UserImages from "../../../components/UserImages/UserImages";
 import ChangePasswordButton from "../../../components/Buttons/EditPasswordButton/ChangePasswordButton";
 import EditProfileButton from "../../../components/Buttons/EditProfileButton/EditProfileButton";
+import EditUserProfile from "../EditUserProfile/EditUserProfileInfo";
 import styles from "./UserInfo.module.css";
 
 const UserInfo = () => {
@@ -12,6 +13,12 @@ const UserInfo = () => {
   const { userId } = useParams();
   const [loading, setLoading] = useState(true); // Add loading state
   const [tokenId, setTokenId] = useState(null);
+
+  const [showEdit, setShowEdit] = useState(false);
+
+  const handleShowEdit = () =>{
+    setShowEdit(!showEdit);
+  }
 
   useEffect(() => {
     async function fetchUser() {
@@ -84,9 +91,10 @@ const UserInfo = () => {
       {tokenId === user.id && (
         <div className={styles.Buttons}>
           <ChangePasswordButton />
-          <EditProfileButton />
+          <EditProfileButton onClick={handleShowEdit}/>
         </div>
       )}
+      {showEdit && <EditUserProfile handleClose = {handleShowEdit}/>}
     </div>
   );
 };

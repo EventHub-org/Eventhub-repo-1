@@ -4,7 +4,7 @@ import styles from './EditProfileButton.module.css';
 
 const EditProfileButton = ({ onClick }) => {
   return (
-    <button className={styles.EditProfileButton}>
+    <button className={styles.EditProfileButton} onClick={onClick}>
       Edit <FiEdit3 />
     </button>
   );
