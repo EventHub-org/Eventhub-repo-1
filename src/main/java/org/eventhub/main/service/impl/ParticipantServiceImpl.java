@@ -9,6 +9,7 @@ import org.eventhub.main.exception.NullDtoReferenceException;
 import org.eventhub.main.mapper.ParticipantMapper;
 import org.eventhub.main.model.Event;
 import org.eventhub.main.model.Participant;
+import org.eventhub.main.model.ParticipantState;
 import org.eventhub.main.repository.ParticipantRepository;
 import org.eventhub.main.service.EventService;
 import org.eventhub.main.service.ParticipantService;
@@ -80,7 +81,6 @@ public class ParticipantServiceImpl implements ParticipantService {
                 .orElseThrow(()->new EntityNotFoundException("Participant with " + id + " id is not found"));
         return participantMapper.entityToResponse(participant);
     }
-
     @Override
     public Participant readByIdEntity(UUID id){
         return participantRepository.findById(id)
@@ -143,7 +143,17 @@ public class ParticipantServiceImpl implements ParticipantService {
                 .map(participantMapper::entityToResponse)
                 .collect(Collectors.toList());
     }
+    @Override
+    public ParticipantState getParticipantState(UUID eventId, UUID userId) {
 
-    
+        if (getAllByEventId(eventId).stream().anyMatch(participant -> participant.getUserId() == userId)) {
+            return ParticipantState.JOINED;
+        } else if (getAllRequestsByEventId(eventId).stream().anyMatch(participant -> participant.getUserId() == userId)) {
+            return ParticipantState.REQUESTED;
+        } else {
+            return ParticipantState.NONE;
+        }
+
+    }
 
 }
