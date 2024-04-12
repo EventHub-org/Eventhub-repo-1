@@ -144,11 +144,11 @@ public class ParticipantServiceImpl implements ParticipantService {
                 .collect(Collectors.toList());
     }
     @Override
-    public ParticipantState getParticipantState(UUID eventId, UUID userId) {
+    public ParticipantState getParticipantState(UUID userId, UUID eventId) {
 
-        if (getAllByEventId(eventId).stream().anyMatch(participant -> participant.getUserId() == userId)) {
+        if (getAllByEventId(eventId).stream().anyMatch(participant -> participant.getUserId().equals(userId))) {
             return ParticipantState.JOINED;
-        } else if (getAllRequestsByEventId(eventId).stream().anyMatch(participant -> participant.getUserId() == userId)) {
+        } else if (getAllRequestsByEventId(eventId).stream().anyMatch(participant -> participant.getUserId().equals(userId))) {
             return ParticipantState.REQUESTED;
         } else {
             return ParticipantState.NONE;

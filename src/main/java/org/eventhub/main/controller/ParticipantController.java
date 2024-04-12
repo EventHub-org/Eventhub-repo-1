@@ -3,6 +3,7 @@ package org.eventhub.main.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.eventhub.main.dto.*;
 import org.eventhub.main.exception.ResponseStatusException;
+import org.eventhub.main.model.ParticipantState;
 import org.eventhub.main.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,7 +70,12 @@ public class ParticipantController {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
+    @GetMapping("/user_state/{user_id}")
+    public ResponseEntity<ParticipantState> getParticipantState(@PathVariable("user_id") UUID userId, @PathVariable("event_id") UUID eventId){
+        log.info("**/get participant state with user id:" + userId + ", event id: " + eventId);
 
+        return new ResponseEntity<>(participantService.getParticipantState(userId, eventId), HttpStatus.OK);
+    }
 
     @GetMapping("/requests")
     public ResponseEntity<List<ParticipantResponse>> getRequestsByEventId(@PathVariable("event_id") UUID eventId){
