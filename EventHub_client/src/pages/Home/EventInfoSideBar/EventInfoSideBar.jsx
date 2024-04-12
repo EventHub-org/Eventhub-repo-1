@@ -18,6 +18,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import ParticipantInfoPopUp from "../../../components/PopUp/ParticipantInfoPopUp";
 import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButton";
 import OwnerPhotoOverlay from "../../../components/OwnerPhotoOverlay/OwnerPhotoOverlay";
+import useAuth from "../../../hooks/useAuth";
+import getIdFromToken from "../../../jwt/getIdFromToken";
 
 const EventInfoSideBar = ({ ownerId, eventId }) => {
   // States
@@ -38,6 +40,12 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   const handleCloseWindow = () => {
     navigate("../");
   };
+
+  const { setAuth } = useAuth();
+
+  try {
+    const userId = getIdFromToken();
+  } catch (e) {}
 
   // Refs
   const sideBar = useRef(null);
