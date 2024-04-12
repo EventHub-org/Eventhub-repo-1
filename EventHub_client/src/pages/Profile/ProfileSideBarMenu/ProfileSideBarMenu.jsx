@@ -16,7 +16,7 @@ const ProfileSideBarMenu = () => {
     link = `/profile/${userId}/account`;
   }
   catch(e){
-    link = "/register";
+    link = "/login";
   }
   
   const handleLogout = () => {
