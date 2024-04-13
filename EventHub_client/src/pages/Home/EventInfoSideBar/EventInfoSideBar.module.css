@@ -241,6 +241,7 @@
 
 .btns-container {
   display: flex;
+  align-items: center;
   gap: 1px;
   height: 3.5vh;
 }
@@ -266,8 +267,11 @@
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   font-size: var(--sm-size);
+  border: var(--primary-color) solid 1px;
   width: auto;
 }
+
+/* Scroll bar */
 
 ::-webkit-scrollbar {
   width: 5px;
@@ -336,6 +340,13 @@
 
   .about-text {
     font-size: var(--xxs-size);
+  }
+
+  .isOwner-action-btn {
+    font-size: var(--xxxs-size);
+  }
+  .isOwner-edit-btn {
+    font-size: var(--xxxs-size);
   }
 }
 
@@ -406,5 +417,12 @@
 
   .about-text {
     font-size: var(--xs-size);
+  }
+
+  .isOwner-action-btn {
+    font-size: var(--xxs-size);
+  }
+  .isOwner-edit-btn {
+    font-size: var(--xxs-size);
   }
 }

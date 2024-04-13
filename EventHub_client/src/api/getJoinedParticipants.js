@@ -2,7 +2,7 @@ import axios from "./axios";
 
 export const getJoinedParticipants = async (eventId) => {
   try {
-    const accessToken = localStorage.getItem("token");
+    // const accessToken = localStorage.getItem("token");
 
     const authAxios = axios.create({
       headers: {

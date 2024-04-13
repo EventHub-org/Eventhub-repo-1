@@ -44,12 +44,8 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
   const [participantState, setParticipantState] = useState(null);
 
-  const handleCloseWindow = () => {
-    navigate("../");
-  };
-
   // Auth
-  const { auth, setAuth } = useAuth();
+  const { auth } = useAuth();
 
   // Navigation
   const navigate = useNavigate();
@@ -65,6 +61,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
       setUserId(getIdFromToken());
     } catch (e) {
       setUserId(null);
+      setParticipantState(null);
       console.log("User is not logged in.");
     }
   }, [auth]);
@@ -141,6 +138,10 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   const handleShowMore = () => {
     setIsShowMore(!isShowMore);
     showMoreBtn.current.innerHTML = isShowMore ? "Show more" : "Show less";
+  };
+
+  const handleCloseWindow = () => {
+    navigate("../");
   };
 
   return (
@@ -296,21 +297,24 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   </PrimaryButton>
                 )}
 
-                {participantState === "NONE" && userId !== event.owner_id && (
-                  <PrimaryButton
-                    className={styles["action-btn"]}
-                    onClick={() => {
-                      createParticipant(userId, eventId).then(() =>
-                        setParticipantState("REQUESTED")
-                      );
-                    }}
-                  >
-                    Join
-                  </PrimaryButton>
-                )}
+                {participantState === "NONE" &&
+                  userId !== event.owner_id &&
+                  userId && (
+                    <PrimaryButton
+                      className={styles["action-btn"]}
+                      onClick={() => {
+                        createParticipant(userId, eventId).then(() =>
+                          setParticipantState("REQUESTED")
+                        );
+                      }}
+                    >
+                      Join
+                    </PrimaryButton>
+                  )}
 
                 {participantState === "REQUESTED" &&
-                  userId !== event.owner_id && (
+                  userId !== event.owner_id &&
+                  userId && (
                     <PrimaryButton
                       className={styles["action-btn"]}
                       onClick={() =>
@@ -325,20 +329,22 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                     </PrimaryButton>
                   )}
 
-                {participantState === "JOINED" && userId !== event.owner_id && (
-                  <PrimaryButton
-                    className={styles["action-btn"]}
-                    onClick={() =>
-                      getParticipantByUserId(userId, eventId).then((data) => {
-                        deleteParticipant(data.id, eventId).then(
-                          setParticipantState("NONE")
-                        );
-                      })
-                    }
-                  >
-                    Leave
-                  </PrimaryButton>
-                )}
+                {participantState === "JOINED" &&
+                  userId !== event.owner_id &&
+                  userId && (
+                    <PrimaryButton
+                      className={styles["action-btn"]}
+                      onClick={() =>
+                        getParticipantByUserId(userId, eventId).then((data) => {
+                          deleteParticipant(data.id, eventId).then(
+                            setParticipantState("NONE")
+                          );
+                        })
+                      }
+                    >
+                      Leave
+                    </PrimaryButton>
+                  )}
 
                 {userId === event.owner_id && (
                   <div className={styles["btns-container"]}>
@@ -390,10 +396,6 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
               </div>
             </motion.div>
           )}
-
-          {/* {hoveredParticipant && (
-            <ParticipantInfoPopUp participant={hoveredParticipant} />
-          )} */}
 
           {showAllParticipants && (
             <ParticipantsList
