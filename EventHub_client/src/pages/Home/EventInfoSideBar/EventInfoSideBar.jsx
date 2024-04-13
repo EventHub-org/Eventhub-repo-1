@@ -283,6 +283,12 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                     Join
                   </PrimaryButton>
                 )}
+
+                {participantState === "JOINED" && (
+                  <PrimaryButton className={styles["action-btn"]}>
+                    Leave
+                  </PrimaryButton>
+                )}
               </div>
             </motion.div>
           )}

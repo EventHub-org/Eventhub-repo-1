@@ -82,6 +82,11 @@ public class ParticipantServiceImpl implements ParticipantService {
         return participantMapper.entityToResponse(participant);
     }
     @Override
+    public ParticipantResponse readByUserIdInEventById(UUID userId, UUID eventId) {
+        return getAllByEventId(eventId).stream().filter(participantRes -> participantRes.getUserId().equals(userId)).findFirst()
+                .orElseThrow(()->new EntityNotFoundException("Participant with user id:  " + userId + " is not found in event with id: " + eventId));
+    }
+    @Override
     public Participant readByIdEntity(UUID id){
         return participantRepository.findById(id)
                 .orElseThrow(()->new EntityNotFoundException("Participant with" + id + " id is not found"));
@@ -114,8 +119,17 @@ public class ParticipantServiceImpl implements ParticipantService {
                 .collect(Collectors.toList());
     }
 
+
     @Override
     public List<ParticipantResponse> getAllByEventId(UUID eventId) {
+        Event event = eventService.readByIdEntity(eventId);
+        return event.getParticipants()
+                .stream()
+                .map(participantMapper::entityToResponse)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public List<ParticipantResponse> getAllJoinedByEventId(UUID eventId) {
         Event event = eventService.readByIdEntity(eventId);
         return event.getParticipants()
                 .stream()
@@ -145,8 +159,7 @@ public class ParticipantServiceImpl implements ParticipantService {
     }
     @Override
     public ParticipantState getParticipantState(UUID userId, UUID eventId) {
-
-        if (getAllByEventId(eventId).stream().anyMatch(participant -> participant.getUserId().equals(userId))) {
+        if (getAllJoinedByEventId(eventId).stream().anyMatch(participant -> participant.getUserId().equals(userId))) {
             return ParticipantState.JOINED;
         } else if (getAllRequestsByEventId(eventId).stream().anyMatch(participant -> participant.getUserId().equals(userId))) {
             return ParticipantState.REQUESTED;
