@@ -20,6 +20,7 @@ import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButt
 import OwnerPhotoOverlay from "../../../components/OwnerPhotoOverlay/OwnerPhotoOverlay";
 import useAuth from "../../../hooks/useAuth";
 import getIdFromToken from "../../../jwt/getIdFromToken";
+import { getParticipantState } from "../../../api/getParticipantState";
 
 const EventInfoSideBar = ({ ownerId, eventId }) => {
   // States
@@ -35,17 +36,17 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
   const [showAllParticipants, setShowAllParticipants] = useState(false);
 
-  const navigate = useNavigate();
+  const [participantState, setParticipantState] = useState(null);
 
   const handleCloseWindow = () => {
     navigate("../");
   };
 
+  // Auth
   const { setAuth } = useAuth();
 
-  try {
-    const userId = getIdFromToken();
-  } catch (e) {}
+  // Navigation
+  const navigate = useNavigate();
 
   // Refs
   const sideBar = useRef(null);
@@ -53,6 +54,25 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   const aboutText = useRef(null);
 
   // Effects
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userId = getIdFromToken();
+        getParticipantState(userId, eventId).then((data) =>
+          setParticipantState(data)
+        );
+      } catch (e) {
+        console.log("User is not logged in.");
+      }
+    };
+
+    fetchData();
+  }, [eventId]);
+
+  useEffect(() => {
+    participantState && console.log("Participant state: " + participantState);
+  }, [participantState]);
+
   useEffect(() => {
     getFullEventById(ownerId, eventId).then((data) => {
       setEvent(data);
@@ -255,9 +275,14 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   {event.max_participants - event.participant_count} Spots left
                 </div>
 
-                <PrimaryButton className={styles["action-btn"]}>
-                  Action
-                </PrimaryButton>
+                {participantState === null && (
+                  <PrimaryButton
+                    className={styles["action-btn"]}
+                    onClick={() => navigate("login")}
+                  >
+                    Join
+                  </PrimaryButton>
+                )}
               </div>
             </motion.div>
           )}
