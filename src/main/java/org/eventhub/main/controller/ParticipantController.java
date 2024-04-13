@@ -62,9 +62,17 @@ public class ParticipantController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ParticipantResponse>> getByEventId(@PathVariable("event_id") UUID eventId){
-        List<ParticipantResponse> responses = participantService.getAllJoinedByEventId(eventId);
+    public ResponseEntity<List<ParticipantResponse>> getAllByEventId(@PathVariable("event_id") UUID eventId){
+        List<ParticipantResponse> responses = participantService.getAllByEventId(eventId);
         log.info("**/get by event id: " + eventId + " participants");
+
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
+    @GetMapping("/joined")
+    public ResponseEntity<List<ParticipantResponse>> getJoinedByEventId(@PathVariable("event_id") UUID eventId){
+        List<ParticipantResponse> responses = participantService.getAllJoinedByEventId(eventId);
+        log.info("**/get all joined by event id: " + eventId + " participants");
 
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }

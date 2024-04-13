@@ -24,6 +24,7 @@ import { getParticipantState } from "../../../api/getParticipantState";
 import { getParticipantByUserId } from "../../../api/getParticipantByUserId";
 import { deleteParticipant } from "../../../api/deleteParticipant";
 import { createParticipant } from "../../../api/createParticipant";
+import { addParticipant } from "../../../api/addParticipant";
 
 const EventInfoSideBar = ({ ownerId, eventId }) => {
   // States
@@ -290,7 +291,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   </PrimaryButton>
                 )}
 
-                {participantState === "NONE" && (
+                {participantState === "NONE" && userId !== event.owner_id && (
                   <PrimaryButton
                     className={styles["action-btn"]}
                     onClick={() => {
@@ -303,22 +304,23 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   </PrimaryButton>
                 )}
 
-                {participantState === "REQUESTED" && (
-                  <PrimaryButton
-                    className={styles["action-btn"]}
-                    onClick={() =>
-                      getParticipantByUserId(userId, eventId).then((data) => {
-                        deleteParticipant(data.id, eventId).then(
-                          setParticipantState("NONE")
-                        );
-                      })
-                    }
-                  >
-                    Cancel
-                  </PrimaryButton>
-                )}
+                {participantState === "REQUESTED" &&
+                  userId !== event.owner_id && (
+                    <PrimaryButton
+                      className={styles["action-btn"]}
+                      onClick={() =>
+                        getParticipantByUserId(userId, eventId).then((data) => {
+                          deleteParticipant(data.id, eventId).then(
+                            setParticipantState("NONE")
+                          );
+                        })
+                      }
+                    >
+                      Cancel
+                    </PrimaryButton>
+                  )}
 
-                {participantState === "JOINED" && (
+                {participantState === "JOINED" && userId !== event.owner_id && (
                   <PrimaryButton
                     className={styles["action-btn"]}
                     onClick={() =>
@@ -331,6 +333,54 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   >
                     Leave
                   </PrimaryButton>
+                )}
+
+                {userId === event.owner_id && (
+                  <div className={styles["btns-container"]}>
+                    {participantState === "NONE" && (
+                      <PrimaryButton
+                        className={styles["isOwner-action-btn"]}
+                        onClick={() => {
+                          createParticipant(userId, eventId).then(() =>
+                            getParticipantByUserId(userId, eventId).then(
+                              (participant) => {
+                                addParticipant(
+                                  userId,
+                                  eventId,
+                                  participant.id
+                                ).then(() => {
+                                  setParticipantState("JOINED");
+                                });
+                              }
+                            )
+                          );
+                        }}
+                      >
+                        Join
+                      </PrimaryButton>
+                    )}
+
+                    {participantState === "JOINED" && (
+                      <PrimaryButton
+                        className={`${styles["isOwner-action-btn"]} ${styles["isOwner-action-2-btn"]}`}
+                        onClick={() =>
+                          getParticipantByUserId(userId, eventId).then(
+                            (data) => {
+                              deleteParticipant(data.id, eventId).then(
+                                setParticipantState("NONE")
+                              );
+                            }
+                          )
+                        }
+                      >
+                        Leave
+                      </PrimaryButton>
+                    )}
+
+                    <PrimaryButton className={styles["isOwner-edit-btn"]}>
+                      Edit
+                    </PrimaryButton>
+                  </div>
                 )}
               </div>
             </motion.div>
