@@ -21,6 +21,8 @@ import OwnerPhotoOverlay from "../../../components/OwnerPhotoOverlay/OwnerPhotoO
 import useAuth from "../../../hooks/useAuth";
 import getIdFromToken from "../../../jwt/getIdFromToken";
 import { getParticipantState } from "../../../api/getParticipantState";
+import { getParticipantByUserId } from "../../../api/getParticipantByUserId";
+import { deleteParticipant } from "../../../api/deleteParticipant";
 
 const EventInfoSideBar = ({ ownerId, eventId }) => {
   // States
@@ -35,6 +37,8 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   const [hoveredParticipant, setHoveredParticipant] = useState(null);
 
   const [showAllParticipants, setShowAllParticipants] = useState(false);
+
+  const [userId, setUserId] = useState(null);
 
   const [participantState, setParticipantState] = useState(null);
 
@@ -57,17 +61,18 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userId = getIdFromToken();
-        getParticipantState(userId, eventId).then((data) =>
-          setParticipantState(data)
-        );
+        setUserId(getIdFromToken());
+        userId &&
+          getParticipantState(userId, eventId).then((data) =>
+            setParticipantState(data)
+          );
       } catch (e) {
         console.log("User is not logged in.");
       }
     };
 
     fetchData();
-  }, [eventId]);
+  }, [eventId, userId]);
 
   useEffect(() => {
     participantState && console.log("Participant state: " + participantState);
@@ -284,8 +289,23 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   </PrimaryButton>
                 )}
 
-                {participantState === "JOINED" && (
+                {participantState === "NONE" && (
                   <PrimaryButton className={styles["action-btn"]}>
+                    Join
+                  </PrimaryButton>
+                )}
+
+                {participantState === "JOINED" && (
+                  <PrimaryButton
+                    className={styles["action-btn"]}
+                    onClick={() =>
+                      getParticipantByUserId(userId, eventId).then((data) => {
+                        deleteParticipant(data.id, eventId).then(
+                          setParticipantState("NONE")
+                        );
+                      })
+                    }
+                  >
                     Leave
                   </PrimaryButton>
                 )}
