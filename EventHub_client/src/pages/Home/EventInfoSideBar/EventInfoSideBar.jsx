@@ -23,6 +23,7 @@ import getIdFromToken from "../../../jwt/getIdFromToken";
 import { getParticipantState } from "../../../api/getParticipantState";
 import { getParticipantByUserId } from "../../../api/getParticipantByUserId";
 import { deleteParticipant } from "../../../api/deleteParticipant";
+import { createParticipant } from "../../../api/createParticipant";
 
 const EventInfoSideBar = ({ ownerId, eventId }) => {
   // States
@@ -290,7 +291,14 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                 )}
 
                 {participantState === "NONE" && (
-                  <PrimaryButton className={styles["action-btn"]}>
+                  <PrimaryButton
+                    className={styles["action-btn"]}
+                    onClick={() => {
+                      createParticipant(userId, eventId).then(() =>
+                        setParticipantState("REQUESTED")
+                      );
+                    }}
+                  >
                     Join
                   </PrimaryButton>
                 )}
