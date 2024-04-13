@@ -295,6 +295,21 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   </PrimaryButton>
                 )}
 
+                {participantState === "REQUESTED" && (
+                  <PrimaryButton
+                    className={styles["action-btn"]}
+                    onClick={() =>
+                      getParticipantByUserId(userId, eventId).then((data) => {
+                        deleteParticipant(data.id, eventId).then(
+                          setParticipantState("NONE")
+                        );
+                      })
+                    }
+                  >
+                    Cancel
+                  </PrimaryButton>
+                )}
+
                 {participantState === "JOINED" && (
                   <PrimaryButton
                     className={styles["action-btn"]}
