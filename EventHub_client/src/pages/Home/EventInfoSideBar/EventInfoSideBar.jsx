@@ -4,7 +4,7 @@ import styles from "./EventInfoSideBar.module.css";
 
 import { IoIosMore } from "react-icons/io";
 
-import { getParticipants } from "../../../api/getParticipants";
+import { getJoinedParticipants } from "../../../api/getJoinedParticipants";
 import { getUserById } from "../../../api/getUserById";
 import { getFullEventById } from "../../../api/getFullEventById";
 
@@ -49,7 +49,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   };
 
   // Auth
-  const { setAuth } = useAuth();
+  const { auth, setAuth } = useAuth();
 
   // Navigation
   const navigate = useNavigate();
@@ -61,16 +61,20 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
   // Effects
   useEffect(() => {
+    try {
+      setUserId(getIdFromToken());
+    } catch (e) {
+      setUserId(null);
+      console.log("User is not logged in.");
+    }
+  }, [auth]);
+
+  useEffect(() => {
     const fetchData = async () => {
-      try {
-        setUserId(getIdFromToken());
-        userId &&
-          getParticipantState(userId, eventId).then((data) =>
-            setParticipantState(data)
-          );
-      } catch (e) {
-        console.log("User is not logged in.");
-      }
+      userId &&
+        getParticipantState(userId, eventId).then((data) =>
+          setParticipantState(data)
+        );
     };
 
     fetchData();
@@ -88,7 +92,8 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
   useEffect(() => {
     event &&
-      getParticipants(event.id).then((data) => {
+      participantState &&
+      getJoinedParticipants(event.id).then((data) => {
         console.log("Data: ", data);
         if (data.length > 2) {
           setIsShowMoreParticipants(true);
@@ -106,7 +111,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
       });
 
     return () => setIsShowMoreParticipants(false);
-  }, [event]);
+  }, [event, participantState]);
 
   useEffect(() => {
     event &&
@@ -366,7 +371,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                         onClick={() =>
                           getParticipantByUserId(userId, eventId).then(
                             (data) => {
-                              deleteParticipant(data.id, eventId).then(
+                              deleteParticipant(data.id, eventId).then(() =>
                                 setParticipantState("NONE")
                               );
                             }
