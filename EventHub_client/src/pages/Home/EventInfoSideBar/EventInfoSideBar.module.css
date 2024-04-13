@@ -239,17 +239,29 @@
   height: 100%;
 }
 
+.action-2-btn {
+  background-color: var(--primary-2-popup-background);
+  color: var(--third-color);
+  border: var(--third-color) solid 1px;
+}
+
+.action-2-btn:hover {
+  background-color: var(--primary-2-popup-background);
+}
+
 .btns-container {
   display: flex;
   align-items: center;
   gap: 1px;
   height: 3.5vh;
+  font-family: var(--primary-font-family);
 }
 
 .isOwner-action-btn {
   border-top-right-radius: 0; /* No radius for top-right corner */
   border-bottom-right-radius: 0; /* No radius for bottom-right corner */
   font-size: var(--sm-size);
+  border: var(--primary-color) solid 1px;
   width: auto;
 }
 

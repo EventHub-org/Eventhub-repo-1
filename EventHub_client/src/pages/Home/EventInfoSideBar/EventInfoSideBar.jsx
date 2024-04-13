@@ -78,14 +78,10 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   }, [eventId, userId]);
 
   useEffect(() => {
-    participantState && console.log("Participant state: " + participantState);
-  }, [participantState]);
-
-  useEffect(() => {
     getFullEventById(ownerId, eventId).then((data) => {
       setEvent(data);
     });
-  }, [ownerId, eventId]);
+  }, [ownerId, eventId, participantState]);
 
   useEffect(() => {
     event &&
@@ -108,7 +104,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
       });
 
     return () => setIsShowMoreParticipants(false);
-  }, [event, participantState]);
+  }, [event]);
 
   useEffect(() => {
     event &&
@@ -316,10 +312,10 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   userId !== event.owner_id &&
                   userId && (
                     <PrimaryButton
-                      className={styles["action-btn"]}
+                      className={`${styles["action-btn"]} ${styles["action-2-btn"]}`}
                       onClick={() =>
                         getParticipantByUserId(userId, eventId).then((data) => {
-                          deleteParticipant(data.id, eventId).then(
+                          deleteParticipant(data.id, eventId).then(() =>
                             setParticipantState("NONE")
                           );
                         })
@@ -333,10 +329,10 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   userId !== event.owner_id &&
                   userId && (
                     <PrimaryButton
-                      className={styles["action-btn"]}
+                      className={`${styles["action-btn"]} ${styles["action-2-btn"]}`}
                       onClick={() =>
                         getParticipantByUserId(userId, eventId).then((data) => {
-                          deleteParticipant(data.id, eventId).then(
+                          deleteParticipant(data.id, eventId).then(() =>
                             setParticipantState("NONE")
                           );
                         })
