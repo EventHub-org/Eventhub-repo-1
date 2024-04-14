@@ -106,7 +106,9 @@ public class ParticipantServiceImpl implements ParticipantService {
         Participant participant = readByIdEntity(id);
 
         Event event = eventService.readByIdEntity(participant.getEvent().getId());
-        event.setParticipantCount(event.getParticipantCount() - 1);
+        if (participant.isApproved()) {
+            event.setParticipantCount(event.getParticipantCount() - 1);
+        }
 
         participantRepository.delete(readByIdEntity(id));
     }
