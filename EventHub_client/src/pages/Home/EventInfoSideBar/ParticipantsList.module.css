@@ -114,6 +114,16 @@
   height: 3.2vh;
 }
 
+.no-participants-msg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--third-color);
+  width: 15vw;
+  margin-top: 5vh;
+  align-self: center;
+}
+
 @media (width < 1280px) {
   .participants-list-container {
     font-size: var(--xxs-size);

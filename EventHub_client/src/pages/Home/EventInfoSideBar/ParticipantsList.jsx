@@ -51,6 +51,11 @@ const ParticipantsList = ({
             onClick={handleCloseWindow}
           />
         </div>
+        {participants.length === 0 && (
+          <div className={styles["no-participants-msg"]}>
+            Here will be shown participants for this event...
+          </div>
+        )}
 
         <ul className={styles["participants-container"]}>
           {owner &&
