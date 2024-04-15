@@ -13,6 +13,7 @@ import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/Clo
 import ParticipantsList from "./ParticipantsList";
 
 import month from "../../../utils/month";
+import ParticipantState from "../../../utils/ParticipantState";
 
 import { AnimatePresence, motion } from "framer-motion";
 import ParticipantInfoPopUp from "../../../components/PopUp/ParticipantInfoPopUp";
@@ -284,14 +285,14 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                 </PrimaryButton>
               )}
 
-              {participantState === "NONE" &&
+              {participantState === ParticipantState.NONE &&
                 userId !== event.owner_id &&
                 userId && (
                   <PrimaryButton
                     className={styles["action-btn"]}
                     onClick={() => {
                       createParticipant(userId, eventId).then(() =>
-                        setParticipantState("REQUESTED")
+                        setParticipantState(ParticipantState.REQUESTED)
                       );
                     }}
                   >
@@ -299,7 +300,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   </PrimaryButton>
                 )}
 
-              {participantState === "REQUESTED" &&
+              {participantState === ParticipantState.REQUESTED &&
                 userId !== event.owner_id &&
                 userId && (
                   <PrimaryButton
@@ -307,7 +308,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                     onClick={() =>
                       getParticipantByUserId(userId, eventId).then((data) => {
                         deleteParticipant(data.id, eventId).then(() =>
-                          setParticipantState("NONE")
+                          setParticipantState(ParticipantState.NONE)
                         );
                       })
                     }
@@ -316,7 +317,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   </PrimaryButton>
                 )}
 
-              {participantState === "JOINED" &&
+              {participantState === ParticipantState.JOINED &&
                 userId !== event.owner_id &&
                 userId && (
                   <PrimaryButton
@@ -324,7 +325,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                     onClick={() =>
                       getParticipantByUserId(userId, eventId).then((data) => {
                         deleteParticipant(data.id, eventId).then(() =>
-                          setParticipantState("NONE")
+                          setParticipantState(ParticipantState.NONE)
                         );
                       })
                     }
@@ -335,7 +336,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
               {userId === event.owner_id && (
                 <div className={styles["btns-container"]}>
-                  {participantState === "NONE" && (
+                  {participantState === ParticipantState.NONE && (
                     <PrimaryButton
                       className={styles["isOwner-action-btn"]}
                       onClick={() => {
@@ -347,7 +348,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                                 eventId,
                                 participant.id
                               ).then(() => {
-                                setParticipantState("JOINED");
+                                setParticipantState(ParticipantState.JOINED);
                               });
                             }
                           )
@@ -358,13 +359,13 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                     </PrimaryButton>
                   )}
 
-                  {participantState === "JOINED" && (
+                  {participantState === ParticipantState.JOINED && (
                     <PrimaryButton
                       className={`${styles["isOwner-action-btn"]} ${styles["isOwner-action-2-btn"]}`}
                       onClick={() =>
                         getParticipantByUserId(userId, eventId).then((data) => {
                           deleteParticipant(data.id, eventId).then(() =>
-                            setParticipantState("NONE")
+                            setParticipantState(ParticipantState.NONE)
                           );
                         })
                       }
