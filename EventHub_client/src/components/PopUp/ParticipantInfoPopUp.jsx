@@ -66,11 +66,11 @@ const ParticipantInfoPopUp = ({ participant, onMouseEnter, onMouseLeave }) => {
       {participant.description && (
         <div className={styles["description"]}>{participant.description}</div>
       )}
-      <Link style={{ all: "unset" }}>
-        <PrimaryButton className={styles["show-more-btn"]}>
-          Show more
-        </PrimaryButton>
-      </Link>
+
+      <PrimaryButton className={styles["show-more-btn"]}>
+        Show more
+      </PrimaryButton>
+
       <div className={styles["transparent-div"]}>&nbsp;</div>
     </motion.div>
   );

@@ -76,12 +76,14 @@
 }
 
 .show-more-btn {
-  align-self: flex-end;
   width: 150px;
   height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: absolute;
+  bottom: 3%;
+  right: 3%;
 }
 
 hr {
