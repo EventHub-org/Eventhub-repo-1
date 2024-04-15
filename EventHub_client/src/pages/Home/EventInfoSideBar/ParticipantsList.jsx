@@ -8,6 +8,7 @@ import { getUserById } from "../../../api/getUserById";
 
 import GoBackButton from "../../../components/Buttons/GoBackButton/GoBackButton";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
+import CloseParticipantButton from "../../../components/Buttons/CloseParticipantButton/CloseParticipantButton";
 import OwnerPhotoOverlay from "../../../components/OwnerPhotoOverlay/OwnerPhotoOverlay";
 
 const ParticipantsList = ({ handleGoBackToSideBar, handleCloseWindow }) => {
@@ -47,10 +48,10 @@ const ParticipantsList = ({ handleGoBackToSideBar, handleCloseWindow }) => {
           />
         </div>
 
-        <div className={styles["participants-container"]}>
+        <ul className={styles["participants-container"]}>
           {owner && <OwnerPhotoOverlay owner={owner} />}
           {participants.map((participant) => (
-            <div
+            <li
               key={participant.id}
               className={styles["participant-container"]}
             >
@@ -66,9 +67,13 @@ const ParticipantsList = ({ handleGoBackToSideBar, handleCloseWindow }) => {
                 </div>
                 <p className={styles["email"]}>{participant.email}</p>
               </div>
-            </div>
+              {/* <button className={styles["delete-participant-btn"]}>asd</button> */}
+              <div className={styles["delete-participant-container"]}>
+                <CloseParticipantButton className={styles["test-2"]} />
+              </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     )
   );

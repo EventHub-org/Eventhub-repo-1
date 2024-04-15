@@ -35,13 +35,12 @@
   font-size: 100px;
 }
 
-.back-btn {
-  width: 20px;
-  height: 20px;
+.delete-participant-container {
+  position: absolute;
+  right: 6%;
+  width: 35px;
+  height: 35px;
 }
-/* .header > * {
-  border: solid;
-} */
 
 /* Participants list */
 
