@@ -3,39 +3,41 @@ import { useNavigate, useParams } from "react-router-dom";
 import styles from "./ParticipantsList.module.css";
 
 import { getUserParticipants } from "../../../api/getUserParticipants";
-import { getFullEventById } from "../../../api/getFullEventById";
 import { getUserById } from "../../../api/getUserById";
 
 import GoBackButton from "../../../components/Buttons/GoBackButton/GoBackButton";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import CloseParticipantButton from "../../../components/Buttons/CloseParticipantButton/CloseParticipantButton";
 import OwnerPhotoOverlay from "../../../components/OwnerPhotoOverlay/OwnerPhotoOverlay";
+import { deleteParticipant } from "../../../api/deleteParticipant";
 
-const ParticipantsList = ({ handleGoBackToSideBar, handleCloseWindow }) => {
+const ParticipantsList = ({
+  handleGoBackToSideBar,
+  handleCloseWindow,
+  userId,
+  setReloadList,
+  _event,
+}) => {
   // States
   const [participants, setParticipants] = useState([]);
-  const [event, setEvent] = useState(null);
   const [owner, setOwner] = useState(null);
 
   // Params
   const { ownerId, eventId } = useParams();
 
   // Effects
-  useEffect(() => {
-    getFullEventById(ownerId, eventId).then((data) => setEvent(data));
-  }, [ownerId, eventId]);
 
   useEffect(() => {
-    event &&
-      getUserParticipants(event.id).then((data) => setParticipants(data));
-  }, [event]);
+    _event &&
+      getUserParticipants(_event.id).then((data) => setParticipants(data));
+  }, [_event]);
 
   useEffect(() => {
-    event && getUserById(event.owner_id).then((data) => setOwner(data));
-  }, [event]);
+    _event && getUserById(_event.owner_id).then((data) => setOwner(data));
+  }, [_event]);
 
   return (
-    event && (
+    _event && (
       <div className={styles["participants-list-container"]}>
         <div className={styles["header"]}>
           <GoBackButton
@@ -49,30 +51,43 @@ const ParticipantsList = ({ handleGoBackToSideBar, handleCloseWindow }) => {
         </div>
 
         <ul className={styles["participants-container"]}>
-          {owner && <OwnerPhotoOverlay owner={owner} />}
-          {participants.map((participant) => (
-            <li
-              key={participant.id}
-              className={styles["participant-container"]}
-            >
-              <img
-                className={styles["participant-photo"]}
-                src={participant.participant_photo.photo_url}
-                alt="User participant img"
-              />
-              <div className={styles["participant-info-container"]}>
-                <div className={styles["full-name"]}>
-                  <p>{participant.first_name}</p>
-                  <p>{participant.last_name}</p>
-                </div>
-                <p className={styles["email"]}>{participant.email}</p>
-              </div>
-              {/* <button className={styles["delete-participant-btn"]}>asd</button> */}
-              <div className={styles["delete-participant-container"]}>
-                <CloseParticipantButton className={styles["test-2"]} />
-              </div>
-            </li>
-          ))}
+          {owner &&
+            participants.find(
+              (participant) => participant.user_id === ownerId
+            ) && <OwnerPhotoOverlay owner={owner} />}
+          {participants.map(
+            (participant) =>
+              participant.user_id !== ownerId && (
+                <li
+                  key={participant.id}
+                  className={styles["participant-container"]}
+                >
+                  <img
+                    className={styles["participant-photo"]}
+                    src={participant.participant_photo.photo_url}
+                    alt="User participant img"
+                  />
+                  <div className={styles["participant-info-container"]}>
+                    <div className={styles["full-name"]}>
+                      <p>{participant.first_name}</p>
+                      <p>{participant.last_name}</p>
+                    </div>
+                    <p className={styles["email"]}>{participant.email}</p>
+                  </div>
+                  {userId === ownerId && (
+                    <div className={styles["delete-participant-container"]}>
+                      <CloseParticipantButton
+                        onClick={() => {
+                          deleteParticipant(participant.id, eventId).then(() =>
+                            setReloadList((prev) => !prev)
+                          );
+                        }}
+                      />
+                    </div>
+                  )}
+                </li>
+              )
+          )}
         </ul>
       </div>
     )
