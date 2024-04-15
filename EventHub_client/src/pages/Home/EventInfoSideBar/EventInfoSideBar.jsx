@@ -25,6 +25,7 @@ import { getParticipantByUserId } from "../../../api/getParticipantByUserId";
 import { deleteParticipant } from "../../../api/deleteParticipant";
 import { createParticipant } from "../../../api/createParticipant";
 import { addParticipant } from "../../../api/addParticipant";
+import SpotsLeft from "../../../components/Spots/SpotsLeft";
 
 const EventInfoSideBar = ({ ownerId, eventId }) => {
   // States
@@ -272,9 +273,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
             {/* Lower section */}
             <div className={styles["lower-container"]}>
-              <div className={styles["spots"]}>
-                {event.max_participants - event.participant_count} Spots left
-              </div>
+              <SpotsLeft event={event} />
 
               {participantState === null && (
                 <PrimaryButton

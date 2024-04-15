@@ -97,6 +97,22 @@
   margin: 0;
 }
 
+.lower-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.requests-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--md-size);
+  width: 5vw;
+  height: 3.2vh;
+}
+
 @media (width < 1280px) {
   .participants-list-container {
     font-size: var(--xxs-size);
@@ -124,5 +140,9 @@
   .participant-photo {
     width: 60px;
     height: 100%;
+  }
+
+  .requests-btn {
+    font-size: var(--xxs-size);
   }
 }

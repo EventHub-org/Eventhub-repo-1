@@ -230,13 +230,6 @@
   margin-top: auto;
 }
 
-.spots {
-  font-family: var(--primary-font-family), sans-serif;
-  font-style: normal;
-  color: var(--third-color);
-  font-size: 20px;
-}
-
 .action-btn {
   font-size: 23px;
   width: 35%;
