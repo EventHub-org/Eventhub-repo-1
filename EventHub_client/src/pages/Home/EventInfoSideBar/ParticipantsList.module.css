@@ -37,7 +37,7 @@
 
 .delete-participant-container {
   position: absolute;
-  right: 3%;
+  right: 1%;
   width: 3vh;
   height: 3vh;
 }
@@ -55,7 +55,6 @@
 .participant-container {
   width: 100%;
   height: 72px;
-  border: 1px solid var(--third-color);
   margin-bottom: 2%;
   display: flex;
   align-items: center;
@@ -65,13 +64,13 @@
 }
 
 .participant-container:hover {
-  background-color: var(--third-color-hover);
   cursor: pointer;
 }
 
 .participant-photo {
   width: 72px;
   height: 100%;
+  border-radius: 50%;
 }
 
 .participant-info-container {
@@ -96,6 +95,7 @@
 
 .email {
   margin: 0;
+  color: var(--third-color);
 }
 
 .lower-container {

@@ -5,7 +5,6 @@
   height: 72px;
   min-height: 72px;
   font-family: var(--primary-font-family);
-  border: solid 1px var(--third-color);
   margin-top: 15px;
   margin-bottom: 2%;
   border-radius: 10px;
@@ -13,7 +12,6 @@
 }
 
 .owner-container:hover {
-  background-color: var(--third-color-hover);
   cursor: pointer;
 }
 
@@ -36,6 +34,7 @@
 
 .email {
   margin: 0;
+  color: var(--third-color);
 }
 
 .full-name {
@@ -55,6 +54,7 @@
 .owner-img {
   width: 72px;
   height: 100%;
+  border-radius: 50%;
 }
 
 @media (width < 1700px) {
