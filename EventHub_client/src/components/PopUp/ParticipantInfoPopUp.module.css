@@ -5,7 +5,7 @@
   height: 350px;
   background-color: var(--primary-popup-background);
   position: absolute;
-  /* right: -100%; */
+  /* right: 10%; */
   top: -575%;
   font-family: var(--primary-font-family);
   padding: 15px;
