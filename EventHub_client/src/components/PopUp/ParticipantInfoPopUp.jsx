@@ -48,20 +48,24 @@ const ParticipantInfoPopUp = ({ participant, onMouseEnter, onMouseLeave }) => {
             <SlLocationPin size="1.4rem" />
             {participant.city}
           </div>
-          <div className={styles["birth-date"]}>
-            <CiCalendar size="1.4rem" />
-            {`${participant.birth_date.slice(
-              8,
-              10
-            )}.${participant.birth_date.slice(
-              5,
-              7
-            )}.${participant.birth_date.slice(0, 4)}`}
-          </div>
+          {participant.birth_date && (
+            <div className={styles["birth-date"]}>
+              <CiCalendar size="1.4rem" />
+              {`${participant.birth_date.slice(
+                8,
+                10
+              )}.${participant.birth_date.slice(
+                5,
+                7
+              )}.${participant.birth_date.slice(0, 4)}`}
+            </div>
+          )}
         </div>
         <hr />
       </div>
-      <div className={styles["description"]}>{participant.description}</div>
+      {participant.description && (
+        <div className={styles["description"]}>{participant.description}</div>
+      )}
       <Link style={{ all: "unset" }}>
         <PrimaryButton className={styles["show-more-btn"]}>
           Show more
