@@ -11,7 +11,7 @@ import styles from "./UserInfo.module.css";
 const UserInfo = () => {
   const [user, setUser] = useState(null);
   const { userId } = useParams();
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   const [tokenId, setTokenId] = useState(null);
 
   const [showEdit, setShowEdit] = useState(false);
@@ -21,6 +21,7 @@ const UserInfo = () => {
   }
 
   useEffect(() => {
+    console.log("In use effect")
     async function fetchUser() {
       try {
         const response = await getUserById(userId);
@@ -40,7 +41,7 @@ const UserInfo = () => {
       setTokenId(null);
     }
     
-  }, [userId]);
+  }, [userId, showEdit]);
 
   if (loading) {
     return (

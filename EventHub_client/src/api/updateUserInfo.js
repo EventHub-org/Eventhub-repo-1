@@ -1,0 +1,85 @@
+import axios from "./axios";
+
+
+export const sendDataWithoutPhotos = async (userData, user_id) => {
+    console.log(userData);
+    console.log("Id: " + user_id)
+    const accessToken = localStorage.getItem('token')
+    const authAxios = axios.create({
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Access-Control-Allow-Origin': '*',
+            "Access-Control-Allow-Headers": "content-type",
+            "Access-Control-Allow-Credentials": "true"
+        }
+    })
+    try {
+        const response = await authAxios.put(`/users/${user_id}`, userData);
+        return response.data;
+    } catch (error) {
+        console.error('Error sending data without photos to server:', error);
+
+        throw error;
+    }
+};
+
+const isFormDataEmpty = (formData) => {
+    const entries = formData.entries();
+    return entries.next().done;
+}
+
+const appendFormData = (formDataArray) => {
+    const mergedFormData = new FormData();
+
+    formDataArray.forEach(formData => {
+        if (!formData) return;
+        for (const [key, value] of formData.entries()) {
+            mergedFormData.append("files", value);
+        }
+    });
+
+    return mergedFormData;
+};
+
+export const sendPhotosToServer = async (formData, user_id) => {
+    const mergedFormData = appendFormData(formData);
+
+    const accessToken = localStorage.getItem('token')
+    const authAxios = axios.create({
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Access-Control-Allow-Origin': '*',
+            "Access-Control-Allow-Credentials": "true"
+        }
+    })
+    try {
+        if(isFormDataEmpty(mergedFormData)) return;
+        const response = await authAxios.post(`/users/${user_id}/photos/upload`, mergedFormData);
+        return response.data;
+
+    } catch (error) {
+        console.error('Error uploading photos to server:', error);
+
+        throw error;
+    }
+};
+
+
+export const deleteUserPhotos = async(photos, user_id) => {
+    const accessToken = localStorage.getItem('token')
+    const authAxios = axios.create({
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Access-Control-Allow-Origin': '*',
+            "Access-Control-Allow-Credentials": "true"
+        }
+    })
+    try {
+        for(let photo of photos){
+            await authAxios.delete(`/users/${user_id}/photos/${photo}`);
+        }
+        
+    } catch (error) {
+        console.error('Error deleting photos', error);
+    }
+}

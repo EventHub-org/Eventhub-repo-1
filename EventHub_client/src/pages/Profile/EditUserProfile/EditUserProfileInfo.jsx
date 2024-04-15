@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import moment from "moment";
-import { useParams } from "react-router-dom";
+import { redirect, useParams } from "react-router-dom";
 import {
   Input,
   Select,
@@ -14,7 +14,12 @@ import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/Clo
 import CancelButton from "../../../components/Buttons/CancelButton/CancelButton";
 import ApplyChangesButton from "../../../components/Buttons/ApplyChangesButton/ApplyChangesButton";
 import { CameraOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import { sendDataWithoutPhotos } from "../../../api/updateUserInfo";
+import {deleteUserPhotos } from "../../../api/updateUserInfo";
+import { sendPhotosToServer } from "../../../api/updateUserInfo";
+import usePlacesAutocomplete from "use-places-autocomplete";
 import styles from "./EditUserProfile.module.css";
+
 
 const EditUserProfile = ({ handleClose }) => {
   const { TextArea } = Input;
@@ -24,16 +29,34 @@ const EditUserProfile = ({ handleClose }) => {
   const [user, setUser] = useState(null);
   const { userId } = useParams();
 
+  const [userExistingPhotos, setUserExistingPhotos] = useState(null);
   const [photos, setPhotos] = useState(new Array(4).fill(null));
   const [uploadedPhotos, setUploadedPhotos] = useState(new Array(4).fill(null));
+  const [toDeletePhotos, setToDeletePhotos] = useState([]);
   const [photoIndex, setPhotoIndex] = useState(0);
 
   useEffect(() => {
     async function fetchUser() {
       try {
         const response = await getUserById(userId);
-        console.log(response.birth_date);
-        setUser(response);
+
+        setUser({
+          first_name: response.first_name,
+          last_name: response.last_name,
+          username: response.username,
+          email: response.email,
+          password: "2222Ascsa",
+          description: response.description,
+          city: response.city,
+          birth_date: moment(response.birth_date, 'YYYY-MM-DD'),
+          gender: response.gender, 
+        });
+
+        const userPhotos =  response.photo_responses.filter(photo => photo.photo_name !== 'userDefaultImage');
+        setUserExistingPhotos(userPhotos);
+        setPhotos(userPhotos.map(photo=>photo.photo_url).concat(new Array(4 - userPhotos.length).fill(null)));
+        setPhotoIndex(userPhotos.length);
+
       } catch (error) {
         console.error("Error fetching user:", error);
       } finally {
@@ -46,7 +69,10 @@ const EditUserProfile = ({ handleClose }) => {
   const handlePhotoUpload = (event) => {
     const file = event.target.files[0];
     photos[photoIndex] = URL.createObjectURL(file);
-    uploadedPhotos[photoIndex] = new FormData().append("files", file);
+
+    const newFormData = new FormData();
+    newFormData.append("files", file);
+    uploadedPhotos[photoIndex] = newFormData;
 
     setPhotos(photos);
     setUploadedPhotos(uploadedPhotos);
@@ -54,6 +80,11 @@ const EditUserProfile = ({ handleClose }) => {
   };
 
   const handlePhotoDelete = (index) => {
+    for(let photo of userExistingPhotos){
+      if(photo.photo_url === photos[index]){
+        setToDeletePhotos([...toDeletePhotos, photo.id]);
+      }
+    }
     photos.splice(index, 1);
     uploadedPhotos.splice(index, 1);
 
@@ -63,6 +94,8 @@ const EditUserProfile = ({ handleClose }) => {
     setPhotoIndex(photoIndex - 1);
     setPhotos(photos);
     setUploadedPhotos(uploadedPhotos);
+
+    console.log(toDeletePhotos);
   };
 
   const updateUserInfo = (event) => {
@@ -72,6 +105,18 @@ const EditUserProfile = ({ handleClose }) => {
       [name]: value
     });
   };
+
+  const applyChanges = () => {
+    try{
+      sendDataWithoutPhotos(user, userId);
+      deleteUserPhotos(toDeletePhotos, userId);
+      sendPhotosToServer(uploadedPhotos, userId)
+      handleClose();
+    }
+    catch(e){
+      console.log("Failed to edit profile")
+    }
+  }
 
   return (
     <div className={styles.OuterContainer}>
@@ -178,9 +223,10 @@ const EditUserProfile = ({ handleClose }) => {
                 <p className={styles.Caption}>Birthday</p>
                 <DatePicker
                   className={styles.Param}
+                  format={'YYYY-MM-DD'}
                   name="birth_date"
-                  value={moment(user.birth_date)}
-                  onChange={updateUserInfo} 
+                  value={user.birth_date ? user.birth_date:null}
+                  onChange={(value) => setUser({ ...user, birth_date: value })}
                 />
               </div>
             </div>
@@ -198,7 +244,7 @@ const EditUserProfile = ({ handleClose }) => {
           </div>
           <div className={styles.Buttons}>
             <CancelButton />
-            <ApplyChangesButton />
+            <ApplyChangesButton onClick={applyChanges}/>
           </div>
         </form>
       )}
