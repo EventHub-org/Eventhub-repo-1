@@ -37,9 +37,9 @@
 
 .delete-participant-container {
   position: absolute;
-  right: 6%;
-  width: 35px;
-  height: 35px;
+  right: 3%;
+  width: 3vh;
+  height: 3vh;
 }
 
 /* Participants list */
@@ -61,6 +61,7 @@
   align-items: center;
   border-radius: 10px;
   overflow: hidden;
+  position: relative;
 }
 
 .participant-container:hover {
