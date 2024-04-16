@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.Objects;
@@ -116,11 +117,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse changePassword(UUID id, PasswordRequest passwordRequest){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         User user = this.readByIdEntity(id);
-        if(!Objects.equals(user.getPassword(), passwordRequest.getOldPassword())){
+
+        if(!encoder.matches(passwordRequest.getOldPassword(), user.getPassword())){
             throw new PasswordException("The old password is incorrect!");
         }
-        user.setPassword(passwordRequest.getNewPassword());
+        user.setPassword(encoder.encode(passwordRequest.getNewPassword()));
         return userDtoMapper.entityToResponse(userRepository.save(user));
     }
 //    public User readByEmail(String email) {
