@@ -125,6 +125,10 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
     resetSideBar();
   }, [eventId]);
 
+  useEffect(() => {
+    console.log("Participant state: ", participantState);
+  }, [participantState]);
+
   //TODO Fix opacity when allParticipants is toggled
 
   // useEffect(() => {

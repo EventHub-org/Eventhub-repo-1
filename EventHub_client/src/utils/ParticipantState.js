@@ -1,6 +1,6 @@
 const ParticipantState = Object.freeze({
   JOINED: "JOINED",
-  REQUESTED: "REQUETED",
+  REQUESTED: "REQUESTED",
   NONE: "NONE",
 });
 
