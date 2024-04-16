@@ -90,6 +90,20 @@
   color: var(--third-color);
 }
 
+.accept-requested-participant-container {
+  position: absolute;
+  right: 13%;
+  width: 3vh;
+  height: 3vh;
+}
+
+.delete-requested-participant-container {
+  position: absolute;
+  right: 1.5%;
+  width: 3vh;
+  height: 3vh;
+}
+
 @media (width < 1280px) {
   .requests-list-container {
     font-size: var(--xxs-size);

@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
+import CloseParticipantButton from "../../../components/Buttons/CloseParticipantButton/CloseParticipantButton";
 import GoBackButton from "../../../components/Buttons/GoBackButton/GoBackButton";
 import styles from "./RequestsList.module.css";
 
 import { getRequestsByEventId } from "../../../api/getRequestsByEventId";
+import { deleteParticipant } from "../../../api/deleteParticipant";
+import AcceptParticipantButton from "../../../components/Buttons/AcceptParticipantButton/AcceptParticipantButton";
 const RequestsList = ({
   _event,
   handleGoBackToParticipantsList,
   handleCloseWindow,
+  setReloadList,
 }) => {
   const [requests, setRequests] = useState(null);
 
@@ -38,6 +42,18 @@ const RequestsList = ({
                   <p>{requestedParticipant.last_name}</p>
                 </div>
                 <p className={styles["email"]}>{requestedParticipant.email}</p>
+              </div>
+              <div className={styles["accept-requested-participant-container"]}>
+                <AcceptParticipantButton />
+              </div>
+              <div className={styles["delete-requested-participant-container"]}>
+                <CloseParticipantButton
+                  onClick={() => {
+                    deleteParticipant(requestedParticipant.id, _event.id).then(
+                      () => setReloadList((prev) => !prev)
+                    );
+                  }}
+                />
               </div>
             </li>
           ))}

@@ -422,6 +422,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
             _event={event}
             handleGoBackToParticipantsList={handleShowAllParticipants}
             handleCloseWindow={handleCloseWindow}
+            setReloadList={setReloadList}
           />
         )}
       </div>
