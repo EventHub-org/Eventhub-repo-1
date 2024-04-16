@@ -151,19 +151,19 @@ public class ParticipantServiceImpl implements ParticipantService {
     }
 
     @Override
-    public List<ParticipantResponse> getAllRequestsByEventId(UUID eventId) {
+    public List<UserParticipantResponse> getAllUserRequestsByEventId(UUID eventId) {
         Event event = eventService.readByIdEntity(eventId);
         return event.getParticipants()
                 .stream()
                 .filter(participant -> !participant.isApproved())
-                .map(participantMapper::entityToResponse)
+                .map(participantMapper::entityToUserParticipantResponse)
                 .collect(Collectors.toList());
     }
     @Override
     public ParticipantState getParticipantState(UUID userId, UUID eventId) {
         if (getAllJoinedByEventId(eventId).stream().anyMatch(participant -> participant.getUserId().equals(userId))) {
             return ParticipantState.JOINED;
-        } else if (getAllRequestsByEventId(eventId).stream().anyMatch(participant -> participant.getUserId().equals(userId))) {
+        } else if (getAllUserRequestsByEventId(eventId).stream().anyMatch(participant -> participant.getUserId().equals(userId))) {
             return ParticipantState.REQUESTED;
         } else {
             return ParticipantState.NONE;

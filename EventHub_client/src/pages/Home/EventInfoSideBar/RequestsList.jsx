@@ -23,13 +23,16 @@ const RequestsList = ({
       {requests && (
         <ul className={styles["requests-list"]}>
           {requests.map((requestedParticipant) => (
-            <li key={requestedParticipant.id}>
+            <li
+              className={styles["requested-participant-container"]}
+              key={requestedParticipant.id}
+            >
               <img
-                className={styles["participant-photo"]}
+                className={styles["requested-participant-photo"]}
                 src={requestedParticipant.participant_photo.photo_url}
                 alt="User requestedParticipant img"
               />
-              <div className={styles["requestedParticipant-info-container"]}>
+              <div className={styles["requested-participant-info-container"]}>
                 <div className={styles["full-name"]}>
                   <p>{requestedParticipant.first_name}</p>
                   <p>{requestedParticipant.last_name}</p>
