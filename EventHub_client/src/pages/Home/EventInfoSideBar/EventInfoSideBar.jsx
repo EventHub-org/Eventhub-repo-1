@@ -269,7 +269,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                     onClick={handleShowAllParticipants}
                     className={styles["show-more-participants-btn"]}
                   >
-                    {userId === ownerId && requests.length > 0 && (
+                    {requests && userId === ownerId && requests.length > 0 && (
                       <div className={styles["requests-count-container"]}>
                         <RequestsCount requestsLength={requests.length} />
                       </div>
