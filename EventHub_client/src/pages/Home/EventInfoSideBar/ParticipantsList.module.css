@@ -102,15 +102,15 @@
   justify-content: center;
   align-items: center;
   font-size: var(--md-size);
-  width: 5vw;
+  width: 5.5vw;
   height: 3.2vh;
   position: relative;
 }
 
 .requests-count-container {
   position: absolute;
-  top: -15%;
-  right: 0;
+  top: -5%;
+  right: -2%;
 }
 
 .no-participants-msg {
