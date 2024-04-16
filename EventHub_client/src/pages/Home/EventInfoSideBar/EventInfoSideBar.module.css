@@ -170,6 +170,9 @@
 
 .requests-count {
   background-color: red;
+  color: #fff;
+  font-size: 11px;
+  border: 1px solid #fff;
   position: absolute;
   width: 15px;
   height: 15px;

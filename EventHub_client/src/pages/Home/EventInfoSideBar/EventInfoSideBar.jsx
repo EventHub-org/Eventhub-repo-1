@@ -268,7 +268,11 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                     onClick={handleShowAllParticipants}
                     className={styles["show-more-participants-btn"]}
                   >
-                    <div className={styles["requests-count"]}>1</div>
+                    {requests.length > 0 && (
+                      <div className={styles["requests-count"]}>
+                        {requests.length}
+                      </div>
+                    )}
                     <IoIosMore
                       className={styles["show-more-participants-btn-icon"]}
                     />
