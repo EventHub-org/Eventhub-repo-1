@@ -34,6 +34,16 @@
   margin-top: 3.2%;
 }
 
+.no-requests-msg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--third-color);
+  width: 15vw;
+  margin-top: 5vh;
+  align-self: center;
+}
+
 /* List */
 
 .requests-list {

@@ -25,6 +25,11 @@ const RequestsList = ({
         <GoBackButton onClick={handleGoBackToParticipantsList} />
         <CloseWindowButton onClick={handleCloseWindow} />
       </div>
+      {requests && requests.length === 0 && (
+        <div className={styles["no-requests-msg"]}>
+          Currently, there are no requests for this event..
+        </div>
+      )}
       {requests && (
         <ul className={styles["requests-list"]}>
           {requests.map((requestedParticipant) => (
