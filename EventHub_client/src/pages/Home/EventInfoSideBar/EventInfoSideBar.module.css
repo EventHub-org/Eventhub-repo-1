@@ -168,15 +168,8 @@
   transition: background-color 0.3s;
 }
 
-.requests-count {
-  background-color: red;
-  color: #fff;
-  font-size: 11px;
-  border: 1px solid #fff;
+.requests-count-container {
   position: absolute;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
   top: 0;
   right: 0;
 }

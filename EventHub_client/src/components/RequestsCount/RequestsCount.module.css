@@ -1,0 +1,9 @@
+.requests-count {
+  background-color: red;
+  color: #fff;
+  font-size: 11px;
+  border: 1px solid #fff;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}

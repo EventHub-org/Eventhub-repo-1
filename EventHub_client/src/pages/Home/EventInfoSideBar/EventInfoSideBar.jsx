@@ -29,6 +29,7 @@ import { addParticipant } from "../../../api/addParticipant";
 import SpotsLeft from "../../../components/Spots/SpotsLeft";
 import RequestsList from "./RequestsList";
 import { getRequestsByEventId } from "../../../api/getRequestsByEventId";
+import RequestsCount from "../../../components/RequestsCount/RequestsCount";
 
 const EventInfoSideBar = ({ ownerId, eventId }) => {
   // States
@@ -269,8 +270,8 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                     className={styles["show-more-participants-btn"]}
                   >
                     {requests.length > 0 && (
-                      <div className={styles["requests-count"]}>
-                        {requests.length}
+                      <div className={styles["requests-count-container"]}>
+                        <RequestsCount requestsLength={requests.length} />
                       </div>
                     )}
                     <IoIosMore
