@@ -413,10 +413,11 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
           />
         )}
 
-        {showRequests && (
+        {showRequests && userId === ownerId && (
           <RequestsList
             _event={event}
             handleGoBackToParticipantsList={handleShowAllParticipants}
+            handleCloseWindow={handleCloseWindow}
           />
         )}
       </div>

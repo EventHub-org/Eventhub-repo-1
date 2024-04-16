@@ -93,12 +93,14 @@ const ParticipantsList = ({
         </ul>
         <div className={styles["lower-container"]}>
           <SpotsLeft event={_event} />
-          <PrimaryButton
-            onClick={handleShowRequests}
-            className={styles["requests-btn"]}
-          >
-            Requests
-          </PrimaryButton>
+          {userId === ownerId && (
+            <PrimaryButton
+              onClick={handleShowRequests}
+              className={styles["requests-btn"]}
+            >
+              Requests
+            </PrimaryButton>
+          )}
         </div>
       </div>
     )
