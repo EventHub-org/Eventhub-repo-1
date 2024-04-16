@@ -202,10 +202,18 @@
   flex-direction: column;
 }
 
-.about-text {
+.about-text-full {
+  hyphens: auto;
+  word-wrap: break-word;
+  /* word-break: break-all; */
+}
+
+.about-text-hidden {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   display: -webkit-box;
+  hyphens: auto;
+  word-wrap: break-word;
   overflow: hidden;
 }
 

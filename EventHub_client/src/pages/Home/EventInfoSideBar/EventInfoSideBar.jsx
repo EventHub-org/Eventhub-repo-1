@@ -106,9 +106,17 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
           aboutText.current.scrollHeight > aboutText.current.clientHeight
         ) {
           setIsOverflowAboutText(true);
+        } else {
+          setIsOverflowAboutText(false);
         }
       });
+
+    return () => setIsShowMore(false);
   }, [event]);
+
+  useEffect(() => {
+    console.log("IsShowMore text: ", isOverflowAboutText);
+  }, [isOverflowAboutText]);
 
   useEffect(() => {
     event &&
@@ -290,7 +298,9 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
             <h3 className={styles["heading"]}>About this event</h3>
             <div className={styles["about-container"]}>
               <div
-                className={styles[isShowMore ? null : "about-text"]}
+                className={
+                  styles[isShowMore ? "about-text-full" : "about-text-hidden"]
+                }
                 ref={aboutText}
               >
                 {event.description}
