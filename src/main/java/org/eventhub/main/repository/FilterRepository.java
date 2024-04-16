@@ -21,4 +21,13 @@ public interface FilterRepository extends JpaRepository<Event, UUID> {
 
     @Query("SELECT e FROM Event e WHERE e.owner.id = :userId AND e.expireAt <= :currentDateTime")
     List<Event> findArchiveEvents(@Param("userId") UUID userId, @Param("currentDateTime") LocalDateTime currentDateTime);
+
+    @Query("SELECT e FROM Event e WHERE e.startAt <= :currentDateTime AND e.expireAt >= :currentDateTime")
+    List<Event> findAllLiveEvents(@Param("currentDateTime") LocalDateTime currentDateTime);
+
+    @Query("SELECT e FROM Event e WHERE e.startAt >= :currentDateTime")
+    List<Event> findAllUpcomingEvents(@Param("currentDateTime") LocalDateTime currentDateTime);
+
+    @Query("SELECT e FROM Event e WHERE e.expireAt <= :currentDateTime")
+    List<Event> findAllPastEvents(@Param("currentDateTime") LocalDateTime currentDateTime);
 }
