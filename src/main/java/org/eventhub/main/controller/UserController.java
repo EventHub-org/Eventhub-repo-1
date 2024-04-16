@@ -1,10 +1,8 @@
 package org.eventhub.main.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.eventhub.main.dto.EventSearchResponse;
-import org.eventhub.main.dto.OperationResponse;
-import org.eventhub.main.dto.UserRequest;
-import org.eventhub.main.dto.UserResponse;
+import org.eventhub.main.dto.*;
+import org.eventhub.main.exception.PasswordException;
 import org.eventhub.main.exception.ResponseStatusException;
 import org.eventhub.main.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +73,20 @@ public class UserController {
         log.info("**/deleted user(id) = " + userId);
         userService.delete(userId);
         return new ResponseEntity<>(new OperationResponse("User " + name + " deleted successfully"), HttpStatus.OK);
+    }
+
+    @PutMapping("/{user_id}/password")
+    public ResponseEntity<UserResponse> changePassword(@PathVariable("user_id") UUID userId,
+                                                       @Validated @RequestBody PasswordRequest passwordRequest,
+                                                       BindingResult result){
+        if (result.hasErrors()) {
+            throw new PasswordException("New password is too weak!");
+        }
+
+        UserResponse userResponse = userService.changePassword(userId, passwordRequest);
+        log.info("**/updated user(id) password = ");
+
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 }
 
