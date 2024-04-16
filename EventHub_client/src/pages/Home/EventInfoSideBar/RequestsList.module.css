@@ -89,3 +89,33 @@
   margin: 0;
   color: var(--third-color);
 }
+
+@media (width < 1280px) {
+  .requests-list-container {
+    font-size: var(--xxs-size);
+  }
+
+  .requested-participant-container {
+    height: 60px;
+  }
+
+  .requested-participant-photo {
+    width: 60px;
+    height: 100%;
+  }
+}
+
+@media (width >= 1280px) and (width < 1700px) {
+  .requests-list-container {
+    font-size: var(--xxs-size);
+  }
+
+  .requested-participant-container {
+    height: 60px;
+  }
+
+  .requested-participant-photo {
+    width: 60px;
+    height: 100%;
+  }
+}
