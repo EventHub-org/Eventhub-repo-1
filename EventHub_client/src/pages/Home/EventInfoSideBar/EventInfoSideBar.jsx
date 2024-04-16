@@ -91,7 +91,6 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
   useEffect(() => {
     event &&
-      participantState &&
       getJoinedParticipants(event.id).then((data) => {
         console.log("Data: ", data);
 
