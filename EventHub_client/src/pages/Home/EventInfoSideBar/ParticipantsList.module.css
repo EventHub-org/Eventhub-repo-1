@@ -32,14 +32,6 @@
   display: flex;
   justify-content: space-between;
   margin-top: 3.2%;
-  font-size: 100px;
-}
-
-.delete-participant-container {
-  position: absolute;
-  right: 1%;
-  width: 3vh;
-  height: 3vh;
 }
 
 /* Participants list */
@@ -122,6 +114,13 @@
   width: 15vw;
   margin-top: 5vh;
   align-self: center;
+}
+
+.delete-participant-container {
+  position: absolute;
+  right: 1%;
+  width: 3vh;
+  height: 3vh;
 }
 
 @media (width < 1280px) {

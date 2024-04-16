@@ -42,14 +42,8 @@ const ParticipantsList = ({
     _event && (
       <div className={styles["participants-list-container"]}>
         <div className={styles["header"]}>
-          <GoBackButton
-            className={styles["back-btn"]}
-            onClick={handleGoBackToSideBar}
-          />
-          <CloseWindowButton
-            className={styles["back-btn"]}
-            onClick={handleCloseWindow}
-          />
+          <GoBackButton onClick={handleGoBackToSideBar} />
+          <CloseWindowButton onClick={handleCloseWindow} />
         </div>
         {participants.length === 0 && (
           <div className={styles["no-participants-msg"]}>
