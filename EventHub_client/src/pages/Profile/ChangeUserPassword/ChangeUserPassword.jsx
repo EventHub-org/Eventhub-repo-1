@@ -86,7 +86,7 @@ const ChangeUserPassword = ({ handleClose }) => {
           </div>
         </div>
         <div className={styles.Buttons}>
-          <CancelButton />
+          <CancelButton onclick={handleClose}/>
           <ApplyChangesButton onClick={handleApply}/>
         </div>
       </div>
