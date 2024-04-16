@@ -28,6 +28,7 @@ import { createParticipant } from "../../../api/createParticipant";
 import { addParticipant } from "../../../api/addParticipant";
 import SpotsLeft from "../../../components/Spots/SpotsLeft";
 import RequestsList from "./RequestsList";
+import { getRequestsByEventId } from "../../../api/getRequestsByEventId";
 
 const EventInfoSideBar = ({ ownerId, eventId }) => {
   // States
@@ -43,6 +44,8 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   const [showAllParticipants, setShowAllParticipants] = useState(false);
 
   const [showRequests, setShowRequests] = useState(false);
+
+  const [requests, setRequests] = useState(null);
 
   const [userId, setUserId] = useState(null);
 
@@ -123,6 +126,10 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
     };
     resetSideBar();
   }, [eventId]);
+
+  useEffect(() => {
+    getRequestsByEventId(eventId).then((data) => setRequests(data));
+  }, [event]);
 
   useEffect(() => {
     console.log("Participant state: ", participantState);
@@ -261,6 +268,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                     onClick={handleShowAllParticipants}
                     className={styles["show-more-participants-btn"]}
                   >
+                    <div className={styles["requests-count"]}>1</div>
                     <IoIosMore
                       className={styles["show-more-participants-btn-icon"]}
                     />
@@ -419,6 +427,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
         {showRequests && userId === ownerId && (
           <RequestsList
             _event={event}
+            requests={requests}
             handleGoBackToParticipantsList={handleShowAllParticipants}
             handleCloseWindow={handleCloseWindow}
             setReloadList={setReloadList}

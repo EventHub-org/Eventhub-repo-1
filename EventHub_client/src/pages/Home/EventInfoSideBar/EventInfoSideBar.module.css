@@ -168,6 +168,16 @@
   transition: background-color 0.3s;
 }
 
+.requests-count {
+  background-color: red;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  top: 0;
+  right: 0;
+}
+
 .show-more-participants-btn:hover {
   background-color: var(--primary-color-hover);
 }
