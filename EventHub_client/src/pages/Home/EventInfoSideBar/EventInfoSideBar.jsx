@@ -425,6 +425,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
             handleShowRequests={handleShowRequests}
             userId={userId}
             setReloadList={setReloadList}
+            requests={requests}
             _event={event}
           />
         )}

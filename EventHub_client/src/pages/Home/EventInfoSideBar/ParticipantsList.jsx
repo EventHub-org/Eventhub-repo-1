@@ -12,6 +12,7 @@ import OwnerPhotoOverlay from "../../../components/OwnerPhotoOverlay/OwnerPhotoO
 import { deleteParticipant } from "../../../api/deleteParticipant";
 import SpotsLeft from "../../../components/Spots/SpotsLeft";
 import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButton";
+import RequestsCount from "../../../components/RequestsCount/RequestsCount";
 
 const ParticipantsList = ({
   handleGoBackToSideBar,
@@ -19,6 +20,7 @@ const ParticipantsList = ({
   handleShowRequests,
   userId,
   setReloadList,
+  requests,
   _event,
 }) => {
   // States
@@ -98,6 +100,11 @@ const ParticipantsList = ({
               onClick={handleShowRequests}
               className={styles["requests-btn"]}
             >
+              {requests.length > 0 && (
+                <div className={styles["requests-count-container"]}>
+                  <RequestsCount requestsLength={requests.length} />
+                </div>
+              )}
               Requests
             </PrimaryButton>
           )}
