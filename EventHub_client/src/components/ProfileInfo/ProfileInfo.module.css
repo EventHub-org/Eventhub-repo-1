@@ -22,7 +22,7 @@
   
   .profileText span {
     display: block;
-    margin: 8px 0px;
+    margin: 3px 0px;
     font-size: 12px; 
     color: var(--text-color); 
   }
@@ -36,4 +36,10 @@
     background: none;
     padding: 0;
     cursor: pointer;
+  }
+
+  .profileImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
   }
