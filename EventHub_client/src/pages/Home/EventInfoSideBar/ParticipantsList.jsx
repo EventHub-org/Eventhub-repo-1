@@ -16,6 +16,7 @@ import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButt
 const ParticipantsList = ({
   handleGoBackToSideBar,
   handleCloseWindow,
+  handleShowRequests,
   userId,
   setReloadList,
   _event,
@@ -92,7 +93,10 @@ const ParticipantsList = ({
         </ul>
         <div className={styles["lower-container"]}>
           <SpotsLeft event={_event} />
-          <PrimaryButton className={styles["requests-btn"]}>
+          <PrimaryButton
+            onClick={handleShowRequests}
+            className={styles["requests-btn"]}
+          >
             Requests
           </PrimaryButton>
         </div>

@@ -27,6 +27,7 @@ import { deleteParticipant } from "../../../api/deleteParticipant";
 import { createParticipant } from "../../../api/createParticipant";
 import { addParticipant } from "../../../api/addParticipant";
 import SpotsLeft from "../../../components/Spots/SpotsLeft";
+import RequestsList from "./RequestsList";
 
 const EventInfoSideBar = ({ ownerId, eventId }) => {
   // States
@@ -40,6 +41,8 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   const [hoveredParticipant, setHoveredParticipant] = useState(null);
 
   const [showAllParticipants, setShowAllParticipants] = useState(false);
+
+  const [showRequests, setShowRequests] = useState(false);
 
   const [userId, setUserId] = useState(null);
 
@@ -126,6 +129,12 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   // Funcs
   const handleShowAllParticipants = () => {
     setShowAllParticipants(!showAllParticipants);
+    setShowRequests(false);
+  };
+
+  const handleShowRequests = () => {
+    setShowRequests(!showRequests);
+    setShowAllParticipants(false);
   };
 
   const handleShowMore = () => {
@@ -141,7 +150,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
     <AnimatePresence>
       ( (
       <div>
-        {!showAllParticipants && event && (
+        {!showAllParticipants && !showRequests && event && (
           <motion.div
             className={styles["side-bar-container"]}
             ref={sideBar}
@@ -383,14 +392,21 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
           </motion.div>
         )}
 
-        {showAllParticipants && (
+        {showAllParticipants && !showRequests && (
           <ParticipantsList
             event={event}
             handleGoBackToSideBar={handleShowAllParticipants}
             handleCloseWindow={handleCloseWindow}
+            handleShowRequests={handleShowRequests}
             userId={userId}
             setReloadList={setReloadList}
             _event={event}
+          />
+        )}
+
+        {showRequests && (
+          <RequestsList
+            handleGoBackToParticipantsList={handleShowAllParticipants}
           />
         )}
       </div>
