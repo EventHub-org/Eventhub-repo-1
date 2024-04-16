@@ -3,7 +3,7 @@ import styles from './ChangePasswordButton.module.css';
 
 const ChangePasswordButton = ({onClick}) => {
   return(
-    <button className={styles.ChangePasswordButton}>Change password</button>
+    <button className={styles.ChangePasswordButton} onClick={onClick}>Change password</button>
   );
 };
 
