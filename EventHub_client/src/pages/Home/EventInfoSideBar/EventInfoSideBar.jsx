@@ -99,6 +99,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
         if (
           !showAllParticipants &&
+          !showRequests &&
           aboutText.current.scrollHeight > aboutText.current.clientHeight
         ) {
           setIsOverflowAboutText(true);
@@ -115,6 +116,14 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
         );
       });
   }, [event]);
+
+  useEffect(() => {
+    const resetSideBar = () => {
+      setShowAllParticipants(false);
+      setShowRequests(false);
+    };
+    resetSideBar();
+  }, [eventId]);
 
   //TODO Fix opacity when allParticipants is toggled
 
@@ -406,6 +415,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
         {showRequests && (
           <RequestsList
+            _event={event}
             handleGoBackToParticipantsList={handleShowAllParticipants}
           />
         )}
