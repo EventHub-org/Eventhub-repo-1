@@ -7,6 +7,7 @@ import styles from "./RequestsList.module.css";
 import { getRequestsByEventId } from "../../../api/getRequestsByEventId";
 import { deleteParticipant } from "../../../api/deleteParticipant";
 import AcceptParticipantButton from "../../../components/Buttons/AcceptParticipantButton/AcceptParticipantButton";
+import { addParticipant } from "../../../api/addParticipant";
 const RequestsList = ({
   _event,
   handleGoBackToParticipantsList,
@@ -44,7 +45,17 @@ const RequestsList = ({
                 <p className={styles["email"]}>{requestedParticipant.email}</p>
               </div>
               <div className={styles["accept-requested-participant-container"]}>
-                <AcceptParticipantButton />
+                <AcceptParticipantButton
+                  onClick={() => {
+                    addParticipant(
+                      requestedParticipant.user_id,
+                      _event.id,
+                      requestedParticipant.id
+                    ).then(() => {
+                      setReloadList((prev) => !prev);
+                    });
+                  }}
+                />
               </div>
               <div className={styles["delete-requested-participant-container"]}>
                 <CloseParticipantButton

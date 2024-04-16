@@ -139,25 +139,18 @@
   align-items: center;
   width: 90%;
   width: 100%;
-  /* border: solid; */
 }
 
 .participants-photos {
   display: flex;
-  /* gap: 10px; */
+  gap: 8px;
   overflow-x: auto;
-  /* border: solid; */
   width: 100%;
-}
-.participants-photos .item {
-  margin-right: 10px;
-
-  /* position: relative; */
 }
 
 .participant-img {
-  width: 60px;
-  height: 60px;
+  width: 53px;
+  height: 53px;
   border-radius: 50%;
 }
 
@@ -185,13 +178,13 @@
 }
 
 .show-more-participants {
-  width: 60px;
-  height: 60px;
+  width: 53px;
+  height: 53px;
 }
 
 .show-more-participants button {
-  width: 60px;
-  height: 60px;
+  width: 53px;
+  height: 53px;
 }
 
 /* About section */
