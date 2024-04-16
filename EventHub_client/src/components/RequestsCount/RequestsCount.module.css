@@ -2,9 +2,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
   background-color: red;
   color: #fff;
-  font-size: 11px;
+  font-size: 10px;
   border: 1px solid #fff;
   width: 15px;
   height: 15px;
