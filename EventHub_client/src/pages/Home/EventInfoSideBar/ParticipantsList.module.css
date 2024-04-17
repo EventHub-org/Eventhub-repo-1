@@ -14,7 +14,7 @@
   height: 85vh;
   top: 70px;
   margin-top: 10px;
-  padding: 20px;
+  padding: 10px;
   z-index: 991;
   right: 0;
   position: absolute;
@@ -32,6 +32,10 @@
   display: flex;
   justify-content: space-between;
   margin-top: 3.2%;
+}
+
+main {
+  padding: 20px;
 }
 
 /* Participants list */
@@ -148,14 +152,19 @@
 @media (width >= 1280px) and (width < 1700px) {
   .participants-list-container {
     font-size: var(--xxs-size);
+    padding: 8px;
+  }
+
+  main {
+    padding: 10px;
   }
 
   .participant-container {
-    height: 60px;
+    height: 53px;
   }
 
   .participant-photo {
-    width: 60px;
+    width: 53px;
     height: 100%;
   }
 

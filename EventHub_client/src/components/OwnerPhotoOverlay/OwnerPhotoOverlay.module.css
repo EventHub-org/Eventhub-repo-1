@@ -59,8 +59,8 @@
 @media (width < 1700px) {
   .owner-container {
     font-size: var(--xxs-size);
-    height: 60px;
-    min-height: 60px;
+    height: 53px;
+    min-height: 53px;
   }
 
   .full-name-container {
@@ -71,7 +71,7 @@
 
   .owner-img {
     /* object-fit: cover; */
-    width: 60px;
+    width: 53px;
   }
 
   .email {
