@@ -36,6 +36,7 @@
 
 main {
   padding: 20px;
+  overflow: auto;
 }
 
 /* Participants list */
@@ -124,7 +125,11 @@ main {
   color: var(--third-color);
   width: 15vw;
   margin-top: 5vh;
-  align-self: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .delete-participant-container {
