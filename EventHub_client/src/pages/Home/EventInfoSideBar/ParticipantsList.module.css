@@ -107,15 +107,15 @@ main {
   justify-content: center;
   align-items: center;
   font-size: var(--md-size);
-  width: 5.5vw;
-  height: 3.2vh;
+  width: 6.5vw;
+  height: 3.5vh;
   position: relative;
 }
 
 .requests-count-container {
   position: absolute;
-  top: -5%;
-  right: -2%;
+  top: 0;
+  right: 0;
 }
 
 .no-participants-msg {
