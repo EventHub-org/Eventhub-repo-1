@@ -9,7 +9,7 @@ import {
 
 import { useNavigate } from "react-router-dom";
 
-const SearchResults = ({ eventsData }) => {
+const SearchResults = ({ eventsData, searchParams }) => {
   const results = [
     {
       id: 1,
@@ -162,7 +162,10 @@ const SearchResults = ({ eventsData }) => {
   const navigate = useNavigate();
 
   const handleClick = (ownerId, eventId) => {
-    navigate(`/event/${ownerId}/${eventId}`);
+    navigate({
+      pathname: `/event/${ownerId}/${eventId}`,
+      search: `?${searchParams.toString()}`,
+    });
   };
 
   return (

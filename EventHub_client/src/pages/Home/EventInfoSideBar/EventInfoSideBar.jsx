@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./EventInfoSideBar.module.css";
 
 import { IoIosMore } from "react-icons/io";
@@ -54,6 +54,15 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
   const [reloadList, setReloadList] = useState(false);
 
+  // Params
+  const [searchParams] = useSearchParams();
+  const params = [];
+
+  searchParams.forEach((value, key) => {
+    params.push(`${key}=${value}`);
+  });
+  const queryString = params.join("&");
+
   // Auth
   const { auth } = useAuth();
 
@@ -65,6 +74,9 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   const showMoreBtn = useRef(null);
   const aboutText = useRef(null);
 
+  useEffect(() => {
+    console.log("Params: ", params);
+  }, []);
   // Effects
   useEffect(() => {
     try {
@@ -171,7 +183,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   };
 
   const handleCloseWindow = () => {
-    navigate("../");
+    navigate({ pathname: "../", search: `?${queryString}` });
   };
 
   return (
