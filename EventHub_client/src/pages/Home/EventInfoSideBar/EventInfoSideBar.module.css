@@ -474,11 +474,11 @@ main {
   }
 
   .about-text-full {
-    font-size: var(--xs-size);
+    font-size: var(--xxs-size);
   }
 
   .about-text-hidden {
-    font-size: var(--xs-size);
+    font-size: var(--xxs-size);
   }
 
   .isOwner-action-btn {
