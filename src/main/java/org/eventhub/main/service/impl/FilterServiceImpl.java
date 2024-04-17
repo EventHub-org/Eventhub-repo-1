@@ -90,30 +90,6 @@ public class FilterServiceImpl implements FilterService {
     }
 
     @Override
-    public List<EventResponseXY> allLiveEvents() {
-        return filterRepository.findAllLiveEvents(LocalDateTime.now())
-                .stream()
-                .map(eventMapper::entityToResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<EventResponseXY> allUpcomingEvents() {
-        return filterRepository.findAllUpcomingEvents(LocalDateTime.now())
-                .stream()
-                .map(eventMapper::entityToResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<EventResponseXY> allPastEvents() {
-        return filterRepository.findAllPastEvents(LocalDateTime.now())
-                .stream()
-                .map(eventMapper::entityToResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<EventResponseXY> allLiveAndUpcomingEvents() {
         List<Event> liveAndUpcomingEvents = new ArrayList<>();
 

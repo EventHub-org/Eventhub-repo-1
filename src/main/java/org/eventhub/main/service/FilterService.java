@@ -15,8 +15,5 @@ public interface FilterService {
     List<EventSearchResponse> filterEvents(EventFilterRequest filterRequest);
     Set<EventSearchResponse> filterCheckboxEvents(CheckboxRequest checkboxRequest);
 
-    List<EventResponseXY> allLiveEvents();
-    List<EventResponseXY> allUpcomingEvents();
-    List<EventResponseXY> allPastEvents();
     List<EventResponseXY> allLiveAndUpcomingEvents();
 }

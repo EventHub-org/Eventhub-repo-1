@@ -37,24 +37,6 @@ public class FilterController {
         return new ResponseEntity<>(filterService.filterCheckboxEvents(request), HttpStatus.OK);
     }
 
-    @GetMapping("/events/all-live")
-    public ResponseEntity<List<EventResponseXY>> getAllLive() {
-        log.info("**/get all live events ");
-        return new ResponseEntity<>(filterService.allLiveEvents(), HttpStatus.OK);
-    }
-
-    @GetMapping("/events/all-upcoming")
-    public ResponseEntity<List<EventResponseXY>> getAllUpcoming() {
-        log.info("**/get all upcoming events ");
-        return new ResponseEntity<>(filterService.allUpcomingEvents(), HttpStatus.OK);
-    }
-
-    @GetMapping("/events/all-past")
-    public ResponseEntity<List<EventResponseXY>> getAllPast() {
-        log.info("**/get all past events ");
-        return new ResponseEntity<>(filterService.allPastEvents(), HttpStatus.OK);
-    }
-
     @GetMapping("/events/all-live-upcoming")
     public ResponseEntity<List<EventResponseXY>> getAllLiveAndUpcoming() {
         log.info("**/get all live and upcoming events ");
