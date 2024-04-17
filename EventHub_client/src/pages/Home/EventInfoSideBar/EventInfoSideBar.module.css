@@ -245,11 +245,15 @@ main {
   align-items: center;
   justify-content: space-between;
   margin-top: auto;
+  height: 3.9vh;
 }
 
 .action-btn {
   font-size: 23px;
   width: 5vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100%;
 }
 
@@ -257,6 +261,10 @@ main {
   background: transparent;
   color: var(--third-color);
   border: var(--third-color) solid 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .action-2-btn:hover {
@@ -269,6 +277,7 @@ main {
   gap: 1px;
   height: 3.5vh;
   font-family: var(--primary-font-family);
+  height: 100%;
 }
 
 .isOwner-action-btn {
@@ -277,12 +286,20 @@ main {
   font-size: var(--sm-size);
   border: var(--primary-color) solid 1px;
   width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .isOwner-action-2-btn {
   background: transparent;
   color: var(--third-color);
   border: var(--third-color) solid 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .isOwner-action-2-btn:hover {
@@ -295,6 +312,10 @@ main {
   font-size: var(--sm-size);
   border: var(--primary-color) solid 1px;
   width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 /* Scroll bar */

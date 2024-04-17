@@ -129,6 +129,7 @@ main {
   justify-content: space-between;
   align-items: center;
   margin-top: auto;
+  height: 3.9vh;
 }
 
 @media (width < 1280px) {
