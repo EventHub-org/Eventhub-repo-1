@@ -45,7 +45,13 @@ const ProfileInfo = ({ onProfileClick }) => {
       </div>
       <button className={styles.avatarButton} onClick={onProfileClick}>
         {user ? (
-          <img src={user.photo_url} alt="profile image" className={styles.profileImage}/>
+          <div className={styles.profileImageContainer}>
+            <img
+              src={user.photo_url}
+              alt="profile image"
+              className={styles.profileImage}
+            />
+          </div>
         ) : (
           <Avatar size={40} icon={<UserOutlined />} />
         )}
