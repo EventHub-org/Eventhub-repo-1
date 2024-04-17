@@ -1,23 +1,14 @@
-import axios from "./axios";
+import authAxios from "./authAxios";
 
 export const addParticipant = async (userId, eventId, participantId) => {
   try {
-    const accessToken = localStorage.getItem("token");
-
-    const response = await axios({
-      method: "put",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "content-type",
-        "Access-Control-Allow-Credentials": "true",
-      },
-      url: `http://localhost:9090/events/${eventId}/participants/${participantId}`,
-      data: {
+    const response = await authAxios.put(
+      `events/${eventId}/participants/${participantId}`,
+      {
         event_id: eventId,
         user_id: userId,
-      },
-    });
+      }
+    );
 
     return response.data;
   } catch (error) {
