@@ -56,12 +56,6 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
   // Params
   const [searchParams] = useSearchParams();
-  const params = [];
-
-  searchParams.forEach((value, key) => {
-    params.push(`${key}=${value}`);
-  });
-  const queryString = params.join("&");
 
   // Auth
   const { auth } = useAuth();
@@ -73,10 +67,6 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   const sideBar = useRef(null);
   const showMoreBtn = useRef(null);
   const aboutText = useRef(null);
-
-  useEffect(() => {
-    console.log("Params: ", params);
-  }, []);
   // Effects
   useEffect(() => {
     try {
@@ -183,7 +173,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   };
 
   const handleCloseWindow = () => {
-    navigate({ pathname: "../", search: `?${queryString}` });
+    navigate({ pathname: "../", search: `?${searchParams.toString()}` });
   };
 
   return (
