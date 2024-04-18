@@ -149,11 +149,37 @@ hr {
 
 @media (width >= 1280px) and (width < 1700px) {
   .pop-up-container {
-    height: 350px;
-    top: -825%;
+    height: 300px;
+    top: -705%;
+  }
+  .full-name {
+    font-size: var(--xs-size);
   }
 
+  .heading {
+    font-size: var(--xs-size);
+  }
+
+  .information {
+    font-size: var(--xxs-size);
+  }
+
+  .email {
+    font-size: var(--xs-size);
+  }
+
+  .description {
+    /* display: none; */
+    font-size: var(--xs-size);
+  }
+
+  .participant-img {
+    width: 55px;
+    height: 55px;
+  }
   .show-more-btn {
-    position: relative;
+    font-size: var(--xxs-size);
+    width: 110px;
+    height: 25px;
   }
 }
