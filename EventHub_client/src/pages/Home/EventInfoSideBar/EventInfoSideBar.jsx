@@ -12,7 +12,6 @@ import ImageSlider from "../../../components/ImageSlider/ImageSlider";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import ParticipantsList from "./ParticipantsList";
 
-import month from "../../../utils/month";
 import ParticipantState from "../../../utils/ParticipantState";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -176,6 +175,20 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
     navigate({ pathname: "../", search: `?${searchParams.toString()}` });
   };
 
+  const getFormattedDate = (dateTimeString) => {
+    const date = new Date(dateTimeString);
+    const month = date.toLocaleString("default", { month: "short" });
+    const day = date.getDate();
+    return `${month} ${day}`;
+  };
+
+  const getFormattedTime = (dateTimeString) => {
+    const date = new Date(dateTimeString);
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
   return (
     <AnimatePresence>
       ( (
@@ -225,23 +238,19 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                 <div className={styles["date-range-container"]}>
                   <div className={styles["start-at"]}>
                     <div className={styles["day"]}>
-                      {month.get(event.start_at.slice(5, 7)) +
-                        " " +
-                        event.start_at.slice(8, 10)}
+                      {getFormattedDate(event.start_at)}
                     </div>
                     <div className={styles["time"]}>
-                      {event.start_at.slice(11, 16)}
+                      {getFormattedTime(event.start_at)}
                     </div>
                   </div>
 
                   <div className={styles["expire-at"]}>
                     <div className={styles["day"]}>
-                      {month.get(event.expire_at.slice(5, 7)) +
-                        " " +
-                        event.expire_at.slice(8, 10)}
+                      {getFormattedDate(event.expire_at)}
                     </div>
                     <div className={styles["time"]}>
-                      {event.expire_at.slice(11, 16)}
+                      {getFormattedTime(event.expire_at)}
                     </div>
                   </div>
                 </div>

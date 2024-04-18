@@ -6,7 +6,11 @@ import { CiCalendar } from "react-icons/ci";
 import PrimaryButton from "../Buttons/PrimaryButton/PrimaryButton";
 
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+
+const getFormattedDate = (dateTimeString) => {
+  const date = new Date(dateTimeString);
+  return date.toLocaleDateString("default");
+};
 
 const ParticipantInfoPopUp = ({ participant, onMouseEnter, onMouseLeave }) => {
   return (
@@ -51,13 +55,7 @@ const ParticipantInfoPopUp = ({ participant, onMouseEnter, onMouseLeave }) => {
           {participant.birth_date && (
             <div className={styles["birth-date"]}>
               <CiCalendar size="1.4rem" />
-              {`${participant.birth_date.slice(
-                8,
-                10
-              )}.${participant.birth_date.slice(
-                5,
-                7
-              )}.${participant.birth_date.slice(0, 4)}`}
+              {getFormattedDate(participant.birth_date)}
             </div>
           )}
         </div>
