@@ -31,7 +31,8 @@
 .header {
   display: flex;
   justify-content: space-between;
-  margin-top: 3.2%;
+  align-items: center;
+  height: 5vh;
 }
 
 main {
