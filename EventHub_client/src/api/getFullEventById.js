@@ -6,6 +6,7 @@ export const getFullEventById = async (userId, eventId) => {
     const response = await axios.get(`/users/${userId}/events/${eventId}`);
     return response.data;
   } catch (error) {
-    message.error("Error getting event with Id: ", error);
+    message.error("Error getting event data");
+    console.error(error);
   }
 };

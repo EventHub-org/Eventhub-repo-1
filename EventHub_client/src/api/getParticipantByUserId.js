@@ -8,6 +8,7 @@ export const getParticipantByUserId = async (userId, eventId) => {
     );
     return response.data;
   } catch (error) {
-    message.error("Error getting participant by user id:", error);
+    message.error("Error getting participant by user id");
+    console.error(error);
   }
 };

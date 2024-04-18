@@ -13,6 +13,7 @@ export const addParticipant = async (userId, eventId, participantId) => {
 
     return response.data;
   } catch (error) {
-    message.error("Error while adding participant: ", error);
+    message.error("Error while adding participant");
+    console.error(error);
   }
 };

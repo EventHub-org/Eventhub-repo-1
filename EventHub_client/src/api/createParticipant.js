@@ -10,6 +10,7 @@ export const createParticipant = async (userId, eventId) => {
 
     return response.data;
   } catch (error) {
-    message.error("Error creating participant:", error);
+    message.error("Error creating participant");
+    console.error(error);
   }
 };

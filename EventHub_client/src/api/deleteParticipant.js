@@ -8,6 +8,7 @@ export const deleteParticipant = async (participantId, eventId) => {
     );
     return response.data;
   } catch (error) {
-    message.error("Error deleting participant:", error);
+    message.error("Error deleting participant");
+    console.error(error);
   }
 };

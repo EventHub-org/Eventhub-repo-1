@@ -73,7 +73,6 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
     } catch (e) {
       setUserId(null);
       setParticipantState(null);
-      console.log("User is not logged in.");
     }
   }, [auth]);
 
@@ -97,8 +96,6 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   useEffect(() => {
     event &&
       getJoinedParticipants(event.id).then((data) => {
-        console.log("Data: ", data);
-
         setParticipantsToShow(data.slice(0, 5));
 
         if (
@@ -116,16 +113,9 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   }, [event]);
 
   useEffect(() => {
-    console.log("IsShowMore text: ", isOverflowAboutText);
-  }, [isOverflowAboutText]);
-
-  useEffect(() => {
     event &&
       getUserById(event.owner_id).then((data) => {
         setOwner(data);
-        console.log(
-          `Owner photo response: ${data.photo_responses[0].photo_url}`
-        );
       });
   }, [event]);
 
@@ -140,10 +130,6 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   useEffect(() => {
     getRequestsByEventId(eventId).then((data) => setRequests(data));
   }, [event]);
-
-  useEffect(() => {
-    console.log("Participant state: ", participantState);
-  }, [participantState]);
 
   //TODO Fix opacity when allParticipants is toggled
 

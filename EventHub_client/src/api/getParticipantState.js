@@ -8,6 +8,7 @@ export const getParticipantState = async (userId, eventId) => {
     );
     return response.data;
   } catch (error) {
-    message.error("Error getting participant state:", error);
+    message.error("Error getting participant state");
+    console.error(error);
   }
 };
