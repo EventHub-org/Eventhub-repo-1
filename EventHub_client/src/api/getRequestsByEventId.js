@@ -1,3 +1,4 @@
+import { message } from "antd";
 import authAxios from "./authAxios";
 
 export const getRequestsByEventId = async (eventId) => {
@@ -7,6 +8,6 @@ export const getRequestsByEventId = async (eventId) => {
     );
     return response.data;
   } catch (error) {
-    console.log("Error getting requests by event id:", error);
+    message.error("Error getting requests by event id:", error);
   }
 };

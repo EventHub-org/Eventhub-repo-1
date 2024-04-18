@@ -1,3 +1,4 @@
+import { message } from "antd";
 import authAxios from "./authAxios";
 
 export const deleteParticipant = async (participantId, eventId) => {
@@ -7,6 +8,6 @@ export const deleteParticipant = async (participantId, eventId) => {
     );
     return response.data;
   } catch (error) {
-    console.log("Error deleting participant:", error);
+    message.error("Error deleting participant:", error);
   }
 };

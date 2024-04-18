@@ -1,3 +1,4 @@
+import { message } from "antd";
 import authAxios from "./authAxios";
 
 export const createParticipant = async (userId, eventId) => {
@@ -9,6 +10,6 @@ export const createParticipant = async (userId, eventId) => {
 
     return response.data;
   } catch (error) {
-    console.log("Error creating participant:", error);
+    message.error("Error creating participant:", error);
   }
 };

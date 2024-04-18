@@ -1,3 +1,4 @@
+import { message } from "antd";
 import axios from "./axios";
 
 export const getParticipantState = async (userId, eventId) => {
@@ -7,6 +8,6 @@ export const getParticipantState = async (userId, eventId) => {
     );
     return response.data;
   } catch (error) {
-    console.log("Error getting participant state:", error);
+    message.error("Error getting participant state:", error);
   }
 };

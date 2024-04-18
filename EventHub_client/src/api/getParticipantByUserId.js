@@ -1,3 +1,4 @@
+import { message } from "antd";
 import authAxios from "./authAxios";
 
 export const getParticipantByUserId = async (userId, eventId) => {
@@ -7,6 +8,6 @@ export const getParticipantByUserId = async (userId, eventId) => {
     );
     return response.data;
   } catch (error) {
-    console.log("Error getting participant by user id:", error);
+    message.error("Error getting participant by user id:", error);
   }
 };
