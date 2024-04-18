@@ -94,7 +94,7 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 6vh;
+  height: 7vh;
 }
 
 .start-at {
@@ -119,19 +119,17 @@ main {
   height: 100%;
   position: absolute;
   left: 50%;
-  /* margin: auto; */
 }
 
 .location {
   right: 10px;
   width: 40%;
-  height: 6vh;
+  height: 7vh;
   overflow-wrap: break-word;
   display: flex;
   align-items: center;
-  font-size: 1.1rem;
   font-weight: 300;
-  font-size: var(--xs-size);
+  font-size: var(--sm-size);
 }
 
 .date-btn {
@@ -437,9 +435,7 @@ main {
 
   .location {
     font-size: var(--xxs-size);
-    /* border: solid; */
     width: 140px;
-    /* height: 100%; */
   }
 
   .vl {
