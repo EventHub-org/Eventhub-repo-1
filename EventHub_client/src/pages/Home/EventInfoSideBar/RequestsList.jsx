@@ -50,13 +50,11 @@ const RequestsList = ({
               <div className={styles["accept-requested-participant-container"]}>
                 <AcceptParticipantButton
                   onClick={() => {
-                    addParticipant(
-                      requestedParticipant.user_id,
-                      _event.id,
-                      requestedParticipant.id
-                    ).then(() => {
-                      setReloadList((prev) => !prev);
-                    });
+                    addParticipant(_event.id, requestedParticipant.id).then(
+                      () => {
+                        setReloadList((prev) => !prev);
+                      }
+                    );
                   }}
                 />
               </div>

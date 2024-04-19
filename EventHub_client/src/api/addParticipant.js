@@ -1,14 +1,10 @@
 import { message } from "antd";
 import authAxios from "./authAxios";
 
-export const addParticipant = async (userId, eventId, participantId) => {
+export const addParticipant = async (eventId, participantId) => {
   try {
-    const response = await authAxios.put(
-      `events/${eventId}/participants/${participantId}`,
-      {
-        event_id: eventId,
-        user_id: userId,
-      }
+    const response = await authAxios.post(
+      `events/${eventId}/participants/add/${participantId}`
     );
 
     return response.data;

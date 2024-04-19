@@ -32,7 +32,7 @@ public class ParticipantController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ParticipantResponse> create(@PathVariable("event_id") UUID eventId, @RequestHeader (name="Authorization") String token ) {
+    public ResponseEntity<ParticipantResponse> create(@PathVariable("event_id") UUID eventId, @RequestHeader (name="Authorization") String token) {
         UUID userId = jwtService.getId(token);
 
         ParticipantRequest request = new ParticipantRequest(eventId, userId);
@@ -104,8 +104,8 @@ public class ParticipantController {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
-    @PutMapping("/{participant_id}")
-    public ResponseEntity<ParticipantResponse> update(@PathVariable("participant_id") UUID participantId){
+    @PostMapping("/add/{participant_id}")
+    public ResponseEntity<ParticipantResponse> addParticipant(@PathVariable("participant_id") UUID participantId) {
 
         ParticipantResponse response = participantService.addParticipant(participantId);
         log.info("**/Added participant(id) = " + response.getId());

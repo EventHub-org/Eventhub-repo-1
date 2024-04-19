@@ -335,7 +335,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   <PrimaryButton
                     className={styles["action-btn"]}
                     onClick={() => {
-                      createParticipant(userId, eventId).then(() =>
+                      createParticipant(eventId).then(() =>
                         setParticipantState(ParticipantState.REQUESTED)
                       );
                     }}
@@ -384,16 +384,14 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                     <PrimaryButton
                       className={styles["isOwner-action-btn"]}
                       onClick={() => {
-                        createParticipant(userId, eventId).then(() =>
+                        createParticipant(eventId).then(() =>
                           getParticipantByUserId(userId, eventId).then(
                             (participant) => {
-                              addParticipant(
-                                userId,
-                                eventId,
-                                participant.id
-                              ).then(() => {
-                                setParticipantState(ParticipantState.JOINED);
-                              });
+                              addParticipant(eventId, participant.id).then(
+                                () => {
+                                  setParticipantState(ParticipantState.JOINED);
+                                }
+                              );
                             }
                           )
                         );
