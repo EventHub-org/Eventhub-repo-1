@@ -67,6 +67,10 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   const aboutText = useRef(null);
 
   useEffect(() => {
+    console.log(auth.token);
+  }, [auth]);
+
+  useEffect(() => {
     auth.token &&
       getParticipantState(eventId).then((data) => {
         setUserState(data.state);
