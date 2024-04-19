@@ -90,8 +90,9 @@ public class ParticipantController {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
-    @GetMapping("/user_state/{user_id}")
-    public ResponseEntity<ParticipantState> getParticipantState(@PathVariable("user_id") UUID userId, @PathVariable("event_id") UUID eventId){
+    @GetMapping("/user_state")
+    public ResponseEntity<ParticipantStateResponse> getParticipantState(@PathVariable("event_id") UUID eventId, @RequestHeader (name="Authorization") String token) {
+        UUID userId = jwtService.getId(token);
         log.info("**/get participant state with user id:" + userId + ", event id: " + eventId);
 
         return new ResponseEntity<>(participantService.getParticipantState(userId, eventId), HttpStatus.OK);

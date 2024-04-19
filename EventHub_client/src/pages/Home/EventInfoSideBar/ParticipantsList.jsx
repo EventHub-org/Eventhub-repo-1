@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styles from "./ParticipantsList.module.css";
 
 import { getUserParticipants } from "../../../api/getUserParticipants";
@@ -18,7 +18,7 @@ const ParticipantsList = ({
   handleGoBackToSideBar,
   handleCloseWindow,
   handleShowRequests,
-  userId,
+  isOwner,
   setReloadList,
   requests,
   _event,
@@ -79,7 +79,7 @@ const ParticipantsList = ({
                       </div>
                       <p className={styles["email"]}>{participant.email}</p>
                     </div>
-                    {userId === ownerId && (
+                    {isOwner && (
                       <div className={styles["delete-participant-container"]}>
                         <CloseParticipantButton
                           onClick={() => {
@@ -98,7 +98,7 @@ const ParticipantsList = ({
 
         <div className={styles["lower-container"]}>
           <SpotsLeft event={_event} />
-          {userId === ownerId && (
+          {isOwner && (
             <PrimaryButton
               onClick={handleShowRequests}
               className={styles["requests-btn"]}

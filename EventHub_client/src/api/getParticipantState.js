@@ -1,10 +1,10 @@
 import { message } from "antd";
-import axios from "./axios";
+import authAxios from "./authAxios";
 
-export const getParticipantState = async (userId, eventId) => {
+export const getParticipantState = async (eventId) => {
   try {
-    const response = await axios.get(
-      `events/${eventId}/participants/user_state/${userId}`
+    const response = await authAxios.get(
+      `events/${eventId}/participants/user_state`
     );
     return response.data;
   } catch (error) {

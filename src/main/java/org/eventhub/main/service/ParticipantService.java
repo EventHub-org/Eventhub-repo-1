@@ -23,5 +23,6 @@ public interface ParticipantService {
     List<UserParticipantResponse> getAllUserRequestsByEventId(UUID eventId);
     List<UserParticipantResponse> getUserParticipantsByEventId(UUID eventId);
 
-    ParticipantState getParticipantState(UUID eventId, UUID userId);
+    ParticipantStateResponse getParticipantState(UUID eventId, UUID userId);
+    ParticipantState getState(UUID eventId, UUID userId);
 }

@@ -19,7 +19,6 @@ import ParticipantInfoPopUp from "../../../components/PopUp/ParticipantInfoPopUp
 import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButton";
 import OwnerPhotoOverlay from "../../../components/OwnerPhotoOverlay/OwnerPhotoOverlay";
 import useAuth from "../../../hooks/useAuth";
-import getIdFromToken from "../../../jwt/getIdFromToken";
 import { getParticipantState } from "../../../api/getParticipantState";
 import { getParticipantByUser } from "../../../api/getParticipantByUser";
 import { deleteParticipant } from "../../../api/deleteParticipant";
@@ -47,9 +46,9 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
   const [requests, setRequests] = useState(null);
 
-  const [userId, setUserId] = useState(null);
+  const [userState, setUserState] = useState(null);
 
-  const [participantState, setParticipantState] = useState(null);
+  const [isOwner, setIsOwner] = useState(false);
 
   const [reloadList, setReloadList] = useState(false);
 
@@ -66,50 +65,47 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   const sideBar = useRef(null);
   const showMoreBtn = useRef(null);
   const aboutText = useRef(null);
-  // Effects
-  useEffect(() => {
-    try {
-      setUserId(getIdFromToken());
-    } catch (e) {
-      setUserId(null);
-      setParticipantState(null);
-    }
-  }, [auth]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      userId &&
-        getParticipantState(userId, eventId).then((data) =>
-          setParticipantState(data)
-        );
-    };
+    auth.token &&
+      getParticipantState(eventId).then((data) => {
+        setUserState(data.state);
+        setIsOwner(data.owner);
+      });
+  }, [eventId, auth]);
 
-    fetchData();
-  }, [eventId, userId]);
+  useEffect(() => {
+    console.log("user state: ", userState);
+    // console.log("is owner: ", isOwner)
+  }, [userState]);
 
   useEffect(() => {
     getFullEventById(ownerId, eventId).then((data) => {
       setEvent(data);
     });
-  }, [ownerId, eventId, participantState, reloadList]);
+  }, [ownerId, eventId, userState, reloadList]);
 
   useEffect(() => {
     event &&
       getJoinedParticipants(event.id).then((data) => {
         setParticipantsToShow(data.slice(0, 5));
-
-        if (
-          !showAllParticipants &&
-          !showRequests &&
-          aboutText.current.scrollHeight > aboutText.current.clientHeight
-        ) {
-          setIsOverflowAboutText(true);
-        } else {
-          setIsOverflowAboutText(false);
-        }
       });
 
     return () => setIsShowMore(false);
+  }, [event]);
+
+  useEffect(() => {
+    if (
+      event &&
+      userState &&
+      !showAllParticipants &&
+      !showRequests &&
+      aboutText.current.scrollHeight > aboutText.current.clientHeight
+    ) {
+      setIsOverflowAboutText(true);
+    } else {
+      setIsOverflowAboutText(false);
+    }
   }, [event]);
 
   useEffect(() => {
@@ -128,8 +124,13 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   }, [eventId]);
 
   useEffect(() => {
-    getRequestsByEventId(eventId).then((data) => setRequests(data));
-  }, [event]);
+    try {
+      isOwner &&
+        getRequestsByEventId(eventId).then((data) => setRequests(data));
+    } catch (error) {
+      setRequests(null);
+    }
+  }, [eventId, isOwner, auth]);
 
   //TODO Fix opacity when allParticipants is toggled
 
@@ -274,13 +275,11 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                       onClick={handleShowAllParticipants}
                       className={styles["show-more-participants-btn"]}
                     >
-                      {requests &&
-                        userId === ownerId &&
-                        requests.length > 0 && (
-                          <div className={styles["requests-count-container"]}>
-                            <RequestsCount requestsLength={requests.length} />
-                          </div>
-                        )}
+                      {requests && isOwner && requests.length > 0 && (
+                        <div className={styles["requests-count-container"]}>
+                          <RequestsCount requestsLength={requests.length} />
+                        </div>
+                      )}
                       <IoIosMore
                         className={styles["show-more-participants-btn-icon"]}
                       />
@@ -320,7 +319,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
             <div className={styles["lower-container"]}>
               <SpotsLeft event={event} />
 
-              {participantState === null && (
+              {userState === null && (
                 <PrimaryButton
                   className={styles["action-btn"]}
                   onClick={() => navigate("login")}
@@ -329,65 +328,59 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                 </PrimaryButton>
               )}
 
-              {participantState === ParticipantState.NONE &&
-                userId !== event.owner_id &&
-                userId && (
-                  <PrimaryButton
-                    className={styles["action-btn"]}
-                    onClick={() => {
-                      createParticipant(eventId).then(() =>
-                        setParticipantState(ParticipantState.REQUESTED)
+              {userState === ParticipantState.NONE && !isOwner && (
+                <PrimaryButton
+                  className={styles["action-btn"]}
+                  onClick={() => {
+                    createParticipant(eventId).then(() =>
+                      setUserState(ParticipantState.REQUESTED)
+                    );
+                  }}
+                >
+                  Join
+                </PrimaryButton>
+              )}
+
+              {userState === ParticipantState.REQUESTED && !isOwner && (
+                <PrimaryButton
+                  className={`${styles["action-btn"]} ${styles["action-2-btn"]}`}
+                  onClick={() =>
+                    getParticipantByUser(eventId).then((data) => {
+                      deleteParticipant(data.id, eventId).then(() =>
+                        setUserState(ParticipantState.NONE)
                       );
-                    }}
-                  >
-                    Join
-                  </PrimaryButton>
-                )}
+                    })
+                  }
+                >
+                  Cancel
+                </PrimaryButton>
+              )}
 
-              {participantState === ParticipantState.REQUESTED &&
-                userId !== event.owner_id &&
-                userId && (
-                  <PrimaryButton
-                    className={`${styles["action-btn"]} ${styles["action-2-btn"]}`}
-                    onClick={() =>
-                      getParticipantByUser(eventId).then((data) => {
-                        deleteParticipant(data.id, eventId).then(() =>
-                          setParticipantState(ParticipantState.NONE)
-                        );
-                      })
-                    }
-                  >
-                    Cancel
-                  </PrimaryButton>
-                )}
+              {userState === ParticipantState.JOINED && !isOwner && (
+                <PrimaryButton
+                  className={`${styles["action-btn"]} ${styles["action-2-btn"]}`}
+                  onClick={() =>
+                    getParticipantByUser(eventId).then((data) => {
+                      deleteParticipant(data.id, eventId).then(() =>
+                        setUserState(ParticipantState.NONE)
+                      );
+                    })
+                  }
+                >
+                  Leave
+                </PrimaryButton>
+              )}
 
-              {participantState === ParticipantState.JOINED &&
-                userId !== event.owner_id &&
-                userId && (
-                  <PrimaryButton
-                    className={`${styles["action-btn"]} ${styles["action-2-btn"]}`}
-                    onClick={() =>
-                      getParticipantByUser(eventId).then((data) => {
-                        deleteParticipant(data.id, eventId).then(() =>
-                          setParticipantState(ParticipantState.NONE)
-                        );
-                      })
-                    }
-                  >
-                    Leave
-                  </PrimaryButton>
-                )}
-
-              {userId === event.owner_id && (
+              {isOwner && (
                 <div className={styles["btns-container"]}>
-                  {participantState === ParticipantState.NONE && (
+                  {userState === ParticipantState.NONE && (
                     <PrimaryButton
                       className={styles["isOwner-action-btn"]}
                       onClick={() => {
                         createParticipant(eventId).then(() =>
                           getParticipantByUser(eventId).then((participant) => {
                             addParticipant(eventId, participant.id).then(() => {
-                              setParticipantState(ParticipantState.JOINED);
+                              setUserState(ParticipantState.JOINED);
                             });
                           })
                         );
@@ -397,13 +390,13 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                     </PrimaryButton>
                   )}
 
-                  {participantState === ParticipantState.JOINED && (
+                  {userState === ParticipantState.JOINED && (
                     <PrimaryButton
                       className={`${styles["isOwner-action-btn"]} ${styles["isOwner-action-2-btn"]}`}
                       onClick={() =>
                         getParticipantByUser(eventId).then((data) => {
                           deleteParticipant(data.id, eventId).then(() =>
-                            setParticipantState(ParticipantState.NONE)
+                            setUserState(ParticipantState.NONE)
                           );
                         })
                       }
@@ -427,14 +420,14 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
             handleGoBackToSideBar={handleShowAllParticipants}
             handleCloseWindow={handleCloseWindow}
             handleShowRequests={handleShowRequests}
-            userId={userId}
+            isOwner={isOwner}
             setReloadList={setReloadList}
             requests={requests}
             _event={event}
           />
         )}
 
-        {showRequests && userId === ownerId && (
+        {showRequests && isOwner && (
           <RequestsList
             _event={event}
             requests={requests}
