@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import { getUserById } from "../../api/getUserById";
-import getIdFromToken from "../../jwt/getIdFromToken";
+import { getUserInfo } from "../../api/getUserInfo";
 import styles from "./ProfileInfo.module.css";
 
 const ProfileInfo = ({ onProfileClick }) => {
@@ -15,8 +14,7 @@ const ProfileInfo = ({ onProfileClick }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const user_id = getIdFromToken();
-        const userData = await getUserById(user_id);
+        const userData = await getUserInfo();
         setUser({
           username: userData.username,
           email: userData.email,
