@@ -1,6 +1,7 @@
 package org.eventhub.main.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.eventhub.main.config.JwtService;
 import org.eventhub.main.dto.*;
 import org.eventhub.main.exception.ResponseStatusException;
 import org.eventhub.main.model.ParticipantState;
@@ -22,18 +23,20 @@ import java.util.UUID;
 public class ParticipantController {
     private final ParticipantService participantService;
 
+    private final JwtService jwtService;
+
     @Autowired
-    public ParticipantController(ParticipantService participantService){
+    public ParticipantController(ParticipantService participantService, JwtService jwtService){
         this.participantService = participantService;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ParticipantResponse> create(@PathVariable("event_id") UUID eventId, @Validated @RequestBody ParticipantRequest request,
-                                      BindingResult bindingResult){
-        request.setEventId(eventId);
-        if(bindingResult.hasErrors()){
-            throw new ResponseStatusException("Invalid Input");
-        }
+    public ResponseEntity<ParticipantResponse> create(@PathVariable("event_id") UUID eventId, @RequestHeader (name="Authorization") String token ) {
+        UUID userId = jwtService.getId(token);
+
+        ParticipantRequest request = new ParticipantRequest(eventId, userId);
+
         ParticipantResponse response = participantService.create(request);
         log.info("**/created participant(id) = " + response.getId());
 

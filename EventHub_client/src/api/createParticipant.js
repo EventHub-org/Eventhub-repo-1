@@ -4,10 +4,7 @@ import authAxios from "./authAxios";
 export const createParticipant = async (userId, eventId) => {
   try {
     const response = await authAxios.post(
-      `events/${eventId}/participants/create`,
-      {
-        user_id: userId,
-      }
+      `events/${eventId}/participants/create`
     );
 
     return response.data;
