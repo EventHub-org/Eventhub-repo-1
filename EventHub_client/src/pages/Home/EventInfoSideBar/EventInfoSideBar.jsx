@@ -130,7 +130,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
     } catch (error) {
       setRequests(null);
     }
-  }, [eventId, isOwner, auth]);
+  }, [eventId, isOwner, auth, reloadList]);
 
   //TODO Fix opacity when allParticipants is toggled
 
