@@ -21,7 +21,7 @@ import OwnerPhotoOverlay from "../../../components/OwnerPhotoOverlay/OwnerPhotoO
 import useAuth from "../../../hooks/useAuth";
 import getIdFromToken from "../../../jwt/getIdFromToken";
 import { getParticipantState } from "../../../api/getParticipantState";
-import { getParticipantByUserId } from "../../../api/getParticipantByUserId";
+import { getParticipantByUser } from "../../../api/getParticipantByUser";
 import { deleteParticipant } from "../../../api/deleteParticipant";
 import { createParticipant } from "../../../api/createParticipant";
 import { addParticipant } from "../../../api/addParticipant";
@@ -350,7 +350,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   <PrimaryButton
                     className={`${styles["action-btn"]} ${styles["action-2-btn"]}`}
                     onClick={() =>
-                      getParticipantByUserId(userId, eventId).then((data) => {
+                      getParticipantByUser(eventId).then((data) => {
                         deleteParticipant(data.id, eventId).then(() =>
                           setParticipantState(ParticipantState.NONE)
                         );
@@ -367,7 +367,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   <PrimaryButton
                     className={`${styles["action-btn"]} ${styles["action-2-btn"]}`}
                     onClick={() =>
-                      getParticipantByUserId(userId, eventId).then((data) => {
+                      getParticipantByUser(eventId).then((data) => {
                         deleteParticipant(data.id, eventId).then(() =>
                           setParticipantState(ParticipantState.NONE)
                         );
@@ -385,15 +385,11 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                       className={styles["isOwner-action-btn"]}
                       onClick={() => {
                         createParticipant(eventId).then(() =>
-                          getParticipantByUserId(userId, eventId).then(
-                            (participant) => {
-                              addParticipant(eventId, participant.id).then(
-                                () => {
-                                  setParticipantState(ParticipantState.JOINED);
-                                }
-                              );
-                            }
-                          )
+                          getParticipantByUser(eventId).then((participant) => {
+                            addParticipant(eventId, participant.id).then(() => {
+                              setParticipantState(ParticipantState.JOINED);
+                            });
+                          })
                         );
                       }}
                     >
@@ -405,7 +401,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                     <PrimaryButton
                       className={`${styles["isOwner-action-btn"]} ${styles["isOwner-action-2-btn"]}`}
                       onClick={() =>
-                        getParticipantByUserId(userId, eventId).then((data) => {
+                        getParticipantByUser(eventId).then((data) => {
                           deleteParticipant(data.id, eventId).then(() =>
                             setParticipantState(ParticipantState.NONE)
                           );

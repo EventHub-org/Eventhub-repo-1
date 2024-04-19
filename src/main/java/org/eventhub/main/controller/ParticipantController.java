@@ -57,8 +57,9 @@ public class ParticipantController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    @GetMapping("/user/{user_id}")
-    public ResponseEntity<ParticipantResponse> getByUserId(@PathVariable("user_id") UUID userId, @PathVariable("event_id") UUID eventId){
+    @GetMapping("/user")
+    public ResponseEntity<ParticipantResponse> getByUser(@PathVariable("event_id") UUID eventId, @RequestHeader (name="Authorization") String token) {
+        UUID userId = jwtService.getId(token);
         ParticipantResponse response = participantService.readByUserIdInEventById(userId, eventId);
         log.info("**/get by user id: " + userId + "in event by id: " + eventId);
 
