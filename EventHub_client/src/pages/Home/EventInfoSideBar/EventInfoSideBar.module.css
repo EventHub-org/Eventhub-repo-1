@@ -484,4 +484,11 @@ main {
   .isOwner-edit-btn {
     font-size: var(--xxxs-size);
   }
+
+  .isOwner-action-btn {
+    font-size: var(--xxs-size);
+  }
+  .isOwner-edit-btn {
+    font-size: var(--xxs-size);
+  }
 }
