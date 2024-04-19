@@ -27,9 +27,10 @@ public class ParticipantController {
         this.participantService = participantService;
     }
 
-    @PostMapping
-    public ResponseEntity<ParticipantResponse> create(@Validated @RequestBody ParticipantRequest request,
+    @PostMapping("/create")
+    public ResponseEntity<ParticipantResponse> create(@PathVariable("event_id") UUID eventId, @Validated @RequestBody ParticipantRequest request,
                                       BindingResult bindingResult){
+        request.setEventId(eventId);
         if(bindingResult.hasErrors()){
             throw new ResponseStatusException("Invalid Input");
         }
