@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/token")
 @RequiredArgsConstructor
@@ -15,11 +17,8 @@ public class TokenController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> getToken(@RequestHeader("Authorization") String token) {
-        String validToken = token.substring(7);
-        String id = jwtService.extractClaim(validToken, claims -> {
-            return claims.get("id", String.class);
-        });
+    public ResponseEntity<UUID> getToken(@RequestHeader("Authorization") String token) {
+        UUID id = jwtService.getId(token);
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 }
