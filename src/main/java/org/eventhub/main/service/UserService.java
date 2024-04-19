@@ -1,6 +1,7 @@
 package org.eventhub.main.service;
 
 import org.eventhub.main.dto.EventSearchResponse;
+import org.eventhub.main.dto.PasswordRequest;
 import org.eventhub.main.dto.UserResponse;
 import org.eventhub.main.dto.UserRequest;
 import org.eventhub.main.model.Photo;
@@ -29,4 +30,5 @@ public interface UserService extends UserDetailsService {
     void addImage(UUID id, Photo image);
 
     void deleteImage(UUID userId, Photo image);
+    UserResponse changePassword(UUID userId, PasswordRequest passwordRequest);
 }

@@ -2,9 +2,11 @@ package org.eventhub.main.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.eventhub.main.dto.EventSearchResponse;
+import org.eventhub.main.dto.PasswordRequest;
 import org.eventhub.main.dto.UserResponse;
 import org.eventhub.main.dto.UserRequest;
 import org.eventhub.main.exception.NullDtoReferenceException;
+import org.eventhub.main.exception.PasswordException;
 import org.eventhub.main.mapper.EventMapper;
 import org.eventhub.main.mapper.UserMapper;
 import org.eventhub.main.model.Photo;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -111,6 +114,22 @@ public class UserServiceImpl implements UserService {
         this.readByIdEntity(userId).getProfileImages().remove(image);
     }
 
+    @Override
+    public UserResponse changePassword(UUID id, PasswordRequest passwordRequest){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String newPassword = encoder.encode(passwordRequest.getNewPassword());
+        User user = this.readByIdEntity(id);
+
+        if(!encoder.matches(passwordRequest.getOldPassword(), user.getPassword())){
+            throw new PasswordException("The old password is incorrect!");
+        }
+        if(encoder.matches(passwordRequest.getOldPassword(), newPassword)){
+            throw new PasswordException("the new password cannot be the same as the old one!");
+        }
+
+        user.setPassword(newPassword);
+        return userDtoMapper.entityToResponse(userRepository.save(user));
+    }
 //    public User readByEmail(String email) {
 //        return userRepository.findByEmail(email);
 //    }

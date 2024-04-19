@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Dropdown, Menu } from "antd";
 import useAuth from "../../../hooks/useAuth";
-import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import { UserOutlined, LogoutOutlined, SafetyOutlined} from "@ant-design/icons";
 import ProfileInfo from "../../../components/ProfileInfo/ProfileInfo";
 import styles from "./Buttons.module.css";
 import { Link } from "react-router-dom";
@@ -34,6 +34,9 @@ const MenuButton = () => {
               Profile
             </Menu.Item>
           </Link>
+          <Menu.Item icon={<SafetyOutlined />} key="change-password">
+            <Link to="profile/change-password">Change password</Link>
+          </Menu.Item>
           <Menu.Item icon={<LogoutOutlined />} key="logout">
             Log out
           </Menu.Item>

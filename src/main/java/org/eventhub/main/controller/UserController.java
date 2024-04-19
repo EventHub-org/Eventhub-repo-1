@@ -2,10 +2,8 @@ package org.eventhub.main.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.eventhub.main.config.JwtService;
-import org.eventhub.main.dto.EventSearchResponse;
-import org.eventhub.main.dto.OperationResponse;
-import org.eventhub.main.dto.UserRequest;
-import org.eventhub.main.dto.UserResponse;
+import org.eventhub.main.dto.*;
+import org.eventhub.main.exception.PasswordException;
 import org.eventhub.main.exception.ResponseStatusException;
 import org.eventhub.main.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -87,6 +86,19 @@ public class UserController {
         log.info("**/deleted user(id) = " + userId);
         userService.delete(userId);
         return new ResponseEntity<>(new OperationResponse("User " + name + " deleted successfully"), HttpStatus.OK);
+    }
+    @PutMapping("/change-password")
+    public ResponseEntity<UserResponse> changePassword( @RequestHeader("Authorization") String token,
+                                                        @Validated @RequestBody PasswordRequest passwordRequest,
+                                                        BindingResult result){
+        if (result.hasErrors()) {
+            throw new PasswordException(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
+        }
+
+        UserResponse userResponse = userService.changePassword(jwtService.getId(token), passwordRequest);
+        log.info("**/updated user(id) password = ");
+
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 }
 
