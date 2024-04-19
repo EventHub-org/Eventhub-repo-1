@@ -1,5 +1,5 @@
 import axios from "./axios";
-import { getUserIdFromToken } from "./getUserIdFromToken";
+import getIdFromToken from "../jwt/getIdFromToken";
 
 export const getCheckbuttonsEvents = async (
   is_my_events,
@@ -9,7 +9,7 @@ export const getCheckbuttonsEvents = async (
 ) => {
   const DATA_URL = "/events/checkbox-filter";
 
-  const user_id = await getUserIdFromToken();
+  const user_id = getIdFromToken();
 
   const response = await axios.post(
     DATA_URL,

@@ -1,8 +1,8 @@
 import axios from "./axios";
-import { getUserIdFromToken } from "./getUserIdFromToken";
+import getIdFromToken from "../jwt/getIdFromToken";
 
 export const getUserEvents = async () => {
-  const user_id = await getUserIdFromToken();
+  const user_id = getIdFromToken();
 
   const DATA_URL = `/users/${user_id}/events`;
 
