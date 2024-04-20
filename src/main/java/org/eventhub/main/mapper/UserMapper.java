@@ -42,6 +42,7 @@ public class UserMapper {
                 .city(user.getCity())
                 .birthDate(user.getBirthDate())
                 .gender(user.getGender())
+                .showEmail(user.isShowEmail())
                 .photoResponses(user.getProfileImages()
                         .stream()
                         .map(photoMapper::entityToResponse)

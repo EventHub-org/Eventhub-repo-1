@@ -16,6 +16,9 @@ public interface UserService extends UserDetailsService {
 
     User readByIdEntity(UUID id);
 
+    UserResponse readByUsername(String username);
+
+    String getUsername(UUID id);
     UserResponse update(UserRequestUpdate userRequest);
 
     void delete(UUID id);

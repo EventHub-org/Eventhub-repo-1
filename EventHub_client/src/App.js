@@ -10,6 +10,7 @@ import {
   Route,
   Link,
 } from "react-router-dom";
+import UserProfile from './pages/Home/UserProfile/UserProfile';
 
 
 
@@ -21,6 +22,7 @@ function App() {
             <Route path="/" element={<Home />}>
               <Route path="event/:ownerId/:eventId" />
               <Route path="/profile/change-password" element={<ChangePassword/>}/>
+              <Route path="/profile/:username" element={<UserProfile/>}/>
             </Route>
             <Route path="/register" element={<SignUp/>}/>
             <Route path="/login" element={<LogIn/>}/> 

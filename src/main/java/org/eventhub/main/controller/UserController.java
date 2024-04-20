@@ -5,6 +5,7 @@ import org.eventhub.main.config.JwtService;
 import org.eventhub.main.dto.*;
 import org.eventhub.main.exception.PasswordException;
 import org.eventhub.main.exception.ResponseStatusException;
+import org.eventhub.main.model.User;
 import org.eventhub.main.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -59,6 +60,21 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/{username}/profile")
+    public ResponseEntity<UserResponse> getByUsername(@PathVariable("username") String username){
+        UserResponse response = userService.readByUsername(username);
+        log.info("**/get by username user = " + response.getId());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/username")
+    public ResponseEntity<String> getUsernameFromToken(@RequestHeader("Authorization") String token){
+        String username = userService.getUsername(jwtService.getId(token));
+        log.info("**/get username from token = " + username);
+        return new ResponseEntity<>(username, HttpStatus.OK);
+    }
+
     @GetMapping("/user-info")
     public ResponseEntity<UserResponse> getUserInfo(@RequestHeader("Authorization") String token){
         UserResponse response = userService.readById(jwtService.getId(token));
@@ -66,6 +82,7 @@ public class UserController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 
     @PutMapping("/{user_id}")
     public ResponseEntity<UserResponse> update(@PathVariable("user_id") UUID userId,

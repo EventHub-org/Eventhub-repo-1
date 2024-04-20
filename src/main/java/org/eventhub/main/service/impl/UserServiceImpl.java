@@ -56,6 +56,21 @@ public class UserServiceImpl implements UserService {
                 () -> new EntityNotFoundException("User with " + id + " not found"));
     }
 
+    @Override
+    public UserResponse readByUsername(String username){
+        User user = userRepository.findByUsername(username);
+        if(user == null)
+            throw new EntityNotFoundException("User with username " + username + " not found");
+        return userDtoMapper.entityToResponse(user);
+    }
+
+    @Override
+    public String getUsername(UUID id){
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("User with " + id + " not found"));
+        return user.getNickname();
+    }
+
     @Transactional
     @Override
     public UserResponse update(UserRequestUpdate userRequest) {

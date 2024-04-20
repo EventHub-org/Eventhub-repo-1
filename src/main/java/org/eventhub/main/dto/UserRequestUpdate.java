@@ -3,6 +3,7 @@ package org.eventhub.main.dto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -30,6 +31,8 @@ public class UserRequestUpdate {
     @Pattern(regexp = "[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}", message = "Must be a valid e-mail address")
     private String email;
 
+    @Size(max = 255,
+            message = "Description length cannot be greater than 255 symbols")
     private String description;
 
     private String city;
