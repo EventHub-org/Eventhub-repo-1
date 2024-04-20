@@ -2,8 +2,7 @@ package org.eventhub.main.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -16,7 +15,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class UserRequest {
+public class UserRequestUpdate {
     @Pattern(regexp = "[A-Z][a-z]+",
             message = "Must start with a capital letter followed by one or more lowercase letters")
     private String firstName;
@@ -40,11 +39,11 @@ public class UserRequest {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    private boolean showEmail;
 
-    public UserRequest(){}
+    public UserRequestUpdate() {}
 
-
-    public UserRequest(String firstName, String lastName, String username, String email, String description, String city, LocalDate birthDate, Gender gender) {
+    public UserRequestUpdate(String firstName, String lastName, String username, String email, String description, String city, LocalDate birthDate, Gender gender, boolean showEmail) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -53,5 +52,6 @@ public class UserRequest {
         this.city = city;
         this.birthDate = birthDate;
         this.gender = gender;
+        this.showEmail = showEmail;
     }
 }

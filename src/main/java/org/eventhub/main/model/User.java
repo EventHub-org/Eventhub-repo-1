@@ -72,6 +72,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Column (name = "show_email")
+    private boolean showEmail;
+
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     private List<Event> userEvents;
 

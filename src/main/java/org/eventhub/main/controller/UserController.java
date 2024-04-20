@@ -40,7 +40,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserResponse> create(@Validated @RequestBody UserRequest userRequest, BindingResult result) {
+    public ResponseEntity<UserResponse> create(@Validated @RequestBody UserRequestCreate userRequest, BindingResult result) {
         if (result.hasErrors()) {
             throw new ResponseStatusException("Invalid Input");
         }
@@ -69,7 +69,7 @@ public class UserController {
 
     @PutMapping("/{user_id}")
     public ResponseEntity<UserResponse> update(@PathVariable("user_id") UUID userId,
-                                               @Validated @RequestBody UserRequest userRequest, BindingResult result) {
+                                               @Validated @RequestBody UserRequestUpdate userRequest, BindingResult result) {
         if (result.hasErrors()) {
             throw new ResponseStatusException("Invalid Input");
         }

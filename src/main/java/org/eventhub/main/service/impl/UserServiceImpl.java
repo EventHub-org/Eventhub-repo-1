@@ -1,13 +1,9 @@
 package org.eventhub.main.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.eventhub.main.dto.EventSearchResponse;
-import org.eventhub.main.dto.PasswordRequest;
-import org.eventhub.main.dto.UserResponse;
-import org.eventhub.main.dto.UserRequest;
+import org.eventhub.main.dto.*;
 import org.eventhub.main.exception.NullDtoReferenceException;
 import org.eventhub.main.exception.PasswordException;
-import org.eventhub.main.mapper.EventMapper;
 import org.eventhub.main.mapper.UserMapper;
 import org.eventhub.main.model.Photo;
 import org.eventhub.main.model.User;
@@ -39,9 +35,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse create(UserRequest userRequest) {
+    public UserResponse create(UserRequestCreate userRequest) {
         if (userRequest != null) {
-            User user = userDtoMapper.requestToEntity(userRequest, new User());
+            User user = userDtoMapper.createRequestToEntity(userRequest, new User());
             return userDtoMapper.entityToResponse(userRepository.save(user));
         }
         throw new NullDtoReferenceException("User cannot be 'null'");
@@ -62,9 +58,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponse update(UserRequest userRequest) {
+    public UserResponse update(UserRequestUpdate userRequest) {
         if (userRequest != null) {
-            User user = userDtoMapper.requestToEntity(userRequest, userRepository.findByEmail(userRequest.getEmail()));
+            User user = userDtoMapper.updateRequestToEntity(userRequest, userRepository.findByEmail(userRequest.getEmail()));
             readByIdEntity(user.getId());
             return userDtoMapper.entityToResponse(userRepository.save(user));
         }
