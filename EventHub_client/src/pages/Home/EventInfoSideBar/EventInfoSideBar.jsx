@@ -384,7 +384,8 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                       </PrimaryButton>
                     )}
 
-                    <PrimaryButton className={styles["isOwner-edit-btn"]}>
+                    <PrimaryButton to={`/edit?userId=${ownerId}&eventId=${eventId}`}
+                    className={styles["isOwner-edit-btn"]}>
                       Edit
                     </PrimaryButton>
                   </div>
