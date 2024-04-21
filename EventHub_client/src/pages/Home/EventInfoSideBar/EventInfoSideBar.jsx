@@ -97,7 +97,6 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   useEffect(() => {
     if (
       event &&
-      userState &&
       !showAllParticipants &&
       !showRequests &&
       aboutText.current.scrollHeight > aboutText.current.clientHeight
