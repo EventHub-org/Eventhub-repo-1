@@ -67,27 +67,30 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   const aboutText = useRef(null);
 
   useEffect(() => {
-    console.log(auth.token);
-  }, [auth]);
-
-  useEffect(() => {
-    auth.token &&
+    if (auth.token) {
       getParticipantState(eventId).then((data) => {
         setUserState(data.state);
+
         setIsOwner(data.owner);
       });
+    } else {
+      setUserState(null);
+      setIsOwner(false);
+    }
   }, [eventId, auth]);
 
   useEffect(() => {
     console.log("user state: ", userState);
-    // console.log("is owner: ", isOwner)
   }, [userState]);
+  useEffect(() => {
+    console.log("is owner: ", isOwner);
+  }, [isOwner]);
 
   useEffect(() => {
     getFullEventById(ownerId, eventId).then((data) => {
       setEvent(data);
     });
-  }, [ownerId, eventId, userState, reloadList, auth]);
+  }, [ownerId, eventId, userState, reloadList]);
 
   useEffect(() => {
     event &&
@@ -134,7 +137,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
     } catch (error) {
       setRequests(null);
     }
-  }, [eventId, isOwner, auth, reloadList]);
+  }, [eventId, isOwner, reloadList]);
 
   //TODO Fix opacity when allParticipants is toggled
 
