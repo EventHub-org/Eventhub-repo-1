@@ -1,5 +1,6 @@
 * {
     box-sizing: border-box;
+    font-family: var(--primary-font-family);
 }   
 
 .Loading{
@@ -28,7 +29,7 @@
 .InnerContainer {
     width: 68%;
     height: 87%;
-    background-color: #fff; 
+    background-color: var(--primary-popup-background); 
     display: flex;
     flex-direction: column;
     border-radius: 8px;
@@ -94,9 +95,9 @@
 
 .InformationText {
     width: 95%;
-    color: #AAA;
+    color: var(--third-color);
     font-size: 20px;
-    border-bottom: 1.5px solid #AAA;
+    border-bottom: 1.5px solid var(--third-color);
     margin: 0;
     margin-bottom: 10px;
 }
@@ -131,9 +132,9 @@
 }
 
 .DescriptionCaption {
-    color: #AAA;
+    color: var(--third-color);
     font-size: 20px;
     width: 100%;
-    border-bottom: 1.5px solid #AAA;
+    border-bottom: 1.5px solid var(--third-color);
     margin-bottom: 10px;
 }
