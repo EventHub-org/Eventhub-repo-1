@@ -17,7 +17,7 @@ import {
     AutoComplete,
     message,
 } from "antd";
-import { CameraOutlined, DeleteOutlined, EyeOutlined,MinusCircleOutlined } from "@ant-design/icons";
+import { CameraOutlined, DeleteOutlined, EyeOutlined,MinusCircleOutlined,LoadingOutlined } from "@ant-design/icons";
 
 import { getCategories } from "../../../api/getCategories";
 import { getFullEventById } from "../../../api/getFullEventById";
@@ -136,7 +136,7 @@ const EditEvent = () => {
 
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-
+    const [submitChanges,setSubmitChanges] = useState(false);
     const ownerId = searchParams.get("userId");
     const eventId = searchParams.get("eventId");
 
@@ -157,7 +157,6 @@ const EditEvent = () => {
                 setParticipants(eventData.max_participants || "");
 
                 const startAt = new Date(eventData.start_at);
-
                 const expiresAt = new Date(eventData.expire_at);
                 setDateRange([startAt, expiresAt])
                 setStartDate(dayjs(startAt));
@@ -187,18 +186,16 @@ const EditEvent = () => {
                 console.error("Error fetching categories:", error);
             }
         };
-
         fetchCategories();
     }, []);
 
 
     const handlePhotoUpload = (index, event) => {
         const file = event.target.files[0];
-
         photos[index] = URL.createObjectURL(file);
-
         const newFormDataPhotos = [...formData]
         const data = new FormData();
+
         data.append("files", file);
         newFormDataPhotos[index] = data;
 
@@ -249,34 +246,10 @@ const EditEvent = () => {
         navigate('/');
     };
 
-    const handleCloseButton = () => {
-        clearEventData()
-    };
-
-    const handleCategoryChange = (values) => {
-        setSelectedCategories(values);
-    };
-
     const handleLocationChange = (value) => {
-        const address = value.address;
-        const latitude = value.lat;
-        const longitude = value.lng;
-
-        setLocation(address);
-        setLatitude(latitude);
-        setLongitude(longitude);
-    };
-
-    const handleDescriptionChange = (e) => {
-        setDescription(e.target.value);
-    };
-
-    const handleCheckboxChange = (e) => {
-        setWithOwner(!withOwner);
-    };
-
-    const handleDateChange = (dates) => {
-        setDateRange(dates);
+        setLocation(value.address);
+        setLatitude(value.lat);
+        setLongitude(value.lng);
     };
 
     const formatDate = (dateString) => {
@@ -299,9 +272,7 @@ const EditEvent = () => {
             participants < 2 ||
             participants > 20000
         ) {
-            message.error(
-                "Number of participants must be a number between 2 and 20,000"
-            );
+            message.error("Number of participants must be a number between 2 and 20,000");
             return false;
         }
 
@@ -317,6 +288,7 @@ const EditEvent = () => {
             message.error("Event description cannot exceed 255 characters");
             return false;
         }
+
         if (selectedCategories.length === 0) {
             message.error("At least one category must be selected");
             return false;
@@ -329,8 +301,10 @@ const EditEvent = () => {
 
         return true;
     };
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSubmitChanges(true);
         try {
             if (!validateFields()) {
                 return;
@@ -338,7 +312,6 @@ const EditEvent = () => {
             const startAt = formatDate(dateRange[0]);
             const expireAt = formatDate(dateRange[1]);
             const authToken = localStorage.getItem("token");
-            console.log("Категорії", selectedCategories);
 
             const user = jwtDecode(authToken);
             const user_id = user.id;
@@ -358,25 +331,27 @@ const EditEvent = () => {
                 current_count: 0,
                 owner_id: user_id,
             };
-            console.log("Event Data:", eventData);
+            
             await editDataWithoutPhotos(eventData, user_id, eventId);
             await deleteEventPhotos(eventId, photosToDelete);
             await editEventPhotos(formData, eventId);
-            // console.log("Photo response data: ",photoDataResponse)
 
             message.success("Event was successfully edited");
             clearEventData()
         } catch (error) {
             console.error("Error submitting event:", error);
             message.error("Failed to create event. Please try again later.");
+        }finally{
+            setSubmitChanges(false)
         }
+        
     };
     const handleDelete = async () => {
         try {
             // Видалення всіх існуючих фотографій
         if (eventExistingPhotos) {
-            const photoIds = eventExistingPhotos.map(photo => photo.id); // Отримання ідентифікаторів існуючих фотографій
-            await deleteEventPhotos(eventId, photoIds); // Виклик функції для видалення фотографій
+            const photoIds = eventExistingPhotos.map(photo => photo.id); 
+            await deleteEventPhotos(eventId, photoIds); 
         }
             await deleteEvent(ownerId, eventId);
             clearEventData()
@@ -390,9 +365,17 @@ const EditEvent = () => {
 
     return (
         <div className={styles.backdrop}>
+            {submitChanges && (
+                <div className={styles.SubmitChanges}>
+                    <LoadingOutlined
+                    style={{ fontSize: '72px', color:"white", fontWeight:"1000" }} 
+                    />
+                    
+                </div>)
+            }
             <div className={styles.wrapper}>
                 <div className={styles.mainContainer}>
-                    <div className={styles.createEventHeader}>
+                    <div className={styles.editEventHeader}>
                         <h2>Edit Event</h2>
                         <div className={styles.CloseButton}>
                             <CloseWindowButton onClick={() => clearEventData()} />
@@ -472,7 +455,6 @@ const EditEvent = () => {
                         ))}
                     </div>
                     <div className={styles.ParamsContainer}>
-                        {/* Перший рядок */}
                         <div className={styles.row}>
                             <div className={styles.ParamContainer}>
                                 <div className={styles.ParamLabel}>Name</div>
@@ -492,7 +474,7 @@ const EditEvent = () => {
                                     maxTagCount={3}
                                     maxTagPlaceholder={<MinusCircleOutlined />}
                                     value={selectedCategories}
-                                    onChange={handleCategoryChange}
+                                    onChange={(values) => setSelectedCategories(values)}
                                 >
                                     {categories.map((category) => (
                                         <Option key={category.id} value={category.name}>
@@ -502,7 +484,6 @@ const EditEvent = () => {
                                 </Select>
                             </div>
                         </div>
-                        {/* Другий рядок */}
                         <div className={styles.row}>
                             <div className={styles.ParamContainer}>
                                 <div className={styles.ParamLabel}>Location</div>
@@ -521,7 +502,6 @@ const EditEvent = () => {
                                 />
                             </div>
                         </div>
-                        {/* Третій рядок */}
                         <div className={styles.row}>
                             <div className={styles.ParamContainer}>
                                 <div className={styles.ParamLabel}>
@@ -533,7 +513,7 @@ const EditEvent = () => {
                                     format="YYYY-MM-DD HH:mm"
                                     placeholder={["Start date and time", "End date and time"]}
                                     style={{ width: "100%", height: "4vh", zIndex: 999 }}
-                                    onChange={handleDateChange}
+                                    onChange={(dates) => setDateRange(dates)}
                                     value={[startDate, expireDate]}
                                 />
 
@@ -549,17 +529,8 @@ const EditEvent = () => {
                             }}
                             placeholder="Enter description..."
                             value={description}
-                            onChange={handleDescriptionChange}
+                            onChange={(e) => setDescription(e.target.value)}
                         />
-                    </div>
-                    <div className={styles.ParticipationContainer}>
-                        <Checkbox
-                            className={styles.Checkbox}
-                            checked={withOwner}
-                            onChange={handleCheckboxChange}
-                        >
-                            I take part in this event
-                        </Checkbox>
                     </div>
                     <div className={styles.ButtonContainer}>
                         <button className={styles.Button} onClick={handleSubmit}>

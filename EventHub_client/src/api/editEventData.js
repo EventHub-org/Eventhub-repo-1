@@ -36,6 +36,8 @@ const appendFormData = (formDataArray) => {
 
     return mergedFormData;
 };
+
+
 export const editEventPhotos = async (formData, event_id) => {
     const mergedPhotos = appendFormData(formData);
     const accessToken = localStorage.getItem('token')
@@ -59,6 +61,7 @@ export const editEventPhotos = async (formData, event_id) => {
     }
 };
 
+
 export const deleteEvent = async (owner_id, event_id) => {
     const accessToken = localStorage.getItem('token');
     const authAxios = axios.create({
@@ -79,7 +82,6 @@ export const deleteEvent = async (owner_id, event_id) => {
     }
 };
 
-
 export const deleteEventPhotos = async (event_id, photos) => {
     const accessToken = localStorage.getItem('token');
     const authAxios = axios.create({
@@ -90,9 +92,7 @@ export const deleteEventPhotos = async (event_id, photos) => {
             "Access-Control-Allow-Credentials": "true"
         }
     });
-
     try {
-
         for(let photo_id of photos){
             await authAxios.delete(`/events/${event_id}/photos/${photo_id}`);
         }
