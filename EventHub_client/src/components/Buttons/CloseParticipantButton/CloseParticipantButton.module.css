@@ -8,13 +8,13 @@
   height: 100%;
   cursor: pointer;
   border-radius: 10px;
+  overflow: hidden;
   border: var(--third-color) solid 1.5px;
 }
 
 .btn-icon {
   color: var(--third-color);
   background: transparent;
-  border-radius: 10px;
   display: block;
   flex-grow: 0;
   flex-shrink: 0;

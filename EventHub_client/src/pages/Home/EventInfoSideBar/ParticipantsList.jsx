@@ -73,11 +73,13 @@ const ParticipantsList = ({
                       alt="User participant img"
                     />
                     <div className={styles["participant-info-container"]}>
+                      <p className={styles["username"]}>
+                        {`@${participant.username}`}
+                      </p>
                       <div className={styles["full-name"]}>
                         <p>{participant.first_name}</p>
                         <p>{participant.last_name}</p>
                       </div>
-                      <p className={styles["email"]}>{participant.email}</p>
                     </div>
                     {isOwner && (
                       <div className={styles["delete-participant-container"]}>

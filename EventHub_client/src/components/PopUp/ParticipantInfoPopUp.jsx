@@ -39,10 +39,7 @@ const ParticipantInfoPopUp = ({ participant, onMouseEnter, onMouseLeave }) => {
           <div className={styles["full-name"]}>
             {`${participant.first_name} ${participant.last_name}`}
           </div>
-          <div className={styles["email"]}>
-            <MdOutlineEmail />
-            {participant.email}
-          </div>
+          <div className={styles["email"]}>{`@${participant.username}`}</div>
         </div>
       </div>
       <div className={styles["info-container"]}>

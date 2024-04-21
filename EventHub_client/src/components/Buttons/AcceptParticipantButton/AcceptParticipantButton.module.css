@@ -9,19 +9,21 @@
   cursor: pointer;
   border-radius: 10px;
   border: #76d572 solid 1.5px;
+  overflow: hidden;
 }
 
 .btn-icon {
   color: #76d572;
-  stroke-width: 0.5px;
+  width: 100%;
+  height: 100%;
   background: transparent;
-  border-radius: 10px;
   display: block;
   flex-grow: 0;
   flex-shrink: 0;
-  transition: background-color 0.3s ease;
+  transition: color 0.4s ease, background-color 0.4s ease;
 }
 
 .btn-icon:hover {
-  background-color: var(--third-color-hover);
+  background-color: #76d572;
+  color: #fff;
 }

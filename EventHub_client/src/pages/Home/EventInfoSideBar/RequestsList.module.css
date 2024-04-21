@@ -90,24 +90,32 @@ main {
   position: relative;
   flex-direction: column;
   justify-content: center;
+  height: 100%;
   margin-left: 3%;
 }
 
 .full-name {
   display: flex;
   align-items: center;
-  font-weight: 600;
+  gap: 0.5ch;
   height: 30px;
   margin: 0;
 }
 
 .full-name p {
   margin-right: 5px;
+  margin: 0;
+  font-size: var(--sm-size);
+  color: var(--third-color);
 }
 
-.email {
+.username {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: var(--md-size);
+  height: 30px;
   margin: 0;
-  color: var(--third-color);
 }
 
 .accept-requested-participant-container {
@@ -165,5 +173,13 @@ main {
   .requested-participant-photo {
     width: 53px;
     height: 100%;
+  }
+
+  .username {
+    font-size: var(--xxs-size);
+  }
+
+  .full-name p {
+    font-size: var(--xxs-size);
   }
 }

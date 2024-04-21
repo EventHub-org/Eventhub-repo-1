@@ -39,11 +39,13 @@ const RequestsList = ({
                 alt="User requestedParticipant img"
               />
               <div className={styles["requested-participant-info-container"]}>
+                <p className={styles["username"]}>
+                  {`@${requestedParticipant.username}`}
+                </p>
                 <div className={styles["full-name"]}>
                   <p>{requestedParticipant.first_name}</p>
                   <p>{requestedParticipant.last_name}</p>
                 </div>
-                <p className={styles["email"]}>{requestedParticipant.email}</p>
               </div>
               <div className={styles["accept-requested-participant-container"]}>
                 <AcceptParticipantButton

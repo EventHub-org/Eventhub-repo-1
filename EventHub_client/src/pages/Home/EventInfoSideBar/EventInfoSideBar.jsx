@@ -87,7 +87,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
     getFullEventById(ownerId, eventId).then((data) => {
       setEvent(data);
     });
-  }, [ownerId, eventId, userState, reloadList]);
+  }, [ownerId, eventId, userState, reloadList, auth]);
 
   useEffect(() => {
     event &&
