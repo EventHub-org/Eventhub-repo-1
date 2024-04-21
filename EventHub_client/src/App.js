@@ -11,7 +11,7 @@ import {
   Link,
 } from "react-router-dom";
 import UserProfile from './pages/Home/UserProfile/UserProfile';
-
+import EditUserProfile from './pages/Home/EditUserProfile/EditUserProfile';
 
 
 function App() {
@@ -23,6 +23,7 @@ function App() {
               <Route path="event/:ownerId/:eventId" />
               <Route path="/profile/change-password" element={<ChangePassword/>}/>
               <Route path="/profile/:username" element={<UserProfile/>}/>
+              <Route path="/profile/edit" element={<EditUserProfile/>}/>
             </Route>
             <Route path="/register" element={<SignUp/>}/>
             <Route path="/login" element={<LogIn/>}/> 

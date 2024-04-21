@@ -40,6 +40,8 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    margin-top: 12px;
+    margin-bottom: -18px;
     padding: 0 25px;
 }
 
@@ -57,7 +59,7 @@
 
 .AboutUser {
     flex: 2;
-    margin-top: 25px;
+    margin-top: 35px;
     padding: 0;
 }
 
@@ -135,6 +137,3 @@
     border-bottom: 1.5px solid #AAA;
     margin-bottom: 10px;
 }
-
-
-

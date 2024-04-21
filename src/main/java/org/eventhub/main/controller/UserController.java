@@ -84,15 +84,16 @@ public class UserController {
     }
 
 
-    @PutMapping("/{user_id}")
-    public ResponseEntity<UserResponse> update(@PathVariable("user_id") UUID userId,
-                                               @Validated @RequestBody UserRequestUpdate userRequest, BindingResult result) {
+    @PutMapping
+    public ResponseEntity<UserResponse> update(@RequestHeader("Authorization") String token,
+                                                @Validated @RequestBody UserRequestUpdate userRequest,
+                                               BindingResult result) {
         if (result.hasErrors()) {
-            throw new ResponseStatusException("Invalid Input");
+            throw new ResponseStatusException(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
 
-        UserResponse userResponse = userService.update(userRequest);
-        log.info("**/updated user(id) = " + userId);
+        UserResponse userResponse = userService.update(jwtService.getId(token), userRequest);
+        log.info("**/updated user(id) = " + userResponse.getId());
 
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }

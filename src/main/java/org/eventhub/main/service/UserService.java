@@ -19,7 +19,7 @@ public interface UserService extends UserDetailsService {
     UserResponse readByUsername(String username);
 
     String getUsername(UUID id);
-    UserResponse update(UserRequestUpdate userRequest);
+    UserResponse update(UUID id, UserRequestUpdate userRequest);
 
     void delete(UUID id);
 

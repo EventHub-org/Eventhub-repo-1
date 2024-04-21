@@ -73,10 +73,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponse update(UserRequestUpdate userRequest) {
+    public UserResponse update(UUID id, UserRequestUpdate userRequest) {
         if (userRequest != null) {
-            User user = userDtoMapper.updateRequestToEntity(userRequest, userRepository.findByEmail(userRequest.getEmail()));
-            readByIdEntity(user.getId());
+            User user = userDtoMapper.updateRequestToEntity(userRequest, this.readByIdEntity(id));
             return userDtoMapper.entityToResponse(userRepository.save(user));
         }
         throw new NullDtoReferenceException("User cannot be 'null'");

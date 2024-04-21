@@ -25,7 +25,7 @@ public class UserRequestUpdate {
             message = "Must start with a capital letter followed by one or more lowercase letters")
     private String lastName;
 
-    @Size(min = 3, max = 15)
+    @Size(min = 3, max = 15, message = "Username must be between 3 to 15 characters")
     private String username;
 
     @Pattern(regexp = "[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}", message = "Must be a valid e-mail address")
@@ -37,7 +37,7 @@ public class UserRequestUpdate {
 
     private String city;
 
-    @Past
+    @Past(message = "Birthday has to be in the past")
     private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
