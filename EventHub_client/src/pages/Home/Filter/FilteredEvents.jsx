@@ -6,7 +6,7 @@ import ListEvents from "../../../components/ListEvents/ListEvents";
 import EmptyFilteredEvents from "./EmptyFilteredEvents.jsx";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 
-const FilteredEvents = ({ handleClose, eventsData, searchParams }) => {
+const FilteredEvents = ({ handleClose, eventsData }) => {
   return (
     <div className={styles.FilterResultContainer}>
       <div className={styles.Heading}>
@@ -20,7 +20,7 @@ const FilteredEvents = ({ handleClose, eventsData, searchParams }) => {
       <hr />
       {eventsData.length > 0 ? (
         <div className={styles.ListEvents}>
-          <ListEvents eventsData={eventsData} searchParams={searchParams} />
+          <ListEvents eventsData={eventsData} />
         </div>
       ) : (
         <EmptyFilteredEvents />

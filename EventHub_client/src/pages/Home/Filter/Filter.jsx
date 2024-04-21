@@ -151,11 +151,7 @@ const EventFilter = () => {
       </Dropdown>
 
       {searchParams.get("filter") && eventsData && (
-        <FilteredEvents
-          handleClose={handleClose}
-          eventsData={eventsData}
-          searchParams={searchParams}
-        />
+        <FilteredEvents handleClose={handleClose} eventsData={eventsData} />
       )}
     </div>
   );

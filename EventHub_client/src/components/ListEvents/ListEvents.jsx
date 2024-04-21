@@ -7,9 +7,9 @@ import {
   EnvironmentOutlined,
 } from "@ant-design/icons";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-const SearchResults = ({ eventsData, searchParams }) => {
+const SearchResults = ({ eventsData }) => {
   const results = [
     {
       id: 1,
@@ -158,6 +158,8 @@ const SearchResults = ({ eventsData, searchParams }) => {
   ];
   const default_image =
     "https://eventhub12.blob.core.windows.net/images/default.jpg?sp=r&st=2024-03-18T06:52:24Z&se=2024-03-24T14:52:24Z&spr=https&sv=2022-11-02&sr=b&sig=nWb0Dzb9%2FWPfAZ6X5MRrwoi%2FxHU8OLe0I6nPtwpBkbQ%3D";
+
+  const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
 

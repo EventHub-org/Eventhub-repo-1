@@ -74,7 +74,7 @@ const SearchEvents = () => {
               No results found for "{searchedValue}"
             </p>
           ) : (
-            <ListEvents eventsData={eventsData} searchParams={searchParams} />
+            <ListEvents eventsData={eventsData} />
           )}
         </div>
       ) : null}
