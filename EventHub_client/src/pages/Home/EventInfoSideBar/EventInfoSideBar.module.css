@@ -283,12 +283,12 @@ main {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   font-size: var(--sm-size);
-  border: var(--primary-color) solid 1px;
   width: auto;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
+  transition: border 0s;
 }
 
 .isOwner-action-2-btn {
@@ -299,6 +299,7 @@ main {
   justify-content: center;
   align-items: center;
   height: 100%;
+  transition: background-color 0.3s ease;
 }
 
 .isOwner-action-2-btn:hover {
@@ -309,7 +310,7 @@ main {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   font-size: var(--sm-size);
-  border: var(--primary-color) solid 1px;
+  /* border: var(--primary-color) solid 1px; */
   width: auto;
   display: flex;
   justify-content: center;

@@ -80,13 +80,6 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   }, [eventId, auth]);
 
   useEffect(() => {
-    console.log("user state: ", userState);
-  }, [userState]);
-  useEffect(() => {
-    console.log("is owner: ", isOwner);
-  }, [isOwner]);
-
-  useEffect(() => {
     getFullEventById(ownerId, eventId).then((data) => {
       setEvent(data);
     });
@@ -138,16 +131,6 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
       setRequests(null);
     }
   }, [eventId, isOwner, reloadList]);
-
-  //TODO Fix opacity when allParticipants is toggled
-
-  // useEffect(() => {
-  //   console.log("Show All: ", showAllParticipants);
-  //   event &&
-  //     (showAllParticipants
-  //       ? (sideBar.current.style.opacity = 0)
-  //       : (sideBar.current.style.opacity = 1));
-  // }, [showAllParticipants, event]);
 
   // Funcs
   const handleShowAllParticipants = () => {
