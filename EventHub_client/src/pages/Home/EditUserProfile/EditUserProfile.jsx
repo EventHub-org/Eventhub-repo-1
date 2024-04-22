@@ -66,7 +66,10 @@ const PlacesAutocomplete = ({ onSelectLocation, initialValue, cancelChanges }) =
       ).long_name;
 
       onSelectLocation(`${city}, ${region}, ${country}`);
-    });
+    }).catch((error) => {
+      message.info("Select another location");
+      handleInput(initialValue);
+    });;
   };
 
   const options = data.map((suggestion) => ({
@@ -311,7 +314,7 @@ const EditUserProfile = () => {
                   />
                 </div>
                 <div className={styles.InputContainer}>
-                  <p className={styles.Caption}>Nickname</p>
+                  <p className={styles.Caption}>Username</p>
                   <Input
                     name="username"
                     placeholder="Nickname"
