@@ -4,6 +4,12 @@ import styles from "./EventInfoSideBar.module.css";
 
 import { IoIosMore } from "react-icons/io";
 
+import {
+  CameraOutlined,
+  DeleteOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
+
 import { getJoinedParticipants } from "../../../api/getJoinedParticipants";
 import { getUserById } from "../../../api/getUserById";
 import { getFullEventById } from "../../../api/getFullEventById";
@@ -52,6 +58,8 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
   const [reloadList, setReloadList] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   // Params
   const [searchParams] = useSearchParams();
 
@@ -87,6 +95,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   useEffect(() => {
     getFullEventById(ownerId, eventId).then((data) => {
       setEvent(data);
+      setIsLoading(false);
     });
   }, [ownerId, eventId, userState, reloadList]);
 
@@ -136,6 +145,10 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
     }
   }, [eventId, isOwner, reloadList]);
 
+  useEffect(() => {
+    showAllParticipants && setIsLoading(true);
+  }, [showAllParticipants]);
+
   // Funcs
   const handleShowAllParticipants = () => {
     setShowAllParticipants(!showAllParticipants);
@@ -171,7 +184,14 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   };
 
   return (
-    <div>
+    <div className={styles["wrapper-container"]}>
+      <div className={styles["loading-circle"]}>
+        {isLoading && (
+          <LoadingOutlined
+            style={{ fontSize: "72px", color: "#aaaaaa", fontWeigh: "1000" }}
+          />
+        )}
+      </div>
       {!showAllParticipants && !showRequests && event && (
         <div className={styles["side-bar-container"]} ref={sideBar}>
           <div className={styles["header"]}>
@@ -393,7 +413,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
       {showAllParticipants && !showRequests && (
         <ParticipantsList
-          event={event}
+          setIsLoading={setIsLoading}
           handleGoBackToSideBar={handleShowAllParticipants}
           handleCloseWindow={handleCloseWindow}
           handleShowRequests={handleShowRequests}

@@ -15,6 +15,7 @@ import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButt
 import RequestsCount from "../../../components/RequestsCount/RequestsCount";
 
 const ParticipantsList = ({
+  setIsLoading,
   handleGoBackToSideBar,
   handleCloseWindow,
   handleShowRequests,
@@ -41,8 +42,14 @@ const ParticipantsList = ({
     _event && getUserById(_event.owner_id).then((data) => setOwner(data));
   }, [_event]);
 
+  useEffect(() => {
+    participants && owner && setIsLoading(false);
+  }, [participants, owner]);
+
   return (
-    _event && (
+    _event &&
+    participants &&
+    owner && (
       <div className={styles["participants-list-container"]}>
         <div className={styles["header"]}>
           <GoBackButton onClick={handleGoBackToSideBar} />

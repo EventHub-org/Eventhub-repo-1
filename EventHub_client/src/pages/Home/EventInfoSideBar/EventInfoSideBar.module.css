@@ -4,18 +4,23 @@
   box-sizing: border-box;
 }
 
-.side-bar-container {
-  background-color: rgba(255, 255, 255, 0.7);
-  margin-top: 10px;
-  backdrop-filter: blur(5px);
+.wrapper-container {
   width: 20vw;
-  min-width: 330px;
   height: 85vh;
-  padding: 10px;
-  z-index: 990;
+  min-width: 330px;
+
+  position: absolute;
   right: 0;
   top: 80px;
-  position: absolute;
+}
+
+.side-bar-container {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  z-index: 990;
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -318,6 +323,22 @@ main {
   height: 100%;
 }
 
+/* Loading circle */
+
+.loading-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* width: 68%; */
+  /* height: 87.5%; */
+  border-radius: 8px;
+  /* background-color: rgba(0, 0, 0, 0.3); */
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 /* Scroll bar */
 
 ::-webkit-scrollbar {
