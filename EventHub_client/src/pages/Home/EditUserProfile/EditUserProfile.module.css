@@ -1,194 +1,192 @@
-*{
-    box-sizing: border-box;
-    font-family: var(--primary-font-family);
+* {
+  box-sizing: border-box;
+  font-family: var(--primary-font-family);
 }
-body{
-    font-size: 16px;
+body {
+  font-size: 16px;
 }
 .OuterContainer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
 }
 
 .InnerContainer {
-    width: 68%;
-    height: 87%;
-    background-color: var(--primary-popup-background); 
-    display: flex;
-    flex-direction: column;
-    border-radius: 8px;
+  width: 68%;
+  height: 87%;
+  min-height: 700px;
+  background-color: var(--primary-popup-background);
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
 }
 
 .SubmitChanges {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 68%;
-    height: 87.5%;
-    border-radius: 8px;
-    background-color: rgba(0, 0, 0, 0.3); 
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 68%;
+  height: 87.5%;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.3);
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .Header {
-    height: 7%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 1.5rem;
-    padding-left: 1rem;
-    margin: 12px 0 -15px;
+  height: 7%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem;
+  padding-left: 1rem;
+  margin: 12px 0 -15px;
 }
 
-.Heading{
-    font-size: 24px;
-    font-weight:500;
-    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
-    margin: 0;
+.Heading {
+  font-size: 24px;
+  font-weight: 500;
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
+  margin: 0;
 }
 
-.Main{
-    display: flex;
-    flex-direction: row;
-    height: 65%;
+.Main {
+  display: flex;
+  flex-direction: row;
+  height: 65%;
 }
 
 .Photos {
-    flex: 1;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    padding: 1em 1em;
-    padding-bottom: 0.25em;
-    overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 1em 1em;
+  padding-bottom: 0.25em;
+  overflow: hidden;
 }
 
 .Photo {
-    position: relative;
-    width: calc(50% - 5px);
-    height: calc(50% - 5px);
-    margin-bottom: 10px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    font-size: 2rem;
-    color: var( --third-color);
-    background-color: var(--third-color-hover);
+  position: relative;
+  width: calc(50% - 5px);
+  height: calc(50% - 5px);
+  margin-bottom: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  color: var(--third-color);
+  background-color: var(--third-color-hover);
 }
 
-.Delete{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
-    display: none;
+.Delete {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  display: none;
 }
 
 .DeleteButton {
-    font-size: 3rem;
-    background-color: rgba(255, 255, 255, 0);
-    color: var(--primary-popup-background);
-    cursor: pointer;
+  font-size: 3rem;
+  background-color: rgba(255, 255, 255, 0);
+  color: var(--primary-popup-background);
+  cursor: pointer;
 }
 
-.DeleteButton:hover{
-    color:#f00;
-    font-size: 3.2rem;
+.DeleteButton:hover {
+  color: #f00;
+  font-size: 3.2rem;
 }
 
 .Photo:hover .Delete {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center; 
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .Image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-
-.AddPhotoLabel{
-    font-size: 1.5rem;
-    border-bottom: 2px var(--third-color) solid;
-    cursor: pointer;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
-.AddPhotoLabel:hover{
-    font-size: 1.7rem;
+.AddPhotoLabel {
+  font-size: 1.5rem;
+  border-bottom: 2px var(--third-color) solid;
+  cursor: pointer;
 }
 
-.InputContainer{
-    padding: 0.4em 1.5em;
-    padding-left: 0.35em;
+.AddPhotoLabel:hover {
+  font-size: 1.7rem;
 }
 
-.MainInfo{
-    flex:1;
+.InputContainer {
+  padding: 0.4em 1.5em;
+  padding-left: 0.35em;
 }
 
-.Caption{
-    padding: 0;
-    margin: 0;
-    font-weight: 600;
-    font-size: 1em;
+.MainInfo {
+  flex: 1;
 }
 
-
-.Select{
-    width: 100%;
-    padding: 0;
-    border: 0.5px solid var(--third-color);
-    border-radius: 7px;
+.Caption {
+  padding: 0;
+  margin: 0;
+  font-weight: 600;
+  font-size: 1em;
 }
 
-
-.Param{
-    width: 100%;
-    padding: 0.25rem;
-    padding-left: 0.65rem;
-    border: 0.5px solid var(--third-color);
+.Select {
+  width: 100%;
+  padding: 0;
+  border: 0.5px solid var(--third-color);
+  border-radius: 7px;
 }
 
-.Description{
-    padding: 0.55em 1em;
+.Param {
+  width: 100%;
+  padding: 0.25rem;
+  padding-left: 0.65rem;
+  border: 0.5px solid var(--third-color);
 }
 
-.TextArea{
-    border: 1px solid var(--third-color);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+.Description {
+  padding: 0.55em 1em;
 }
 
-.Buttons{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: end;
-    padding: 0.55em 1em;
+.TextArea {
+  border: 1px solid var(--third-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.MainSuggestion{
-    margin: 0 5px;
+.Buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: end;
+  padding: 0.55em 1em;
 }
 
+.MainSuggestion {
+  margin: 0 5px;
+}
