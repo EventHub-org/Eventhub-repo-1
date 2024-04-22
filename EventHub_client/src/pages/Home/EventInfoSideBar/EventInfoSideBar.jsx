@@ -28,6 +28,7 @@ import SpotsLeft from "../../../components/Spots/SpotsLeft";
 import RequestsList from "./RequestsList";
 import { getRequestsByEventId } from "../../../api/getRequestsByEventId";
 import RequestsCount from "../../../components/RequestsCount/RequestsCount";
+import { message } from "antd";
 
 const EventInfoSideBar = ({ ownerId, eventId }) => {
   // States
@@ -68,11 +69,16 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
   useEffect(() => {
     if (auth.token) {
-      getParticipantState(eventId).then((data) => {
-        setUserState(data.state);
+      getParticipantState(eventId)
+        .then((data) => {
+          setUserState(data.state);
 
-        setIsOwner(data.owner);
-      });
+          setIsOwner(data.owner);
+        })
+        .catch((error) => {
+          message.error("Access token has expired");
+          console.error(error);
+        });
     } else {
       setUserState(null);
       setIsOwner(false);

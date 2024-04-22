@@ -1,8 +1,4 @@
-import { message } from "antd";
 import axios from "./axios";
-import useAuth from "../hooks/useAuth";
-
-// const authAxios = AuthAxios();
 
 export const getParticipantState = async (eventId) => {
   try {
@@ -20,7 +16,6 @@ export const getParticipantState = async (eventId) => {
     );
     return response.data;
   } catch (error) {
-    message.error("Error getting participant state");
     console.error(error);
   }
 };
