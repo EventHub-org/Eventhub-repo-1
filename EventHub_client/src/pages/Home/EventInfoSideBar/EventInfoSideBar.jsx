@@ -14,7 +14,6 @@ import ParticipantsList from "./ParticipantsList";
 
 import ParticipantState from "../../../utils/ParticipantState";
 
-import { AnimatePresence, motion } from "framer-motion";
 import ParticipantInfoPopUp from "../../../components/PopUp/ParticipantInfoPopUp";
 import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButton";
 import OwnerPhotoOverlay from "../../../components/OwnerPhotoOverlay/OwnerPhotoOverlay";
@@ -172,268 +171,249 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   };
 
   return (
-    <AnimatePresence>
-      ( (
-      <div>
-        {!showAllParticipants && !showRequests && event && (
-          <motion.div
-            className={styles["side-bar-container"]}
-            ref={sideBar}
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
-            exit={{
-              opacity: 0,
-            }}
-            transition={{
-              duration: 0.7,
-            }}
-          >
-            <div className={styles["header"]}>
-              <h2 className={styles["event-title"]}>{event.title}</h2>
-              <CloseWindowButton onClick={handleCloseWindow} />
+    <div>
+      {!showAllParticipants && !showRequests && event && (
+        <div className={styles["side-bar-container"]} ref={sideBar}>
+          <div className={styles["header"]}>
+            <h2 className={styles["event-title"]}>{event.title}</h2>
+            <CloseWindowButton onClick={handleCloseWindow} />
+          </div>
+          <main>
+            {/* Photo */}
+            <div className={styles["photo-container"]}>
+              <ImageSlider images={event.photo_responses} />
             </div>
-            <main>
-              {/* Photo */}
-              <div className={styles["photo-container"]}>
-                <ImageSlider images={event.photo_responses} />
+
+            {/* Category */}
+            <div className={styles["category-container"]}>
+              {event.category_responses.map((category) => (
+                <div key={category.id} className={styles["category"]}>
+                  {category.name}
+                </div>
+              ))}
+            </div>
+
+            {/* Owner */}
+            {owner && <OwnerPhotoOverlay owner={owner} />}
+
+            {/* Date */}
+            <h3 className={styles["heading"]}>Date and time</h3>
+            <div className={styles["date-container"]}>
+              <div className={styles["date-range-container"]}>
+                <div className={styles["start-at"]}>
+                  <div className={styles["day"]}>
+                    {getFormattedDate(event.start_at)}
+                  </div>
+                  <div className={styles["time"]}>
+                    {getFormattedTime(event.start_at)}
+                  </div>
+                </div>
+
+                <div className={styles["expire-at"]}>
+                  <div className={styles["day"]}>
+                    {getFormattedDate(event.expire_at)}
+                  </div>
+                  <div className={styles["time"]}>
+                    {getFormattedTime(event.expire_at)}
+                  </div>
+                </div>
               </div>
 
-              {/* Category */}
-              <div className={styles["category-container"]}>
-                {event.category_responses.map((category) => (
-                  <div key={category.id} className={styles["category"]}>
-                    {category.name}
+              <div className={styles["vl"]}></div>
+              <div className={styles["location"]}>{event.location}</div>
+            </div>
+
+            {/* Participants */}
+            <h3 className={styles["heading"]}>Participants</h3>
+            <div className={styles["participant-container"]}>
+              <div
+                className={styles["participants-photos"]}
+                onMouseLeave={() => setHoveredParticipant(null)}
+              >
+                {participantsToShow.map((participant) => (
+                  <div
+                    className={styles["item"]}
+                    key={participant.id}
+                    onMouseEnter={() => {
+                      getUserById(participant.user_id).then((data) => {
+                        setHoveredParticipant(data);
+                      });
+                    }}
+                  >
+                    <img
+                      className={styles["participant-img"]}
+                      src={participant.participant_photo.photo_url}
+                      alt="Participant Img"
+                    />
                   </div>
                 ))}
-              </div>
-
-              {/* Owner */}
-              {owner && <OwnerPhotoOverlay owner={owner} />}
-
-              {/* Date */}
-              <h3 className={styles["heading"]}>Date and time</h3>
-              <div className={styles["date-container"]}>
-                <div className={styles["date-range-container"]}>
-                  <div className={styles["start-at"]}>
-                    <div className={styles["day"]}>
-                      {getFormattedDate(event.start_at)}
-                    </div>
-                    <div className={styles["time"]}>
-                      {getFormattedTime(event.start_at)}
-                    </div>
-                  </div>
-
-                  <div className={styles["expire-at"]}>
-                    <div className={styles["day"]}>
-                      {getFormattedDate(event.expire_at)}
-                    </div>
-                    <div className={styles["time"]}>
-                      {getFormattedTime(event.expire_at)}
-                    </div>
-                  </div>
-                </div>
-
-                <div className={styles["vl"]}></div>
-                <div className={styles["location"]}>{event.location}</div>
-              </div>
-
-              {/* Participants */}
-              <h3 className={styles["heading"]}>Participants</h3>
-              <div className={styles["participant-container"]}>
-                <div
-                  className={styles["participants-photos"]}
-                  onMouseLeave={() => setHoveredParticipant(null)}
-                >
-                  {participantsToShow.map((participant) => (
-                    <div
-                      className={styles["item"]}
-                      key={participant.id}
-                      onMouseEnter={() => {
-                        getUserById(participant.user_id).then((data) => {
-                          setHoveredParticipant(data);
-                        });
-                      }}
-                    >
-                      <img
-                        className={styles["participant-img"]}
-                        src={participant.participant_photo.photo_url}
-                        alt="Participant Img"
-                      />
-                    </div>
-                  ))}
-                  <div className={styles["show-more-participants"]}>
-                    <button
-                      onClick={handleShowAllParticipants}
-                      className={styles["show-more-participants-btn"]}
-                    >
-                      {requests && isOwner && requests.length > 0 && (
-                        <div className={styles["requests-count-container"]}>
-                          <RequestsCount requestsLength={requests.length} />
-                        </div>
-                      )}
-                      <IoIosMore
-                        className={styles["show-more-participants-btn-icon"]}
-                      />
-                    </button>
-                  </div>
-
-                  {hoveredParticipant && (
-                    <ParticipantInfoPopUp participant={hoveredParticipant} />
-                  )}
-                </div>
-              </div>
-
-              {/* About section */}
-              <h3 className={styles["heading"]}>About this event</h3>
-              <div className={styles["about-container"]}>
-                <div
-                  className={
-                    styles[isShowMore ? "about-text-full" : "about-text-hidden"]
-                  }
-                  ref={aboutText}
-                >
-                  {event.description}
-                </div>
-                {isOverflowAboutText && (
+                <div className={styles["show-more-participants"]}>
                   <button
-                    onClick={handleShowMore}
-                    className={styles["show-more-btn"]}
-                    ref={showMoreBtn}
+                    onClick={handleShowAllParticipants}
+                    className={styles["show-more-participants-btn"]}
                   >
-                    Show more
+                    {requests && isOwner && requests.length > 0 && (
+                      <div className={styles["requests-count-container"]}>
+                        <RequestsCount requestsLength={requests.length} />
+                      </div>
+                    )}
+                    <IoIosMore
+                      className={styles["show-more-participants-btn-icon"]}
+                    />
                   </button>
+                </div>
+
+                {hoveredParticipant && (
+                  <ParticipantInfoPopUp participant={hoveredParticipant} />
                 )}
               </div>
-            </main>
+            </div>
 
-            {/* Lower section */}
-            <div className={styles["lower-container"]}>
-              <SpotsLeft event={event} />
-
-              {userState === null && (
-                <PrimaryButton
-                  className={styles["action-btn"]}
-                  onClick={() => navigate("login")}
+            {/* About section */}
+            <h3 className={styles["heading"]}>About this event</h3>
+            <div className={styles["about-container"]}>
+              <div
+                className={
+                  styles[isShowMore ? "about-text-full" : "about-text-hidden"]
+                }
+                ref={aboutText}
+              >
+                {event.description}
+              </div>
+              {isOverflowAboutText && (
+                <button
+                  onClick={handleShowMore}
+                  className={styles["show-more-btn"]}
+                  ref={showMoreBtn}
                 >
-                  Join
-                </PrimaryButton>
-              )}
-
-              {userState === ParticipantState.NONE && !isOwner && (
-                <PrimaryButton
-                  className={styles["action-btn"]}
-                  onClick={() => {
-                    createParticipant(eventId).then(() =>
-                      setUserState(ParticipantState.REQUESTED)
-                    );
-                  }}
-                >
-                  Join
-                </PrimaryButton>
-              )}
-
-              {userState === ParticipantState.REQUESTED && !isOwner && (
-                <PrimaryButton
-                  className={`${styles["action-btn"]} ${styles["action-2-btn"]}`}
-                  onClick={() =>
-                    getParticipantByUser(eventId).then((data) => {
-                      deleteParticipant(data.id, eventId).then(() =>
-                        setUserState(ParticipantState.NONE)
-                      );
-                    })
-                  }
-                >
-                  Cancel
-                </PrimaryButton>
-              )}
-
-              {userState === ParticipantState.JOINED && !isOwner && (
-                <PrimaryButton
-                  className={`${styles["action-btn"]} ${styles["action-2-btn"]}`}
-                  onClick={() =>
-                    getParticipantByUser(eventId).then((data) => {
-                      deleteParticipant(data.id, eventId).then(() =>
-                        setUserState(ParticipantState.NONE)
-                      );
-                    })
-                  }
-                >
-                  Leave
-                </PrimaryButton>
-              )}
-
-              {isOwner && (
-                <div className={styles["btns-container"]}>
-                  {userState === ParticipantState.NONE && (
-                    <PrimaryButton
-                      className={styles["isOwner-action-btn"]}
-                      onClick={() => {
-                        createParticipant(eventId).then(() =>
-                          getParticipantByUser(eventId).then((participant) => {
-                            addParticipant(eventId, participant.id).then(() => {
-                              setUserState(ParticipantState.JOINED);
-                            });
-                          })
-                        );
-                      }}
-                    >
-                      Join
-                    </PrimaryButton>
-                  )}
-
-                  {userState === ParticipantState.JOINED && (
-                    <PrimaryButton
-                      className={`${styles["isOwner-action-btn"]} ${styles["isOwner-action-2-btn"]}`}
-                      onClick={() =>
-                        getParticipantByUser(eventId).then((data) => {
-                          deleteParticipant(data.id, eventId).then(() =>
-                            setUserState(ParticipantState.NONE)
-                          );
-                        })
-                      }
-                    >
-                      Leave
-                    </PrimaryButton>
-                  )}
-
-                  <PrimaryButton className={styles["isOwner-edit-btn"]}>
-                    Edit
-                  </PrimaryButton>
-                </div>
+                  Show more
+                </button>
               )}
             </div>
-          </motion.div>
-        )}
+          </main>
 
-        {showAllParticipants && !showRequests && (
-          <ParticipantsList
-            event={event}
-            handleGoBackToSideBar={handleShowAllParticipants}
-            handleCloseWindow={handleCloseWindow}
-            handleShowRequests={handleShowRequests}
-            isOwner={isOwner}
-            setReloadList={setReloadList}
-            requests={requests}
-            _event={event}
-          />
-        )}
+          {/* Lower section */}
+          <div className={styles["lower-container"]}>
+            <SpotsLeft event={event} />
 
-        {showRequests && isOwner && (
-          <RequestsList
-            _event={event}
-            requests={requests}
-            handleGoBackToParticipantsList={handleShowAllParticipants}
-            handleCloseWindow={handleCloseWindow}
-            setReloadList={setReloadList}
-          />
-        )}
-      </div>
-      ) )
-    </AnimatePresence>
+            {userState === null && (
+              <PrimaryButton
+                className={styles["action-btn"]}
+                onClick={() => navigate("login")}
+              >
+                Join
+              </PrimaryButton>
+            )}
+
+            {userState === ParticipantState.NONE && !isOwner && (
+              <PrimaryButton
+                className={styles["action-btn"]}
+                onClick={() => {
+                  createParticipant(eventId).then(() =>
+                    setUserState(ParticipantState.REQUESTED)
+                  );
+                }}
+              >
+                Join
+              </PrimaryButton>
+            )}
+
+            {userState === ParticipantState.REQUESTED && !isOwner && (
+              <PrimaryButton
+                className={`${styles["action-btn"]} ${styles["action-2-btn"]}`}
+                onClick={() =>
+                  getParticipantByUser(eventId).then((data) => {
+                    deleteParticipant(data.id, eventId).then(() =>
+                      setUserState(ParticipantState.NONE)
+                    );
+                  })
+                }
+              >
+                Cancel
+              </PrimaryButton>
+            )}
+
+            {userState === ParticipantState.JOINED && !isOwner && (
+              <PrimaryButton
+                className={`${styles["action-btn"]} ${styles["action-2-btn"]}`}
+                onClick={() =>
+                  getParticipantByUser(eventId).then((data) => {
+                    deleteParticipant(data.id, eventId).then(() =>
+                      setUserState(ParticipantState.NONE)
+                    );
+                  })
+                }
+              >
+                Leave
+              </PrimaryButton>
+            )}
+
+            {isOwner && (
+              <div className={styles["btns-container"]}>
+                {userState === ParticipantState.NONE && (
+                  <PrimaryButton
+                    className={styles["isOwner-action-btn"]}
+                    onClick={() => {
+                      createParticipant(eventId).then(() =>
+                        getParticipantByUser(eventId).then((participant) => {
+                          addParticipant(eventId, participant.id).then(() => {
+                            setUserState(ParticipantState.JOINED);
+                          });
+                        })
+                      );
+                    }}
+                  >
+                    Join
+                  </PrimaryButton>
+                )}
+
+                {userState === ParticipantState.JOINED && (
+                  <PrimaryButton
+                    className={`${styles["isOwner-action-btn"]} ${styles["isOwner-action-2-btn"]}`}
+                    onClick={() =>
+                      getParticipantByUser(eventId).then((data) => {
+                        deleteParticipant(data.id, eventId).then(() =>
+                          setUserState(ParticipantState.NONE)
+                        );
+                      })
+                    }
+                  >
+                    Leave
+                  </PrimaryButton>
+                )}
+
+                <PrimaryButton className={styles["isOwner-edit-btn"]}>
+                  Edit
+                </PrimaryButton>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {showAllParticipants && !showRequests && (
+        <ParticipantsList
+          event={event}
+          handleGoBackToSideBar={handleShowAllParticipants}
+          handleCloseWindow={handleCloseWindow}
+          handleShowRequests={handleShowRequests}
+          isOwner={isOwner}
+          setReloadList={setReloadList}
+          requests={requests}
+          _event={event}
+        />
+      )}
+
+      {showRequests && isOwner && (
+        <RequestsList
+          _event={event}
+          requests={requests}
+          handleGoBackToParticipantsList={handleShowAllParticipants}
+          handleCloseWindow={handleCloseWindow}
+          setReloadList={setReloadList}
+        />
+      )}
+    </div>
   );
 };
 
