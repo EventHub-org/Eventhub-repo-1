@@ -25,7 +25,7 @@ import { getUserInfo } from "../../../api/getUserInfo";
 import dayjs from "dayjs";
 import styles from "./EditUserProfile.module.css";
 
-const PlacesAutocomplete = ({ onSelectLocation, initialValue }) => {
+const PlacesAutocomplete = ({ onSelectLocation, initialValue, cancelChanges }) => {
   const {
     ready,
     value,
@@ -36,14 +36,14 @@ const PlacesAutocomplete = ({ onSelectLocation, initialValue }) => {
     requestOptions: {},
     debounce: 300,
   });
-
+  
   const handleInput = (value) => {
     setValue(value);
   };
 
   useEffect(() => {
     handleInput(initialValue);
-  }, []);
+  }, [cancelChanges]);
 
   const handleSelect = (value) => {
     setValue(value);
@@ -106,6 +106,7 @@ const EditUserProfile = () => {
   const [submitChanges, setSubmitChanges] = useState(false);
 
   const [user, setUser] = useState(null);
+  const [cancelAddress, setCancelAddress] = useState(false);
 
   const [userExistingPhotos, setUserExistingPhotos] = useState(null);
   const [photos, setPhotos] = useState(new Array(4).fill(null));
@@ -113,7 +114,7 @@ const EditUserProfile = () => {
   const [toDeletePhotos, setToDeletePhotos] = useState([]);
   const [photoIndex, setPhotoIndex] = useState(0);
 
-  async function fetchUser() {
+  const fetchUser = async () => {
     try {
       const response = await getUserInfo();
 
@@ -144,7 +145,7 @@ const EditUserProfile = () => {
     } catch (error) {
       navigate("/login");
     }
-  }
+  };
   useEffect(() => {
     fetchUser();
   }, [loading]);
@@ -195,12 +196,16 @@ const EditUserProfile = () => {
       city: value,
     });
   };
-
+ 
   const applyChanges = async (event) => {
     event.preventDefault();
+
     try {
       setSubmitChanges(true);
-      await sendDataWithoutPhotos(user);
+      await sendDataWithoutPhotos({
+        ...user,
+        birth_date: user.birth_date.add(1, "day"),
+      });
       await deleteUserPhotos(toDeletePhotos);
       await sendPhotosToServer(uploadedPhotos);
 
@@ -216,6 +221,7 @@ const EditUserProfile = () => {
   const handleCancel = async (event) => {
     event.preventDefault();
     await fetchUser();
+    setCancelAddress(!cancelAddress);
     setUploadedPhotos(new Array(4).fill(null));
     setToDeletePhotos([]);
   };
@@ -319,6 +325,7 @@ const EditUserProfile = () => {
                   <PlacesAutocomplete
                     onSelectLocation={handleCityUpdate}
                     initialValue={user.city}
+                    cancelChanges={cancelAddress}
                   />
                 </div>
                 <div className={styles.InputContainer}>

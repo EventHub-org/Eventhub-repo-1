@@ -17,11 +17,11 @@ import java.time.LocalDate;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserRequestCreate {
     @Pattern(regexp = "[A-Z][a-z]+",
-            message = "Must start with a capital letter followed by one or more lowercase letters")
+            message = "First Name must start with a capital letter followed by one or more lowercase letters")
     private String firstName;
 
     @Pattern(regexp = "[A-Z][a-z]+",
-            message = "Must start with a capital letter followed by one or more lowercase letters")
+            message = "Last Name must start with a capital letter followed by one or more lowercase letters")
     private String lastName;
 
     @Size(min = 3, max = 15)
@@ -39,7 +39,6 @@ public class UserRequestCreate {
     @Pattern(regexp = ".*[a-z].*",
             message = "Must contain at least one lowercase letter")
     private String password;
-
 
     private String city;
 

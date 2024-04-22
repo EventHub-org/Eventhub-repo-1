@@ -18,18 +18,15 @@ import java.time.LocalDate;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserRequestUpdate {
     @Pattern(regexp = "[A-Z][a-z]+",
-            message = "Must start with a capital letter followed by one or more lowercase letters")
+            message = "First Name must start with a capital letter followed by one or more lowercase letters")
     private String firstName;
 
     @Pattern(regexp = "[A-Z][a-z]+",
-            message = "Must start with a capital letter followed by one or more lowercase letters")
+            message = "Last Name must start with a capital letter followed by one or more lowercase letters")
     private String lastName;
 
     @Size(min = 3, max = 15, message = "Username must be between 3 to 15 characters")
     private String username;
-
-    @Pattern(regexp = "[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}", message = "Must be a valid e-mail address")
-    private String email;
 
     @Size(max = 255,
             message = "Description length cannot be greater than 255 symbols")
@@ -42,15 +39,15 @@ public class UserRequestUpdate {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
     private boolean showEmail;
 
     public UserRequestUpdate() {}
 
-    public UserRequestUpdate(String firstName, String lastName, String username, String email, String description, String city, LocalDate birthDate, Gender gender, boolean showEmail) {
+    public UserRequestUpdate(String firstName, String lastName, String username, String description, String city, LocalDate birthDate, Gender gender, boolean showEmail) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
-        this.email = email;
         this.description = description;
         this.city = city;
         this.birthDate = birthDate;

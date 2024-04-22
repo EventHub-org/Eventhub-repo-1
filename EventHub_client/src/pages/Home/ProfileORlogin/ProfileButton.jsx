@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { Dropdown, Menu } from "antd";
 import useAuth from "../../../hooks/useAuth";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
 import {
   UserOutlined,
   LogoutOutlined,
@@ -18,6 +19,8 @@ const MenuButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [linkToProfile, setLinkToProfile] = useState();
 
+  const location = useLocation();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -28,8 +31,10 @@ const MenuButton = () => {
       }
     };
 
-    fetchData();
-  }, []);
+    if (location.pathname === "/") {
+      fetchData();
+    }
+  }, [location.pathname]);
 
   const handleMenuClick = (e) => {
     if (e.key === "profile") {
@@ -50,13 +55,19 @@ const MenuButton = () => {
       overlay={
         <Menu className={styles.customMenu} onClick={handleMenuClick}>
           <Menu.Item icon={<UserOutlined />} key="profile">
-            <Link to={linkToProfile} key="profile-link">Profile</Link>
+            <Link to={linkToProfile} key="profile-link">
+              Profile
+            </Link>
           </Menu.Item>
           <Menu.Item icon={<InfoCircleOutlined />} key="edit-profile">
-            <Link to="profile/edit" key="profile-link">Edit information</Link>
+            <Link to="profile/edit" key="profile-link">
+              Edit information
+            </Link>
           </Menu.Item>
           <Menu.Item icon={<SafetyOutlined />} key="change-password">
-            <Link to="profile/change-password" key="change-password-link">Change password</Link>
+            <Link to="profile/change-password" key="change-password-link">
+              Change password
+            </Link>
           </Menu.Item>
           <Menu.Item icon={<LogoutOutlined />} key="logout">
             Log out
