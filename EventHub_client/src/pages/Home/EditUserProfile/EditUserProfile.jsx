@@ -151,7 +151,7 @@ const EditUserProfile = () => {
   };
   useEffect(() => {
     fetchUser();
-  }, [loading]);
+  }, []);
 
   const handlePhotoUpload = (event) => {
     const file = event.target.files[0];
@@ -181,8 +181,6 @@ const EditUserProfile = () => {
     setPhotoIndex(photoIndex - 1);
     setPhotos(photos);
     setUploadedPhotos(uploadedPhotos);
-
-    console.log(toDeletePhotos);
   };
 
   const updateUserInfo = (event) => {
