@@ -5,6 +5,8 @@ import usePlacesAutocomplete, {
     getLatLng,
 } from "use-places-autocomplete";
 import dayjs from 'dayjs';
+import moment from 'moment';
+
 import { jwtDecode } from "jwt-decode";
 
 import styles from "./EditEvent.module.css";
@@ -137,15 +139,19 @@ const EditEvent = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const [submitChanges,setSubmitChanges] = useState(false);
-    const ownerId = searchParams.get("userId");
+    const authToken = localStorage.getItem("token");
+
+    const user = jwtDecode(authToken);
+    const userId = user.id;
+
     const eventId = searchParams.get("eventId");
 
-    const [startDate, setStartDate] = useState(null);
-    const [expireDate, setExpireDate] = useState(null);
+    const [startDate, setStartDate] = useState(dayjs());
+    const [expireDate, setExpireDate] = useState(dayjs());
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const eventData = await getFullEventById(ownerId, eventId);
+                const eventData = await getFullEventById(userId, eventId);
 
                 setTitle(eventData.title || "");
                 setDescription(eventData.description || "");
@@ -163,7 +169,6 @@ const EditEvent = () => {
                 setExpireDate(dayjs(expiresAt));
 
                 const userPhotos = eventData.photo_responses.filter(photo => photo.photo_name !== 'eventDefaultImage');
-
                 setEventExistingPhotos(userPhotos);
                 setPhotos(userPhotos.map(photo => photo.photo_url).concat(new Array(6 - userPhotos.length).fill(null)));
                 setAddedPhotos(userPhotos.length);
@@ -174,7 +179,7 @@ const EditEvent = () => {
         };
 
         fetchData();
-    }, [ownerId, eventId]);
+    }, [eventId]);
 
 
     useEffect(() => {
@@ -229,7 +234,14 @@ const EditEvent = () => {
             }
         }
     };
-
+    const handleDateRangeChange = (dates) => {
+        if (dates && dates.length === 2) {
+            const [newStartDate, newExpireDate] = dates;
+            setStartDate(newStartDate);
+            setExpireDate(newExpireDate);
+        }
+        setDateRange(dates);
+    };
     const clearEventData = () => {
         setTitle("");
         setDescription("");
@@ -311,10 +323,7 @@ const EditEvent = () => {
             }
             const startAt = formatDate(dateRange[0]);
             const expireAt = formatDate(dateRange[1]);
-            const authToken = localStorage.getItem("token");
-
-            const user = jwtDecode(authToken);
-            const user_id = user.id;
+           
             const eventData = {
                 title: title,
                 max_participants: participants,
@@ -329,10 +338,10 @@ const EditEvent = () => {
                     name: category,
                 })),
                 current_count: 0,
-                owner_id: user_id,
+                owner_id: userId,
             };
             
-            await editDataWithoutPhotos(eventData, user_id, eventId);
+            await editDataWithoutPhotos(eventData, userId, eventId);
             await deleteEventPhotos(eventId, photosToDelete);
             await editEventPhotos(formData, eventId);
 
@@ -353,7 +362,7 @@ const EditEvent = () => {
             const photoIds = eventExistingPhotos.map(photo => photo.id); 
             await deleteEventPhotos(eventId, photoIds); 
         }
-            await deleteEvent(ownerId, eventId);
+            await deleteEvent(userId, eventId);
             clearEventData()
             message.success("Event deleted successfully!");
 
@@ -513,7 +522,7 @@ const EditEvent = () => {
                                     format="YYYY-MM-DD HH:mm"
                                     placeholder={["Start date and time", "End date and time"]}
                                     style={{ width: "100%", height: "4vh", zIndex: 999 }}
-                                    onChange={(dates) => setDateRange(dates)}
+                                    onChange={(dates) => handleDateRangeChange(dates)}
                                     value={[startDate, expireDate]}
                                 />
 
