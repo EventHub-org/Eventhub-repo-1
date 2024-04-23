@@ -91,6 +91,10 @@ const PlacesAutocomplete = ({ onSelectLocation, initialValue, cancelChanges }) =
       options={options}
       onSelect={handleSelect}
       onSearch={handleInput}
+      onChange={(newValue) => {
+        handleInput(newValue);
+        onSelectLocation(newValue);
+      }}
       value={value}
       disabled={!ready}
       placeholder="Where do you live?"
