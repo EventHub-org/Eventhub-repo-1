@@ -17,7 +17,6 @@ export const getRequestsByEventId = async (eventId) => {
     );
     return response.data;
   } catch (error) {
-    message.error("Error getting requests by event id");
     console.error(error);
   }
 };

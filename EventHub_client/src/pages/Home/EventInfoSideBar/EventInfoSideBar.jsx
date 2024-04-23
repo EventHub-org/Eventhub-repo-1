@@ -4,11 +4,7 @@ import styles from "./EventInfoSideBar.module.css";
 
 import { IoIosMore } from "react-icons/io";
 
-import {
-  CameraOutlined,
-  DeleteOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 
 import { getJoinedParticipants } from "../../../api/getJoinedParticipants";
 import { getUserById } from "../../../api/getUserById";
@@ -60,6 +56,8 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  const [errorMsg, setErrorMsg] = useState(null);
+
   // Params
   const [searchParams] = useSearchParams();
 
@@ -83,8 +81,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
           setIsOwner(data.owner);
         })
         .catch((error) => {
-          message.error("Access token has expired");
-          console.error(error);
+          setErrorMsg("An error occurerd");
         });
     } else {
       setUserState(null);
@@ -93,17 +90,25 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   }, [eventId, auth]);
 
   useEffect(() => {
-    getFullEventById(ownerId, eventId).then((data) => {
-      setEvent(data);
-      setIsLoading(false);
-    });
+    getFullEventById(ownerId, eventId)
+      .then((data) => {
+        setEvent(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setErrorMsg("An error occurerd");
+      });
   }, [ownerId, eventId, userState, reloadList]);
 
   useEffect(() => {
     event &&
-      getJoinedParticipants(event.id).then((data) => {
-        setParticipantsToShow(data.slice(0, 5));
-      });
+      getJoinedParticipants(event.id)
+        .then((data) => {
+          setParticipantsToShow(data.slice(0, 5));
+        })
+        .catch((error) => {
+          setErrorMsg("An error occurerd");
+        });
 
     return () => setIsShowMore(false);
   }, [event]);
@@ -123,9 +128,13 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
   useEffect(() => {
     event &&
-      getUserById(event.owner_id).then((data) => {
-        setOwner(data);
-      });
+      getUserById(event.owner_id)
+        .then((data) => {
+          setOwner(data);
+        })
+        .catch((error) => {
+          setErrorMsg("An error occurerd");
+        });
   }, [event]);
 
   useEffect(() => {
@@ -139,7 +148,11 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   useEffect(() => {
     try {
       isOwner &&
-        getRequestsByEventId(eventId).then((data) => setRequests(data));
+        getRequestsByEventId(eventId)
+          .then((data) => setRequests(data))
+          .catch((error) => {
+            setErrorMsg("An error occurerd");
+          });
     } catch (error) {
       setRequests(null);
     }
@@ -149,7 +162,22 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
     showAllParticipants && setIsLoading(true);
   }, [showAllParticipants]);
 
+  useEffect(() => {
+    // Display error message
+    if (errorMsg) {
+      message.error({
+        content: errorMsg,
+        onClose: handleCloseMessage,
+      });
+    }
+  }, [errorMsg]);
+
   // Funcs
+  const handleCloseMessage = () => {
+    // Clear error message
+    setErrorMsg(null);
+  };
+
   const handleShowAllParticipants = () => {
     setShowAllParticipants(!showAllParticipants);
     setShowRequests(false);
@@ -167,6 +195,56 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
 
   const handleCloseWindow = () => {
     navigate({ pathname: "../", search: `?${searchParams.toString()}` });
+  };
+
+  const handleJoinEvent = async () => {
+    try {
+      if (userState === ParticipantState.NONE) {
+        await createParticipant(eventId);
+        setUserState(ParticipantState.REQUESTED);
+      }
+    } catch (error) {
+      setErrorMsg("An error occured");
+    }
+  };
+
+  const handleCancelRequest = async () => {
+    try {
+      if (userState === ParticipantState.REQUESTED) {
+        const participant = await getParticipantByUser(eventId);
+        await deleteParticipant(participant.id, eventId);
+        setUserState(ParticipantState.NONE);
+      }
+    } catch (error) {
+      setErrorMsg("An error occured");
+    }
+  };
+
+  const handleLeaveEvent = async () => {
+    try {
+      if (userState === ParticipantState.JOINED) {
+        const participant = await getParticipantByUser(eventId);
+        await deleteParticipant(participant.id, eventId);
+        setUserState(ParticipantState.NONE);
+      }
+    } catch (error) {
+      setErrorMsg("An error occured");
+    }
+  };
+
+  const handleJoinOwnerEvent = async () => {
+    try {
+      if (!isOwner) return;
+
+      if (userState === ParticipantState.NONE) {
+        await createParticipant(eventId);
+        const participant = await getParticipantByUser(eventId);
+        await addParticipant(eventId, participant.id);
+        setUserState(ParticipantState.JOINED);
+      }
+    } catch (error) {
+      setErrorMsg("An error occured");
+    }
   };
 
   const getFormattedDate = (dateTimeString) => {
@@ -255,9 +333,13 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                     className={styles["item"]}
                     key={participant.id}
                     onMouseEnter={() => {
-                      getUserById(participant.user_id).then((data) => {
-                        setHoveredParticipant(data);
-                      });
+                      getUserById(participant.user_id)
+                        .then((data) => {
+                          setHoveredParticipant(data);
+                        })
+                        .catch((error) => {
+                          setErrorMsg("An error occurerd");
+                        });
                     }}
                   >
                     <img
@@ -328,11 +410,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
             {userState === ParticipantState.NONE && !isOwner && (
               <PrimaryButton
                 className={styles["action-btn"]}
-                onClick={() => {
-                  createParticipant(eventId).then(() =>
-                    setUserState(ParticipantState.REQUESTED)
-                  );
-                }}
+                onClick={handleJoinEvent}
               >
                 Join
               </PrimaryButton>
@@ -341,13 +419,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
             {userState === ParticipantState.REQUESTED && !isOwner && (
               <PrimaryButton
                 className={`${styles["action-btn"]} ${styles["action-2-btn"]}`}
-                onClick={() =>
-                  getParticipantByUser(eventId).then((data) => {
-                    deleteParticipant(data.id, eventId).then(() =>
-                      setUserState(ParticipantState.NONE)
-                    );
-                  })
-                }
+                onClick={handleCancelRequest}
               >
                 Cancel
               </PrimaryButton>
@@ -356,13 +428,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
             {userState === ParticipantState.JOINED && !isOwner && (
               <PrimaryButton
                 className={`${styles["action-btn"]} ${styles["action-2-btn"]}`}
-                onClick={() =>
-                  getParticipantByUser(eventId).then((data) => {
-                    deleteParticipant(data.id, eventId).then(() =>
-                      setUserState(ParticipantState.NONE)
-                    );
-                  })
-                }
+                onClick={handleLeaveEvent}
               >
                 Leave
               </PrimaryButton>
@@ -373,15 +439,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                 {userState === ParticipantState.NONE && (
                   <PrimaryButton
                     className={styles["isOwner-action-btn"]}
-                    onClick={() => {
-                      createParticipant(eventId).then(() =>
-                        getParticipantByUser(eventId).then((participant) => {
-                          addParticipant(eventId, participant.id).then(() => {
-                            setUserState(ParticipantState.JOINED);
-                          });
-                        })
-                      );
-                    }}
+                    onClick={handleJoinOwnerEvent}
                   >
                     Join
                   </PrimaryButton>
@@ -390,13 +448,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                 {userState === ParticipantState.JOINED && (
                   <PrimaryButton
                     className={`${styles["isOwner-action-btn"]} ${styles["isOwner-action-2-btn"]}`}
-                    onClick={() =>
-                      getParticipantByUser(eventId).then((data) => {
-                        deleteParticipant(data.id, eventId).then(() =>
-                          setUserState(ParticipantState.NONE)
-                        );
-                      })
-                    }
+                    onClick={handleLeaveEvent}
                   >
                     Leave
                   </PrimaryButton>

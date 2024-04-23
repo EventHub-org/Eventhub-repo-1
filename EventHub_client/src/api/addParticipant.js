@@ -1,4 +1,3 @@
-import { message } from "antd";
 import axios from "./axios";
 
 export const addParticipant = async (eventId, participantId) => {
@@ -18,7 +17,6 @@ export const addParticipant = async (eventId, participantId) => {
 
     return response.data;
   } catch (error) {
-    message.error("Error while adding participant");
     console.error(error);
   }
 };

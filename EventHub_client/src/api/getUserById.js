@@ -6,7 +6,6 @@ export const getUserById = async (userId) => {
     const response = await axios.get(`users/${userId}`);
     return response.data;
   } catch (error) {
-    message.error("Error getting user");
     console.error(error);
   }
 };

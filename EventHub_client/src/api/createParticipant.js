@@ -18,7 +18,6 @@ export const createParticipant = async (eventId) => {
 
     return response.data;
   } catch (error) {
-    message.error("Error creating participant");
     console.error(error);
   }
 };
