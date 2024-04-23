@@ -40,6 +40,8 @@ public class EventRequest {
     private String description;
 
     @NotNull
+    @NotEmpty(message = "Please choose correct location")
+    @NotBlank(message = "Please choose correct location")
     private String location;
 
     @NotNull
@@ -55,6 +57,7 @@ public class EventRequest {
     private boolean withOwner;
   
     @NotNull
+    @Size(min = 1, message = "Please choose at least one category!")
     private List<CategoryRequest> categoryRequests;
 
     @NotNull

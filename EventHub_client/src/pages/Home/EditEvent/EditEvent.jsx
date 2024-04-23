@@ -271,7 +271,7 @@ const EditEvent = () => {
         date.setHours(date.getHours() - offset / 60);
         return date.toISOString();
     };
-
+/*
     const validateFields = () => {
         if (title.length < 5 || title.length > 20) {
             message.error("Event name must be between 5 and 20 characters");
@@ -313,14 +313,11 @@ const EditEvent = () => {
 
         return true;
     };
-    
+    */
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitChanges(true);
         try {
-            if (!validateFields()) {
-                return;
-            }
             const startAt = formatDate(dateRange[0]);
             const expireAt = formatDate(dateRange[1]);
            
@@ -349,7 +346,7 @@ const EditEvent = () => {
             clearEventData()
         } catch (error) {
             console.error("Error submitting event:", error);
-            message.error("Failed to create event. Please try again later.");
+            message.error(error.response.data);
         }finally{
             setSubmitChanges(false)
         }
