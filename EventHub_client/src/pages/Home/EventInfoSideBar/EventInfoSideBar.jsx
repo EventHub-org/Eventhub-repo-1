@@ -31,7 +31,7 @@ import { getRequestsByEventId } from "../../../api/getRequestsByEventId";
 import RequestsCount from "../../../components/RequestsCount/RequestsCount";
 import { message } from "antd";
 
-const EventInfoSideBar = ({ ownerId, eventId }) => {
+const EventInfoSideBar = ({ eventId }) => {
   // States
   const [isShowMore, setIsShowMore] = useState(false);
   const [isOverflowAboutText, setIsOverflowAboutText] = useState(false);
@@ -92,7 +92,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
   }, [eventId, auth]);
 
   useEffect(() => {
-    getFullEventById(ownerId, eventId)
+    getFullEventById(eventId)
       .then((data) => {
         setEvent(data);
         setIsLoading(false);
@@ -101,7 +101,7 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
       .catch((error) => {
         setErrorMsg("An error occurerd");
       });
-  }, [ownerId, eventId, userState, reloadList]);
+  }, [eventId, userState, reloadList]);
 
   useEffect(() => {
     event &&

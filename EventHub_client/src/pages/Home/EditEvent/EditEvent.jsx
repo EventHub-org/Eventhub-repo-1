@@ -5,20 +5,12 @@ import usePlacesAutocomplete, {
   getLatLng,
 } from "use-places-autocomplete";
 import dayjs from "dayjs";
-import moment from "moment";
 
 import { jwtDecode } from "jwt-decode";
 
 import styles from "./EditEvent.module.css";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
-import {
-  Input,
-  Select,
-  DatePicker,
-  Checkbox,
-  AutoComplete,
-  message,
-} from "antd";
+import { Input, Select, DatePicker, AutoComplete, message } from "antd";
 import {
   CameraOutlined,
   DeleteOutlined,
@@ -141,23 +133,21 @@ const EditEvent = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [participants, setParticipants] = useState("");
   const [dateRange, setDateRange] = useState(null);
+  const [ownerId, setOwnerId] = useState(null);
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [submitChanges, setSubmitChanges] = useState(false);
-  const authToken = localStorage.getItem("token");
-
-  const user = jwtDecode(authToken);
-  const userId = user.id;
 
   const eventId = searchParams.get("eventId");
 
   const [startDate, setStartDate] = useState(dayjs());
   const [expireDate, setExpireDate] = useState(dayjs());
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const eventData = await getFullEventById(userId, eventId);
+        const eventData = await getFullEventById(eventId);
 
         setTitle(eventData.title || "");
         setDescription(eventData.description || "");
@@ -165,6 +155,7 @@ const EditEvent = () => {
         setLongitude(eventData.longitude || 0);
         setLocation(eventData.location || "");
         setWithOwner(eventData.withOwner || true);
+        setOwnerId(eventData.owner_id);
         setSelectedCategories(
           eventData.category_responses?.map((category) => category.name) || []
         );
@@ -269,7 +260,7 @@ const EditEvent = () => {
     setAddedPhotos(0);
     setDateRange(null);
     setFormData(new FormData());
-    navigate("/");
+    navigate(`/event/${eventId}`);
   };
 
   const handleLocationChange = (value) => {
@@ -348,13 +339,14 @@ const EditEvent = () => {
         category_requests: selectedCategories.map((category) => ({
           name: category,
         })),
-        owner_id: userId,
+        owner_id: ownerId,
       };
 
-      await editDataWithoutPhotos(eventData, userId, eventId);
+      await editDataWithoutPhotos(eventData, eventId);
       await deleteEventPhotos(eventId, photosToDelete);
       await editEventPhotos(formData, eventId);
 
+      navigate(`/event/${eventId}`);
       message.success("Event was successfully edited");
       clearEventData();
     } catch (error) {
@@ -371,8 +363,9 @@ const EditEvent = () => {
         const photoIds = eventExistingPhotos.map((photo) => photo.id);
         await deleteEventPhotos(eventId, photoIds);
       }
-      await deleteEvent(userId, eventId);
+      await deleteEvent(eventId);
       clearEventData();
+      navigate("/");
       message.success("Event deleted successfully!");
     } catch (error) {
       message.error("Error deleting event");

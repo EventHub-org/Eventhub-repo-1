@@ -31,7 +31,7 @@ const defaultOption = {
   disableDoubleClickZoom: true,
   styles: light,
   minZoom: 5,
-  maxZoom: 20, 
+  maxZoom: 20,
 };
 
 const Map = ({ center }) => {
@@ -87,7 +87,7 @@ const Map = ({ center }) => {
   const onMarkerClick = (event) => {
     setSelectedEvent(event);
     navigate({
-      pathname: `/event/${event.owner_id}/${event.id}`,
+      pathname: `/event/${event.id}`,
       search: `?${searchParams.toString()}`,
     });
   };

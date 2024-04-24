@@ -15,7 +15,7 @@ function App() {
       <div>
         <Routes>
           <Route path="/" element={<Home />}>
-            <Route path="event/:ownerId/:eventId" />
+            <Route path="event/:eventId" />
             <Route path="/edit" element={<EditEvent />} />
             <Route
               path="/profile/change-password"

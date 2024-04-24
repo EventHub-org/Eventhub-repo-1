@@ -30,7 +30,7 @@ const Home = () => {
   const location = useLocation();
 
   const outlet = useOutlet();
-  const { ownerId, eventId } = useParams();
+  const { eventId } = useParams();
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -52,9 +52,7 @@ const Home = () => {
           <MyEvents />
           {location.pathname.includes("/edit") && <EditEvent />}
 
-          {ownerId && eventId && (
-            <EventInfoSideBar ownerId={ownerId} eventId={eventId} />
-          )}
+          {eventId && <EventInfoSideBar eventId={eventId} />}
           {outlet}
         </>
       ) : (
