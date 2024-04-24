@@ -1,10 +1,10 @@
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
-import CloseParticipantButton from "../../../components/Buttons/CloseParticipantButton/CloseParticipantButton";
+import CloseParticipantButton from "./CloseParticipantButton/CloseParticipantButton";
 import GoBackButton from "../../../components/Buttons/GoBackButton/GoBackButton";
 import styles from "./RequestsList.module.css";
 
 import { deleteParticipant } from "../../../api/deleteParticipant";
-import AcceptParticipantButton from "../../../components/Buttons/AcceptParticipantButton/AcceptParticipantButton";
+import AcceptParticipantButton from "./AcceptParticipantButton/AcceptParticipantButton";
 import { addParticipant } from "../../../api/addParticipant";
 import SpotsLeft from "../../../components/Spots/SpotsLeft";
 const RequestsList = ({

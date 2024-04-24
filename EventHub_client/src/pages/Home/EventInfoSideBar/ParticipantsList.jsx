@@ -7,7 +7,7 @@ import { getUserById } from "../../../api/getUserById";
 
 import GoBackButton from "../../../components/Buttons/GoBackButton/GoBackButton";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
-import CloseParticipantButton from "../../../components/Buttons/CloseParticipantButton/CloseParticipantButton";
+import CloseParticipantButton from "./CloseParticipantButton/CloseParticipantButton";
 import OwnerPhotoOverlay from "../../../components/OwnerPhotoOverlay/OwnerPhotoOverlay";
 import { deleteParticipant } from "../../../api/deleteParticipant";
 import SpotsLeft from "../../../components/Spots/SpotsLeft";
