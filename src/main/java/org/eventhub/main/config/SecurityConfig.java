@@ -58,6 +58,7 @@ public class SecurityConfig {
                         "/events/{event_id}/participants/users",
                         "/events/{event_id}/participants/user_state/{user_id}",
                         "/events/{event_id}/participants/joined")
+                        "/events/all-live-upcoming")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
