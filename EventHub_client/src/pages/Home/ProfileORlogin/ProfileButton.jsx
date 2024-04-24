@@ -13,6 +13,7 @@ import {
 import ProfileInfo from "../../../components/ProfileInfo/ProfileInfo";
 import { getUsername } from "../../../api/getUsername";
 import styles from "./Buttons.module.css";
+import { Link, useNavigate } from "react-router-dom";
 
 const MenuButton = () => {
   const { setAuth } = useAuth();
@@ -35,6 +36,8 @@ const MenuButton = () => {
       fetchData();
     }
   }, [location.pathname]);
+
+  const navigate = useNavigate();
 
   const handleMenuClick = (e) => {
     if (e.key === "profile") {
@@ -70,6 +73,7 @@ const MenuButton = () => {
             </Link>
           </Menu.Item>
           <Menu.Item icon={<LogoutOutlined />} key="logout">
+
             Log out
           </Menu.Item>
         </Menu>
