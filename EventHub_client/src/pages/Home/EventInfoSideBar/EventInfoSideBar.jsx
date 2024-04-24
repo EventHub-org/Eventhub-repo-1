@@ -204,7 +204,19 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
         setUserState(ParticipantState.REQUESTED);
       }
     } catch (error) {
-      setErrorMsg("An error occured");
+      if (error.response) {
+        const responseData = error.response.data;
+        if (
+          typeof responseData === "string" &&
+          responseData.includes("is full")
+        ) {
+          message.info("Event is full");
+        } else {
+          setErrorMsg("An error occurred");
+        }
+      } else {
+        setErrorMsg("An error occurred");
+      }
     }
   };
 
@@ -454,7 +466,10 @@ const EventInfoSideBar = ({ ownerId, eventId }) => {
                   </PrimaryButton>
                 )}
 
-                <PrimaryButton className={styles["isOwner-edit-btn"]}>
+                <PrimaryButton
+                  to={`/edit?eventId=${eventId}`}
+                  className={styles["isOwner-edit-btn"]}
+                >
                   Edit
                 </PrimaryButton>
               </div>
