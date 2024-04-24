@@ -64,7 +64,7 @@ const Map = ({ center }) => {
         } catch (error) {
           console.error("Error getting events data:", error);
         }
-      } else if (searchParams.get("show_filter")) {
+      } else if (searchParams.get("filter")) {
         try {
           const data = await getFilteredEvents();
           setEvents(data);
@@ -86,7 +86,10 @@ const Map = ({ center }) => {
   }, [searchParams]);
   const onMarkerClick = (event) => {
     setSelectedEvent(event);
-    navigate(`/event/${event.owner_id}/${event.id}`);
+    navigate({
+      pathname: `/event/${event.owner_id}/${event.id}`,
+      search: `?${searchParams.toString()}`,
+    });
   };
 
   const onMapClick = () => {

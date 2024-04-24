@@ -1,6 +1,5 @@
 import axios from "./axios";
 
-
 export const sendDataWithoutPhotos = async (eventData, owner_id) => {
     const accessToken = localStorage.getItem('token')
     const authAxios = axios.create({
@@ -17,13 +16,13 @@ export const sendDataWithoutPhotos = async (eventData, owner_id) => {
     } catch (error) {
         console.error('Error sending data without photos to server:', error);
 
-        throw error;
-    }
+    throw error;
+  }
 };
 
 function isFormDataEmpty(formData) {
-    const entries = formData.entries();
-    return entries.next().done;
+  const entries = formData.entries();
+  return entries.next().done;
 }
 const appendFormData = (formDataArray) => {
     const mergedFormData = new FormData();
@@ -51,9 +50,6 @@ export const sendPhotosToServer = async (formData, event_id) => {
         const response = await authAxios.post(`/events/${event_id}/photos/upload`, mergedPhotos);
         return response.data;
 
-    } catch (error) {
-        console.error('Error uploading photos to server:', error);
-
-        throw error;
-    }
+    throw error;
+  }
 };

@@ -9,14 +9,10 @@
 .participants-list-container {
   background-color: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(5px);
-  width: 20vw;
-  min-width: 330px;
-  height: 85vh;
-  top: 70px;
-  margin-top: 10px;
-  padding: 20px;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
   z-index: 991;
-  right: 0;
   position: absolute;
   overflow: auto;
   display: flex;
@@ -31,17 +27,14 @@
 .header {
   display: flex;
   justify-content: space-between;
-  margin-top: 3.2%;
-  font-size: 100px;
+  align-items: center;
+  height: 5vh;
 }
 
-.back-btn {
-  width: 20px;
-  height: 20px;
+main {
+  padding: 20px;
+  overflow: auto;
 }
-/* .header > * {
-  border: solid;
-} */
 
 /* Participants list */
 
@@ -49,28 +42,29 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  all: unset;
   margin-top: 5%;
 }
 
 .participant-container {
   width: 100%;
   height: 72px;
-  border: 1px solid var(--third-color);
   margin-bottom: 2%;
   display: flex;
   align-items: center;
   border-radius: 10px;
   overflow: hidden;
+  position: relative;
 }
 
 .participant-container:hover {
-  background-color: var(--third-color-hover);
   cursor: pointer;
 }
 
 .participant-photo {
   width: 72px;
   height: 100%;
+  border-radius: 50%;
 }
 
 .participant-info-container {
@@ -78,23 +72,77 @@
   position: relative;
   flex-direction: column;
   justify-content: center;
+  height: 100%;
   margin-left: 3%;
 }
 
 .full-name {
   display: flex;
   align-items: center;
-  font-weight: 600;
+  gap: 0.5ch;
   height: 30px;
   margin: 0;
 }
 
 .full-name p {
   margin-right: 5px;
+  margin: 0;
+  font-size: var(--sm-size);
+  color: var(--third-color);
 }
 
-.email {
+.username {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: var(--md-size);
+  height: 30px;
   margin: 0;
+}
+
+.lower-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  height: 3.9vh;
+}
+
+.requests-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--md-size);
+  width: 6.5vw;
+  height: 3.5vh;
+  position: relative;
+}
+
+.requests-count-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.no-participants-msg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--third-color);
+  width: 15vw;
+  margin-top: 5vh;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.delete-participant-container {
+  position: absolute;
+  right: 1.5%;
+  width: 3vh;
+  height: 3vh;
 }
 
 @media (width < 1280px) {
@@ -115,14 +163,31 @@
 @media (width >= 1280px) and (width < 1700px) {
   .participants-list-container {
     font-size: var(--xxs-size);
+    padding: 8px;
+  }
+
+  main {
+    padding: 10px;
   }
 
   .participant-container {
-    height: 60px;
+    height: 53px;
   }
 
   .participant-photo {
-    width: 60px;
+    width: 53px;
     height: 100%;
+  }
+
+  .requests-btn {
+    font-size: var(--xxs-size);
+  }
+
+  .username {
+    font-size: var(--xxs-size);
+  }
+
+  .full-name p {
+    font-size: var(--xxs-size);
   }
 }

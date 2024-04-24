@@ -51,11 +51,15 @@ public class SecurityConfig {
                         "/authentication/**",
                         "/users/{owner_id}/events/{event_id}",
                         "/users/{user_id}",
+                        "/users/{username}/profile",
                         "/categories/**",
                         "/search",
                         "/events/filter",
                         "/users/events",
-                        "/events/{event_id}/participants/**")
+                        "/events/{event_id}/participants/users",
+                        "/events/{event_id}/participants/user_state/{user_id}",
+                        "/events/{event_id}/participants/joined",
+                        "/events/all-live-upcoming")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
