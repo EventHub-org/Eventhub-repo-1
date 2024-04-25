@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<?> handleResponseStatusException(ResponseStatusException ex) {
         log.error("Entity not found exception: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
     @ExceptionHandler
