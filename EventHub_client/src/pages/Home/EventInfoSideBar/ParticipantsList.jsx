@@ -30,7 +30,7 @@ const ParticipantsList = ({
   const [owner, setOwner] = useState(null);
 
   // Params
-  const { ownerId, eventId } = useParams();
+  const { eventId } = useParams();
 
   // Effects
 
@@ -54,8 +54,7 @@ const ParticipantsList = ({
 
   return (
     _event &&
-    participants &&
-    owner && (
+    participants && (
       <div className={styles["participants-list-container"]}>
         <div className={styles["header"]}>
           <GoBackButton onClick={handleGoBackToSideBar} />
@@ -71,11 +70,11 @@ const ParticipantsList = ({
           <ul className={styles["participants-container"]}>
             {owner &&
               participants.find(
-                (participant) => participant.user_id === ownerId
+                (participant) => participant.user_id === owner.id
               ) && <OwnerPhotoOverlay owner={owner} />}
             {participants.map(
               (participant) =>
-                participant.user_id !== ownerId && (
+                participant.user_id !== owner.id && (
                   <li
                     key={participant.id}
                     className={styles["participant-container"]}
