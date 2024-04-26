@@ -15,7 +15,7 @@ import {
   CameraOutlined,
   DeleteOutlined,
   EyeOutlined,
-  MinusCircleOutlined
+  MinusCircleOutlined,
 } from "@ant-design/icons";
 
 import { getCategories } from "../../../api/getCategories";
@@ -350,8 +350,14 @@ const EditEvent = () => {
       message.success("Event was successfully edited");
       clearEventData();
     } catch (error) {
-      console.error("Error submitting event:", error);
-      message.error(error.response.data);
+      if (error.response.status === 403) {
+        message.error(error.response.data);
+        navigate("/");
+      } else {
+        console.error("Error submitting event:", error);
+        message.error(error.response.data);
+        navigate("/");
+      }
     } finally {
       setSubmitChanges(false);
     }
@@ -375,9 +381,7 @@ const EditEvent = () => {
 
   return (
     <div className={styles.backdrop}>
-      {submitChanges && (
-        <ProcessingEffect/>
-      )}
+      {submitChanges && <ProcessingEffect />}
       <div className={styles.wrapper}>
         <div className={styles.mainContainer}>
           <div className={styles.editEventHeader}>

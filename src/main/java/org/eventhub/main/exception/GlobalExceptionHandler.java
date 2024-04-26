@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<?> handleAccessIsDeniedException(AccessIsDeniedException ex) {
-        log.error("Entity not found exception: {}", ex.getMessage());
+        log.error("Access is denied exception: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 

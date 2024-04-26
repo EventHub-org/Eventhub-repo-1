@@ -31,7 +31,7 @@ public class EventController {
 
     @PostMapping("/{user_id}/events")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<EventFullInfoResponse> create(@PathVariable("user_id") UUID userId, @Validated @RequestBody EventRequest request,
+    public ResponseEntity<EventFullInfoResponse> create(@RequestHeader(name="Authorization") String token, @PathVariable("user_id") UUID userId, @Validated @RequestBody EventRequest request,
                                                         BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new ResponseStatusException("Invalid Input");
@@ -40,7 +40,7 @@ public class EventController {
 
         if(request.isWithOwner()) {
             ParticipantResponse participantResponse = participantService.create(new ParticipantRequest(response.getId(), userId));
-            participantService.addParticipant(participantResponse.getId());
+            participantService.addParticipant(participantResponse.getId(), response.getId(), token);
             response.setParticipantCount(response.getParticipantCount() + 1);
         }
 
@@ -70,21 +70,23 @@ public class EventController {
     }
 
     @PutMapping("/events/{event_id}")
-    public ResponseEntity<EventFullInfoResponse> update(@PathVariable("event_id") UUID eventId,
-                                                        @Validated @RequestBody EventRequest request, BindingResult result){
+    public ResponseEntity<EventFullInfoResponse> update(@RequestHeader (name="Authorization") String token, @PathVariable("event_id") UUID eventId,
+                                                        @Validated @RequestBody EventRequest request, BindingResult result) {
+
+
         if(result.hasErrors()){
             throw new ResponseStatusException(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        EventFullInfoResponse response = eventService.update(eventId, request);
+        EventFullInfoResponse response = eventService.update(eventId, request, token);
         log.info("**/updated event(id) = " + response.getId());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/events/{event_id}")
-    public ResponseEntity<OperationResponse> delete(@PathVariable("event_id") UUID eventId) {
+    public ResponseEntity<OperationResponse> delete(@RequestHeader (name="Authorization") String token, @PathVariable("event_id") UUID eventId) {
         String title = eventService.readById(eventId).getTitle();
-        eventService.delete(eventId);
+        eventService.delete(eventId, token);
         log.info("**/deleted event(id) = " + eventId);
 
         return new ResponseEntity<>(new OperationResponse("Event with title '"+title+"' deleted successfully"), HttpStatus.OK);

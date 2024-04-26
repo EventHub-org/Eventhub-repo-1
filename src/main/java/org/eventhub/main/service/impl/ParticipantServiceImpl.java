@@ -30,6 +30,7 @@ public class ParticipantServiceImpl implements ParticipantService {
     private final ParticipantMapper participantMapper;
     private final EventService eventService;
 
+
     @Autowired
     public ParticipantServiceImpl(ParticipantRepository participantRepository, ParticipantMapper participantMapper, EventService eventService) {
         this.participantRepository = participantRepository;
@@ -60,7 +61,9 @@ public class ParticipantServiceImpl implements ParticipantService {
     }
 
     @Override
-    public ParticipantResponse addParticipant(UUID participantId) {
+    public ParticipantResponse addParticipant(UUID participantId, UUID eventId, String token) {
+        eventService.validateEventOwner(token, eventId);
+
         Participant existingParticipant = readByIdEntity(participantId);
 
         Event event = existingParticipant.getEvent();
@@ -103,7 +106,9 @@ public class ParticipantServiceImpl implements ParticipantService {
         throw new NullDtoReferenceException("Request can't be null");
     }
 
-    public void delete(UUID id) {
+    public void delete(UUID id, UUID eventId, String token) {
+        eventService.validateEventOwner(token, eventId);
+
         Participant participant = readByIdEntity(id);
 
         Event event = eventService.readByIdEntity(participant.getEvent().getId());
@@ -182,5 +187,4 @@ public class ParticipantServiceImpl implements ParticipantService {
         }
 
     }
-
 }
