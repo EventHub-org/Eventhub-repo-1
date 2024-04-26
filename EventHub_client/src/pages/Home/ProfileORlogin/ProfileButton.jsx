@@ -32,9 +32,7 @@ const MenuButton = () => {
       }
     };
 
-    if (location.pathname === "/") {
       fetchData();
-    }
   }, [location.pathname]);
 
   const navigate = useNavigate();
