@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import styles from "./EventInfoSideBar.module.css";
 
 import { IoIosMore } from "react-icons/io";
@@ -31,8 +31,9 @@ import { getRequestsByEventId } from "../../../api/getRequestsByEventId";
 import RequestsCount from "../../../components/RequestsCount/RequestsCount";
 import { message } from "antd";
 
-const EventInfoSideBar = ({ eventId }) => {
+const EventInfoSideBar = () => {
   // States
+  const { eventId } = useParams();
   const [isShowMore, setIsShowMore] = useState(false);
   const [isOverflowAboutText, setIsOverflowAboutText] = useState(false);
   const [participantsToShow, setParticipantsToShow] = useState([]);
