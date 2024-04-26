@@ -15,8 +15,7 @@ import {
   CameraOutlined,
   DeleteOutlined,
   EyeOutlined,
-  MinusCircleOutlined,
-  LoadingOutlined,
+  MinusCircleOutlined
 } from "@ant-design/icons";
 
 import { getCategories } from "../../../api/getCategories";
@@ -27,6 +26,7 @@ import {
   deleteEvent,
   deleteEventPhotos,
 } from "../../../api/editEventData";
+import ProcessingEffect from "../../../components/ProcessingEffect/ProcessingEffect";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -376,11 +376,7 @@ const EditEvent = () => {
   return (
     <div className={styles.backdrop}>
       {submitChanges && (
-        <div className={styles.SubmitChanges}>
-          <LoadingOutlined
-            style={{ fontSize: "72px", color: "white", fontWeight: "1000" }}
-          />
-        </div>
+        <ProcessingEffect/>
       )}
       <div className={styles.wrapper}>
         <div className={styles.mainContainer}>
