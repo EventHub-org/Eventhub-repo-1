@@ -6,7 +6,6 @@ import { IoIosMore } from "react-icons/io";
 
 import { LoadingOutlined } from "@ant-design/icons";
 
-import { getJoinedParticipants } from "../../../api/getJoinedParticipants";
 import { getUserById } from "../../../api/getUserById";
 import { getFullEventById } from "../../../api/getFullEventById";
 
@@ -30,6 +29,7 @@ import RequestsList from "./RequestsList";
 import { getRequestsByEventId } from "../../../api/getRequestsByEventId";
 import RequestsCount from "../../../components/RequestsCount/RequestsCount";
 import { message } from "antd";
+import { getUserParticipants } from "../../../api/getUserParticipants";
 
 const EventInfoSideBar = () => {
   // States
@@ -47,8 +47,6 @@ const EventInfoSideBar = () => {
 
   const [showRequests, setShowRequests] = useState(false);
 
-  const [requests, setRequests] = useState(null);
-
   const [userState, setUserState] = useState(null);
 
   const [isOwner, setIsOwner] = useState(false);
@@ -57,9 +55,11 @@ const EventInfoSideBar = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const [isFull, setIsFull] = useState(true);
+  const [joinedParticipants, setJoinedParticipants] = useState(null);
 
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [requests, setRequests] = useState(null);
+
+  const [isFull, setIsFull] = useState(true);
 
   // Params
   const [searchParams] = useSearchParams();
@@ -76,46 +76,93 @@ const EventInfoSideBar = () => {
   const aboutText = useRef(null);
 
   useEffect(() => {
-    if (auth.token) {
-      getParticipantState(eventId)
-        .then((data) => {
-          setUserState(data.state);
+    const fetchData = async () => {
+      if (auth.token) {
+        const userState = await getParticipantState(eventId);
+        setUserState(userState.state);
+        setIsOwner(userState.owner);
 
-          setIsOwner(data.owner);
-        })
-        .catch((error) => {
-          setErrorMsg("An error occurerd");
-        });
-    } else {
-      setUserState(null);
-      setIsOwner(false);
+        if (userState.owner) {
+          const requests = await getRequestsByEventId(eventId);
+          setRequests(requests);
+        }
+      } else {
+        setUserState(null);
+        setIsOwner(false);
+      }
+
+      const fullEventData = await getFullEventById(eventId);
+      setEvent(fullEventData);
+      setIsLoading(false);
+      setIsFull(
+        fullEventData.max_participants === fullEventData.participant_count
+      );
+
+      const joinedParticipants = await getUserParticipants(eventId);
+      setJoinedParticipants(joinedParticipants);
+
+      setParticipantsToShow(joinedParticipants.slice(0, 5));
+
+      const owner = await getUserById(fullEventData.owner_id);
+      setOwner(owner);
+    };
+    try {
+      fetchData();
+    } catch (error) {
+      setRequests(null);
+
+      if (!error.response) {
+        // Помилка з'єднання з сервером
+        message.error("No server response");
+      } else {
+        const status = error.response.status;
+        switch (status) {
+          case 400:
+            // Помилка валідації даних на сервері
+            message.error(
+              "Invalid email or password. Please check your input."
+            );
+            break;
+          case 401:
+            // Користувач не авторизований
+            message.error("Unauthorized: Please check your credentials.");
+            break;
+          case 403:
+            // Доступ заборонено
+            message.error(
+              "Forbidden: You do not have permission to access this resource."
+            );
+            break;
+          case 404:
+            // URL не знайдено
+            message.error("Not Found: The requested resource was not found.");
+            break;
+          case 409:
+            // Конфлікт
+            message.error("Conflict: The resource already exists.");
+            break;
+          case 422:
+            // Невірні вхідні дані
+            message.error(
+              "Unprocessable Entity: The request was well-formed but unable to be followed due to semantic errors."
+            );
+            break;
+          case 500:
+            // Внутрішня помилка сервера
+            message.error(
+              "Internal Server Error: Something went wrong on the server."
+            );
+            break;
+          default:
+            // Інші типи помилок
+            console.error(error);
+            message.error("Failed to get event data: " + error.response.data);
+            break;
+        }
+      }
     }
-  }, [eventId, auth]);
-
-  useEffect(() => {
-    getFullEventById(eventId)
-      .then((data) => {
-        setEvent(data);
-        setIsLoading(false);
-        setIsFull(data.max_participants === data.participant_count);
-      })
-      .catch((error) => {
-        setErrorMsg("An error occurerd");
-      });
-  }, [eventId, userState, reloadList]);
-
-  useEffect(() => {
-    event &&
-      getJoinedParticipants(event.id)
-        .then((data) => {
-          setParticipantsToShow(data.slice(0, 5));
-        })
-        .catch((error) => {
-          setErrorMsg("An error occurerd");
-        });
-
     return () => setIsShowMore(false);
-  }, [event]);
+  }, [eventId, auth, userState, reloadList]);
 
   useEffect(() => {
     if (
@@ -131,17 +178,6 @@ const EventInfoSideBar = () => {
   }, [event]);
 
   useEffect(() => {
-    event &&
-      getUserById(event.owner_id)
-        .then((data) => {
-          setOwner(data);
-        })
-        .catch((error) => {
-          setErrorMsg("An error occurerd");
-        });
-  }, [event]);
-
-  useEffect(() => {
     const resetSideBar = () => {
       setShowAllParticipants(false);
       setShowRequests(false);
@@ -150,37 +186,10 @@ const EventInfoSideBar = () => {
   }, [eventId]);
 
   useEffect(() => {
-    try {
-      isOwner &&
-        getRequestsByEventId(eventId)
-          .then((data) => setRequests(data))
-          .catch((error) => {
-            setErrorMsg("An error occurerd");
-          });
-    } catch (error) {
-      setRequests(null);
-    }
-  }, [eventId, isOwner, reloadList]);
-
-  useEffect(() => {
     showAllParticipants && setIsLoading(true);
   }, [showAllParticipants]);
 
-  useEffect(() => {
-    // Display error message
-    if (errorMsg) {
-      message.error({
-        content: errorMsg,
-        onClose: handleCloseMessage,
-      });
-    }
-  }, [errorMsg]);
-
   // Funcs
-  const handleCloseMessage = () => {
-    // Clear error message
-    setErrorMsg(null);
-  };
 
   const handleShowAllParticipants = () => {
     setShowAllParticipants(!showAllParticipants);
@@ -216,10 +225,10 @@ const EventInfoSideBar = () => {
         ) {
           message.info("Event is full");
         } else {
-          setErrorMsg("An error occurred");
+          message.error("An error occurred");
         }
       } else {
-        setErrorMsg("An error occurred");
+        message.error("An error occurred");
       }
     }
   };
@@ -232,7 +241,7 @@ const EventInfoSideBar = () => {
         setUserState(ParticipantState.NONE);
       }
     } catch (error) {
-      setErrorMsg("An error occured");
+      message.error("An error occured");
     }
   };
 
@@ -244,7 +253,7 @@ const EventInfoSideBar = () => {
         setUserState(ParticipantState.NONE);
       }
     } catch (error) {
-      setErrorMsg("An error occured");
+      message.error("An error occured");
     }
   };
 
@@ -267,10 +276,10 @@ const EventInfoSideBar = () => {
         ) {
           message.info("Event is full");
         } else {
-          setErrorMsg("An error occurred");
+          message.error("An error occurred");
         }
       } else {
-        setErrorMsg("An error occurred");
+        message.error("An error occurred");
       }
     }
   };
@@ -366,7 +375,7 @@ const EventInfoSideBar = () => {
                           setHoveredParticipant(data);
                         })
                         .catch((error) => {
-                          setErrorMsg("An error occurerd");
+                          message.error("An error occurerd");
                         });
                     }}
                   >
@@ -429,7 +438,7 @@ const EventInfoSideBar = () => {
             {userState === null && (
               <PrimaryButton
                 className={styles["action-btn"]}
-                onClick={() => navigate("login")}
+                onClick={() => navigate("/login")}
               >
                 Join
               </PrimaryButton>
@@ -494,7 +503,7 @@ const EventInfoSideBar = () => {
         </div>
       )}
 
-      {showAllParticipants && !showRequests && (
+      {showAllParticipants && !showRequests && joinedParticipants && owner && (
         <ParticipantsList
           setIsLoading={setIsLoading}
           handleGoBackToSideBar={handleShowAllParticipants}
@@ -504,6 +513,8 @@ const EventInfoSideBar = () => {
           setReloadList={setReloadList}
           requests={requests}
           _event={event}
+          participants={joinedParticipants}
+          owner={owner}
         />
       )}
 

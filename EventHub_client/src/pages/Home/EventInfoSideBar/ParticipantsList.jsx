@@ -2,9 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./ParticipantsList.module.css";
 
-import { getUserParticipants } from "../../../api/getUserParticipants";
-import { getUserById } from "../../../api/getUserById";
-
 import GoBackButton from "../../../components/Buttons/GoBackButton/GoBackButton";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import CloseParticipantButton from "./CloseParticipantButton/CloseParticipantButton";
@@ -24,29 +21,11 @@ const ParticipantsList = ({
   setReloadList,
   requests,
   _event,
+  participants,
+  owner,
 }) => {
-  // States
-  const [participants, setParticipants] = useState([]);
-  const [owner, setOwner] = useState(null);
-
   // Params
   const { eventId } = useParams();
-
-  // Effects
-
-  useEffect(() => {
-    _event &&
-      getUserParticipants(_event.id)
-        .then((data) => setParticipants(data))
-        .catch((error) => message.error("An error occured"));
-  }, [_event]);
-
-  useEffect(() => {
-    _event &&
-      getUserById(_event.owner_id)
-        .then((data) => setOwner(data))
-        .catch((error) => message.error("An error occured"));
-  }, [_event]);
 
   useEffect(() => {
     participants && owner && setIsLoading(false);
