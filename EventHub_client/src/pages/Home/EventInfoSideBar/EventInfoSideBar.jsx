@@ -77,90 +77,88 @@ const EventInfoSideBar = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (auth.token) {
-        const userState = await getParticipantState(eventId);
-        setUserState(userState.state);
-        setIsOwner(userState.owner);
+      try {
+        if (auth.token) {
+          const userState = await getParticipantState(eventId);
+          setUserState(userState.state);
+          setIsOwner(userState.owner);
 
-        if (userState.owner) {
-          const requests = await getRequestsByEventId(eventId);
-          setRequests(requests);
+          if (userState.owner) {
+            const requests = await getRequestsByEventId(eventId);
+            setRequests(requests);
+          }
+        } else {
+          setUserState(null);
+          setIsOwner(false);
         }
-      } else {
-        setUserState(null);
-        setIsOwner(false);
+
+        const fullEventData = await getFullEventById(eventId);
+        setEvent(fullEventData);
+        setIsLoading(false);
+        setIsFull(
+          fullEventData.max_participants === fullEventData.participant_count
+        );
+
+        const joinedParticipants = await getUserParticipants(eventId);
+        setJoinedParticipants(joinedParticipants);
+
+        setParticipantsToShow(joinedParticipants.slice(0, 5));
+
+        const owner = await getUserById(fullEventData.owner_id);
+        setOwner(owner);
+      } catch (error) {
+        setRequests(null);
+
+        if (!error.response) {
+          // Помилка з'єднання з сервером
+          message.error("No server response");
+        } else {
+          const status = error.response.status;
+
+          switch (status) {
+            case 401:
+              // Користувач не авторизований
+              message.error("Unauthorized: Please check your credentials.");
+              break;
+            case 403:
+              // Доступ заборонено
+              message.error(
+                "Forbidden: You do not have permission to access this resource."
+              );
+              break;
+            case 404:
+              // URL не знайдено
+              message.error("Not Found: The requested resource was not found.");
+              break;
+            case 409:
+              // Конфлікт
+              message.error("Conflict: The resource already exists.");
+              break;
+            case 422:
+              // Невірні вхідні дані
+              message.error(
+                "Unprocessable Entity: The request was well-formed but unable to be followed due to semantic errors."
+              );
+              break;
+            case 500:
+              // Внутрішня помилка сервера
+              message.error(
+                "Internal Server Error: Something went wrong on the server."
+              );
+              break;
+            default:
+              // Інші типи помилок
+              console.error(error);
+              message.error("Failed to get event data: " + error.response.data);
+              break;
+          }
+        }
+        navigate("/");
       }
-
-      const fullEventData = await getFullEventById(eventId);
-      setEvent(fullEventData);
-      setIsLoading(false);
-      setIsFull(
-        fullEventData.max_participants === fullEventData.participant_count
-      );
-
-      const joinedParticipants = await getUserParticipants(eventId);
-      setJoinedParticipants(joinedParticipants);
-
-      setParticipantsToShow(joinedParticipants.slice(0, 5));
-
-      const owner = await getUserById(fullEventData.owner_id);
-      setOwner(owner);
     };
-    try {
-      fetchData();
-    } catch (error) {
-      setRequests(null);
 
-      if (!error.response) {
-        // Помилка з'єднання з сервером
-        message.error("No server response");
-      } else {
-        const status = error.response.status;
-        switch (status) {
-          case 400:
-            // Помилка валідації даних на сервері
-            message.error(
-              "Invalid email or password. Please check your input."
-            );
-            break;
-          case 401:
-            // Користувач не авторизований
-            message.error("Unauthorized: Please check your credentials.");
-            break;
-          case 403:
-            // Доступ заборонено
-            message.error(
-              "Forbidden: You do not have permission to access this resource."
-            );
-            break;
-          case 404:
-            // URL не знайдено
-            message.error("Not Found: The requested resource was not found.");
-            break;
-          case 409:
-            // Конфлікт
-            message.error("Conflict: The resource already exists.");
-            break;
-          case 422:
-            // Невірні вхідні дані
-            message.error(
-              "Unprocessable Entity: The request was well-formed but unable to be followed due to semantic errors."
-            );
-            break;
-          case 500:
-            // Внутрішня помилка сервера
-            message.error(
-              "Internal Server Error: Something went wrong on the server."
-            );
-            break;
-          default:
-            // Інші типи помилок
-            console.error(error);
-            message.error("Failed to get event data: " + error.response.data);
-            break;
-        }
-      }
-    }
+    fetchData();
+
     return () => setIsShowMore(false);
   }, [eventId, auth, userState, reloadList]);
 
