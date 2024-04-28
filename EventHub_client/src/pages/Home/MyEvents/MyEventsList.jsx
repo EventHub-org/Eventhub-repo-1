@@ -1,5 +1,6 @@
 import styles from "./MyEvents.module.css";
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Checkbox } from "antd";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import ListEvents from "../../../components/ListEvents/ListEvents";
