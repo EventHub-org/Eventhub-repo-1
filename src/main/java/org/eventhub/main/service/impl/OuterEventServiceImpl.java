@@ -45,6 +45,17 @@ public class OuterEventServiceImpl {
                         String imageSrc = eventInfoContainer.selectFirst("img").attr("data-src");
                         System.out.println(imageSrc);
 
+                        // Parse description
+                        Element descriptionContainer = eventDoc.selectFirst(".afisha-about");
+                        Element content = descriptionContainer.selectFirst(".content_cut");
+                        StringBuilder builder = new StringBuilder();
+                        for (Element p : content.select("p")) {
+                            builder.append(p.text());
+                            builder.append("\n\n");
+                        }
+                        String description = builder.toString();
+                        System.out.println(description);
+
                         System.out.println("\n");
 
 
