@@ -30,7 +30,6 @@ const MyEvents = () => {
       {searchParams.get("my_events") && (
         <EventList
           handleButtonClose={handleButtonClose}
-          searchParams={searchParams}
         />
       )}
     </div>

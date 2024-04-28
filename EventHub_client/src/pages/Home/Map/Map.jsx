@@ -1,9 +1,11 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
+import queryString from "query-string";
 import { getEventsData } from "../../../api/getEventsLocation";
 import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 import styles from "./Map.module.css";
 import { useSearchParams, useParams } from "react-router-dom";
 import { getEventsDataSearch } from "../../../api/getEventsData";
+import { getCheckbuttonsEvents } from "../../../api/getCheckbuttonsEvents";
 import { light } from "./Theme";
 
 import { useNavigate } from "react-router-dom";
@@ -67,6 +69,20 @@ const Map = ({ center }) => {
       } else if (searchParams.get("filter")) {
         try {
           const data = await getFilteredEvents();
+          setEvents(data);
+        } catch (error) {
+          console.error("Error getting events data:", error);
+        }
+      } else if (searchParams.get("my_events")) {
+        const parsed = queryString.parse(window.location.search);
+
+        try {
+          const data = await getCheckbuttonsEvents(
+            parsed.checkboxMy === "true",
+            parsed.checkboxJoined === "true",
+            parsed.checkboxPending === "true",
+            parsed.checkboxArchive === "true"
+          );
           setEvents(data);
         } catch (error) {
           console.error("Error getting events data:", error);

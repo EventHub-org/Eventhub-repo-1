@@ -6,12 +6,14 @@ import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/Clo
 import ListEvents from "../../../components/ListEvents/ListEvents";
 import { getCheckbuttonsEvents } from "../../../api/getCheckbuttonsEvents";
 
-const MyEventsList = ({ handleButtonClose, searchParams }) => {
+const MyEventsList = ({ handleButtonClose }) => {
   const [events, setEvents] = useState([]);
   const [checkboxMy, setCheckboxMy] = useState(true);
   const [checkboxJoined, setCheckboxJoined] = useState(true);
   const [checkboxPending, setCheckboxPending] = useState(false);
   const [checkboxArchive, setCheckboxArchive] = useState(false);
+
+  const [searchParams, setSearchParams] = useSearchParams("");
 
   const sendCheckboxes = async () => {
     try {
@@ -22,6 +24,13 @@ const MyEventsList = ({ handleButtonClose, searchParams }) => {
         checkboxArchive
       );
       setEvents(data);
+      setSearchParams({
+        my_events: true,
+        checkboxMy,
+        checkboxJoined,
+        checkboxPending,
+        checkboxArchive,
+      });
     } catch (error) {
       console.error("Error getting events data:", error);
     }
