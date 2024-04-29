@@ -16,6 +16,7 @@ public interface ParticipantService {
     ParticipantResponse readByUserIdInEventById(UUID userId, UUID eventId);
     ParticipantResponse update(ParticipantRequest participantRequest, UUID id);
     void delete(UUID id, UUID eventId, String token);
+    void deleteSelf(UUID id, UUID eventId, String token);
     List<ParticipantResponse> getAll();
 
     List<ParticipantResponse> getAllByEventId(UUID eventId);

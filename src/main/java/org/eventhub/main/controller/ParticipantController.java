@@ -121,4 +121,10 @@ public class ParticipantController {
         log.info("**/deleted participant(id) = " + participantId);
         return new ResponseEntity<>(new OperationResponse("Participant deleted successfully"), HttpStatus.OK);
     }
+    @DeleteMapping("/{participant_id}/leave")
+    public ResponseEntity<OperationResponse> leave(@PathVariable("participant_id") UUID participantId, @PathVariable("event_id") UUID eventId, @RequestHeader (name="Authorization") String token){
+        participantService.deleteSelf(participantId, eventId, token);
+        log.info("**/participant(id) = " + participantId + " has left");
+        return new ResponseEntity<>(new OperationResponse("Participant has left successfully"), HttpStatus.OK);
+    }
 }
