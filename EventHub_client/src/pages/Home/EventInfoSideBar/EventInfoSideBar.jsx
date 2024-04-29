@@ -30,6 +30,7 @@ import { getRequestsByEventId } from "../../../api/getRequestsByEventId";
 import RequestsCount from "../../../components/RequestsCount/RequestsCount";
 import { message } from "antd";
 import { getUserParticipants } from "../../../api/getUserParticipants";
+import { leaveEvent } from "../../../api/leaveEvent";
 
 const EventInfoSideBar = () => {
   // States
@@ -247,7 +248,7 @@ const EventInfoSideBar = () => {
     try {
       if (userState === ParticipantState.JOINED) {
         const participant = await getParticipantByUser(eventId);
-        await deleteParticipant(participant.id, eventId);
+        await leaveEvent(participant.id, eventId);
         setUserState(ParticipantState.NONE);
       }
     } catch (error) {
