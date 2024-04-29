@@ -61,7 +61,7 @@ public class OuterEvent {
 
     @NotNull
     @Column(name = "url")
-    private String url;
+    private String eventLink;
 
     @NotNull
     @Column(name = "photo_url")
