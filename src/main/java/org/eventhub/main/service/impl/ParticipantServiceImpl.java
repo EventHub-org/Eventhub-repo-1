@@ -109,6 +109,7 @@ public class ParticipantServiceImpl implements ParticipantService {
         throw new NullDtoReferenceException("Request can't be null");
     }
 
+    @Override
     public void delete(UUID id, UUID eventId, String token) {
         eventService.validateEventOwner(token, eventId);
 
