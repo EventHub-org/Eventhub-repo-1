@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class EventhubBackendApplication {
 
 	public static void main(String[] args) {
-		OuterEventServiceImpl.crawlContramarka(2, "https://lviv.kontramarka.ua/uk",  new ArrayList<>());
+		OuterEventServiceImpl.crawlContramarka("https://lviv.kontramarka.ua/uk",  new ArrayList<>());
 //		OuterEventServiceImpl.request("https://lviv.travel/ua/events");
 //		SpringApplication.run(EventhubBackendApplication.class, args);
 	}

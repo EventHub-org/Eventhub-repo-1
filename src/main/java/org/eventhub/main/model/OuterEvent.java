@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,8 @@ public class OuterEvent {
     private String title;
 
     @NotBlank(message = "Description is mandatory")
-    @Size(max = 255,
-            message = "Description length cannot be greater than 255 symbols")
+    @Size(max = 600,
+            message = "Description length cannot be greater than 600 symbols")
     @Column(name = "description")
     private String description;
 
@@ -52,12 +53,17 @@ public class OuterEvent {
 
     @NotNull
     @Column(name = "start_at")
-    private LocalDateTime startAt;
+    private LocalDate startAt;
 
     @NotNull
     @Column(name = "expire_at")
-    private LocalDateTime expireAt;
+    private LocalDate expireAt;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    private Photo photo = new Photo();
+    @NotNull
+    @Column(name = "url")
+    private String url;
+
+    @NotNull
+    @Column(name = "photo_url")
+    private String photoUrl;
 }
