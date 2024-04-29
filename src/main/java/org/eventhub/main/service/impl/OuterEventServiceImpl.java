@@ -1,5 +1,7 @@
 package org.eventhub.main.service.impl;
 
+import com.google.gson.Gson;
+import org.eventhub.main.dto.GeocodeResponse;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -9,6 +11,15 @@ import org.jsoup.select.Elements;
 
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -63,7 +74,43 @@ public class OuterEventServiceImpl {
 
                     // Parse location
                     String location = eventDoc.select(".event-card__address").text();
+                    String encodedLocation;
+
+                    HttpRequest getXYRequest;
+                    try {
+                        String uriString = String.format("https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s",
+                                URLEncoder.encode(location, StandardCharsets.UTF_8.toString()),
+                                System.getenv("GOOGLE_MAPS_API_KEY"));
+                        System.out.println("uri str: " + uriString);
+
+                        getXYRequest = HttpRequest.newBuilder()
+                                .uri(new URI(uriString))
+                                .GET()
+                                .build();
+                    } catch (URISyntaxException | UnsupportedEncodingException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    HttpClient httpClient = HttpClient.newHttpClient();
+                    HttpResponse<String> getGeocodeResponse;
+                    try {
+                        getGeocodeResponse = httpClient.send(getXYRequest, HttpResponse.BodyHandlers.ofString());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Gson gson = new Gson();
+
+                    GeocodeResponse geocodeResponse = new GeocodeResponse();
+                    geocodeResponse = gson.fromJson(getGeocodeResponse.body(), GeocodeResponse.class);
+
+                    BigDecimal latitude = geocodeResponse.getResults().get(0).getGeometry().getLocation().getLat();
+                    BigDecimal longitude = geocodeResponse.getResults().get(0).getGeometry().getLocation().getLng();
+
                     System.out.println(location);
+                    System.out.println(latitude);
+                    System.out.println(longitude);
 
                     // Parse img
                     Element eventInfoContainer = eventDoc.selectFirst(".event-card");
@@ -87,34 +134,6 @@ public class OuterEventServiceImpl {
                     System.out.println("\n");
                 }
             }
-//                for (Element element : doc.select(".block-info")) {
-//                    // Parse title
-//                    String title = element.select(".block-info__title").select("span").text();
-//
-//                    // Parse date
-//                    //StringBuilder dateBuilder = new StringBuilder();
-//                    Elements date = element.select(".dates > span");
-//                    Elements time = element.select(".block-info__time");
-//
-//                    StringBuilder finalDate = new StringBuilder();
-//                    finalDate.append(date);
-//                    finalDate.append(time);
-//
-////            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("")
-//
-//
-//                    String dateStr = date.text();
-//                    String timeStr = time.text().substring(0, 5);
-////            String timeStr = time.text();
-//
-//
-//                    System.out.println(title);
-//                    System.out.println(dateStr);
-//                    System.out.println(timeStr);
-//                    System.out.println("\n\n");
-//
-//                }
-//
         }
 
 
