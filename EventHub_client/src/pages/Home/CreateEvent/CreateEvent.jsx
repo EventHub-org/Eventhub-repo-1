@@ -348,7 +348,7 @@ const CreateEvent = () => {
       setFormData(new FormData());
     } catch (error) {
       console.error("Error submitting event:", error);
-      message.error("Failed to create event. Please try again later.");
+      message.error(error.response.data);
     } finally {
       setSubmitChanges(false);
     }
