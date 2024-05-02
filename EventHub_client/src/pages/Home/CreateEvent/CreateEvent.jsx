@@ -251,8 +251,8 @@ const CreateEvent = () => {
   };
 
   const validateFields = () => {
-    if (title.length < 5 || title.length > 20) {
-      message.error("Event name must be between 5 and 20 characters");
+    if (title.length < 5 || title.length > 35) {
+      message.error("Event name must be between 5 and 35 characters");
       return false;
     }
 
