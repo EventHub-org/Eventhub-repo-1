@@ -1,11 +1,15 @@
 package org.eventhub.main.controller;
 
+import com.sendgrid.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.eventhub.main.config.JwtService;
 import org.eventhub.main.dto.*;
 import org.eventhub.main.exception.PasswordException;
 import org.eventhub.main.exception.ResponseStatusException;
+import org.eventhub.main.model.ConfirmationToken;
 import org.eventhub.main.model.User;
+import org.eventhub.main.service.ConfirmationTokenService;
+import org.eventhub.main.service.EmailService;
 import org.eventhub.main.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -82,7 +87,6 @@ public class UserController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 
     @PutMapping
     public ResponseEntity<UserResponse> update(@RequestHeader("Authorization") String token,

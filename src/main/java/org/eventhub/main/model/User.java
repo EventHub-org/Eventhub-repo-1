@@ -78,6 +78,9 @@ public class User implements UserDetails {
     @Column (name = "show_email")
     private boolean showEmail;
 
+    @Column (name = "is_verified")
+    private boolean isVerified;
+
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     private List<Event> userEvents;
 

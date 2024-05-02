@@ -72,6 +72,7 @@ public class UserMapper {
         user.setCity(userRequest.getCity());
         user.setGender(userRequest.getGender());
         user.setShowEmail(false);
+        user.setVerified(false);
         return user;
     }
 

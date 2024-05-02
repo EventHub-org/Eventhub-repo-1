@@ -1,20 +1,27 @@
 package org.eventhub.main.controller;
 
+import com.sendgrid.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eventhub.main.config.AuthenticationService;
 import org.eventhub.main.dto.*;
 import org.eventhub.main.exception.ResponseStatusException;
+import org.eventhub.main.model.ConfirmationToken;
+import org.eventhub.main.model.User;
+import org.eventhub.main.service.ConfirmationTokenService;
+import org.eventhub.main.service.EmailService;
+import org.eventhub.main.service.impl.EmailServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Objects;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/authentication")
@@ -22,6 +29,9 @@ import java.util.Objects;
 public class AuthenticationController {
 
     private final AuthenticationService authService;
+    private final ConfirmationTokenService confirmationTokenService;
+    private final EmailService emailService;
+
 
 //    @PostMapping("/register")
 //    public ResponseEntity<AuthenticationResponce> register(@RequestBody UserRequest request) {
@@ -29,11 +39,23 @@ public class AuthenticationController {
 //    }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponce> register(@Validated @RequestBody RegisterRequest request, BindingResult result) {
+    public ResponseEntity<String> register(@Validated @RequestBody UserRequestCreate userRequest, BindingResult result) throws IOException {
         if (result.hasErrors()) {
-            throw new ResponseStatusException(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
+            throw new ResponseStatusException("Invalid Input");
         }
-        return ResponseEntity.ok(authService.register(request));
+
+        User user = this.authService.register(userRequest);
+        ConfirmationToken confirmationToken = this.confirmationTokenService.create(user);
+
+        EmailRequest emailRequest = new EmailRequest(userRequest.getEmail(),"Verify email", "Please, verify your email", userRequest.getFirstName());
+        Response email = this.emailService.sendVerificationEmail(confirmationToken.getId(), emailRequest);
+
+
+        return new ResponseEntity<>("Email for verificatio is sent", HttpStatus.CREATED);
+    }
+    @GetMapping("/confirm-account")
+    public ResponseEntity<UserResponse> confirm(@RequestParam("token")String confirmationToken) {
+        return ResponseEntity.ok(authService.confirm(UUID.fromString(confirmationToken)));
     }
 
     @PostMapping("/login")
