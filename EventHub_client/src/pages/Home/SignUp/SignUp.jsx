@@ -71,12 +71,7 @@ const SignUp = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      const accessToken = res?.data?.token;
-      localStorage.setItem("token", accessToken);
-      console.log(res);
-      console.log("Response:", res.data);
-      message.success("Registration successful!");
-      navigate("/");
+      navigate(`/verify?email=${res.data}`);
     } catch (err) {
       if (!err.response) {
         // Помилка з'єднання з сервером

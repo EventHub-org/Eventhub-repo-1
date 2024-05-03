@@ -38,13 +38,19 @@ public class AuthenticationService {
         return userRepository.findByEmail(userResponse.getEmail());
     }
 
-    public UserResponse confirm(UUID confirmationTokenId){
+    public AuthenticationResponce confirm(UUID confirmationTokenId){
         ConfirmationToken token = this.confirmationTokenService.read(confirmationTokenId);
-        User user = this.userRepository.findByEmail(token.getUser().getEmail());
+        User user = token.getUser();
         user.setVerified(true);
         this.userRepository.save(user);
 
-        return this.userService.readById(user.getId());
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("id", user.getId());
+
+        var jwtToken = jwtService.generateToken(extraClaims, user);
+        return AuthenticationResponce.builder()
+                .token(jwtToken)
+                .build();
     }
 
     public AuthenticationResponce login(AuthenticationRequest request) {

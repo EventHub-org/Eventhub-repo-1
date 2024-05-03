@@ -19,13 +19,11 @@ import java.util.UUID;
 public class EmailServiceImpl implements EmailService {
     private final SendGrid sendGrid;
     private final Email emailFrom;
-    private final String verificationEndPoint;
 
     public EmailServiceImpl(){
         String key = System.getenv("sendgrid_key");
         this.sendGrid = new SendGrid(key);
         this.emailFrom = new Email("protsnazar2004@gmail.com");
-        this.verificationEndPoint = "https://uk.wikipedia.org/wiki/%D0%A0%D1%96%D1%87%D0%B0%D1%80%D0%B4_%D0%91%D0%B5%D0%BD%D1%82%D0%BB%D1%96";
     }
     @Override
     public Response sendEmail(EmailRequest emailRequest) throws IOException {
@@ -44,6 +42,8 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public Response sendVerificationEmail(UUID tokenId, EmailRequest emailRequest) throws IOException {
+        String verificationEndPoint = "http://localhost:3000/confirm/" + tokenId.toString();
+
         String subject = emailRequest.getSubject();
         Email to = new Email(emailRequest.getTo());
         Content content = new Content("text/html", emailRequest.getBody());
@@ -53,7 +53,7 @@ public class EmailServiceImpl implements EmailService {
         personalization.addTo(to);
 
         personalization.addDynamicTemplateData("first_name", emailRequest.getName());
-        personalization.addDynamicTemplateData("url",this.verificationEndPoint);
+        personalization.addDynamicTemplateData("url",verificationEndPoint);
         mail.addPersonalization(personalization);
         mail.setTemplateId(System.getenv("template_id"));
 

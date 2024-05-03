@@ -24,6 +24,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @RestController
+@Slf4j
 @RequestMapping("/authentication")
 @RequiredArgsConstructor
 public class AuthenticationController {
@@ -41,7 +42,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@Validated @RequestBody UserRequestCreate userRequest, BindingResult result) throws IOException {
         if (result.hasErrors()) {
-            throw new ResponseStatusException("Invalid Input");
+            throw new ResponseStatusException(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
 
         User user = this.authService.register(userRequest);
@@ -51,10 +52,11 @@ public class AuthenticationController {
         Response email = this.emailService.sendVerificationEmail(confirmationToken.getId(), emailRequest);
 
 
-        return new ResponseEntity<>("Email for verificatio is sent", HttpStatus.CREATED);
+        return new ResponseEntity<>(user.getEmail(), HttpStatus.CREATED);
     }
     @GetMapping("/confirm-account")
-    public ResponseEntity<UserResponse> confirm(@RequestParam("token")String confirmationToken) {
+    public ResponseEntity<AuthenticationResponce> confirm(@RequestParam("token")String confirmationToken) {
+        log.info("**/confirm token(id) = " + confirmationToken);
         return ResponseEntity.ok(authService.confirm(UUID.fromString(confirmationToken)));
     }
 

@@ -90,6 +90,9 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.REMOVE)
     private List<Photo> profileImages = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private ConfirmationToken confirmationToken;
+
 //    @Enumerated(EnumType.STRING)
 //    Role role;
 

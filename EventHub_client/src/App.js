@@ -9,6 +9,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import UserProfile from "./pages/Home/UserProfile/UserProfile";
 import EditUserProfile from "./pages/Home/EditUserProfile/EditUserProfile";
 import EventInfoSideBar from "./pages/Home/EventInfoSideBar/EventInfoSideBar.jsx";
+import EmailVerification from "./pages/Home/EmailVerification/EmailVerification.jsx";
+import ConfirmEmail from "./pages/Home/EmailVerification/ConfirmEmail/ConfirmEmail.jsx";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
             <Route path="/profile/edit" element={<EditUserProfile />} />
             <Route path="/register" element={<SignUp />} />
             <Route path="/login" element={<LogIn />} />
+            <Route path="/verify" element={<EmailVerification/>} />
+            <Route path="/confirm/:confirmationToken" element={<ConfirmEmail/>}/>
           </Route>
         </Routes>
       </div>

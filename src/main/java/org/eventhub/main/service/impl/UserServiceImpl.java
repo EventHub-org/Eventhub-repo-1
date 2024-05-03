@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.eventhub.main.dto.*;
 import org.eventhub.main.exception.NullDtoReferenceException;
 import org.eventhub.main.exception.PasswordException;
+import org.eventhub.main.exception.ResponseStatusException;
 import org.eventhub.main.mapper.UserMapper;
 import org.eventhub.main.model.Photo;
 import org.eventhub.main.model.User;
@@ -84,6 +85,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(UUID id) {
         userRepository.delete(readByIdEntity(id));
+    }
+
+    @Override
+    public void deleteByEmail(String email){
+        User user = this.findByEmail(email);
+        if(!user.isVerified()){
+            userRepository.delete(this.findByEmail(email));
+        }
     }
 
     @Override
