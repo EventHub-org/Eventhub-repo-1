@@ -7,6 +7,5 @@ import java.io.IOException;
 import java.util.UUID;
 
 public interface EmailService {
-    Response sendEmail(EmailRequest request) throws IOException;
     Response sendVerificationEmail(UUID tokenId, EmailRequest emailRequest) throws IOException;
 }

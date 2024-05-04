@@ -46,12 +46,6 @@ public class AuthenticationController {
         }
 
         User user = this.authService.register(userRequest);
-        ConfirmationToken confirmationToken = this.confirmationTokenService.create(user);
-
-        EmailRequest emailRequest = new EmailRequest(userRequest.getEmail(),"Verify email", "Please, verify your email", userRequest.getFirstName());
-        Response email = this.emailService.sendVerificationEmail(confirmationToken.getId(), emailRequest);
-
-
         return new ResponseEntity<>(user.getEmail(), HttpStatus.CREATED);
     }
     @GetMapping("/confirm-account")

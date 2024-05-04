@@ -25,20 +25,6 @@ public class EmailServiceImpl implements EmailService {
         this.sendGrid = new SendGrid(key);
         this.emailFrom = new Email("protsnazar2004@gmail.com");
     }
-    @Override
-    public Response sendEmail(EmailRequest emailRequest) throws IOException {
-        String subject = emailRequest.getSubject();
-        Email to = new Email(emailRequest.getTo());
-        Content content = new Content("text/html", emailRequest.getBody());
-        Mail mail = new Mail(this.emailFrom, subject, to, content);
-
-        Request request = new Request();
-
-        request.setMethod(Method.POST);
-        request.setEndpoint("mail/send");
-        request.setBody(mail.build());
-        return this.sendGrid.api(request);
-    }
 
     @Override
     public Response sendVerificationEmail(UUID tokenId, EmailRequest emailRequest) throws IOException {
@@ -54,6 +40,7 @@ public class EmailServiceImpl implements EmailService {
 
         personalization.addDynamicTemplateData("first_name", emailRequest.getName());
         personalization.addDynamicTemplateData("url",verificationEndPoint);
+
         mail.addPersonalization(personalization);
         mail.setTemplateId(System.getenv("template_id"));
 

@@ -13,15 +13,11 @@ import org.eventhub.main.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.security.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -147,6 +143,15 @@ public class UserServiceImpl implements UserService {
         return userDtoMapper.entityToResponse(userRepository.save(user));
     }
 
+    @Override
+    public UserResponse confirmUser(UUID id){
+        User user = readByIdEntity(id);
+        if(user.isVerified()){
+            throw new ResponseStatusException("User is already verified!");
+        }
+        user.setVerified(true);
+        return userDtoMapper.entityToResponse(this.userRepository.save(user));
+    }
 
 //    public User readByEmail(String email) {
 //        return userRepository.findByEmail(email);

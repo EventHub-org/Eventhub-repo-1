@@ -7,6 +7,7 @@ import org.eventhub.main.model.ConfirmationToken;
 import org.eventhub.main.model.User;
 import org.eventhub.main.repository.UserRepository;
 import org.eventhub.main.service.ConfirmationTokenService;
+import org.eventhub.main.service.EmailService;
 import org.eventhub.main.service.UserService;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Timer;
@@ -31,6 +33,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final ConfirmationTokenService confirmationTokenService;
+    private final EmailService emailService;
     private final ThreadPoolTaskScheduler scheduler;
 
     private void scheduleConfirmationTask(String email) {
@@ -43,24 +46,30 @@ public class AuthenticationService {
         }, Instant.now().plusSeconds(timeForVerification));
     }
 
-    public User register(UserRequestCreate registerRequest) {
+    public User register(UserRequestCreate registerRequest) throws IOException {
         registerRequest.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         UserResponse userResponse = userService.create(registerRequest);
 
+        User user = userService.findByEmail(userResponse.getEmail());
+        ConfirmationToken confirmationToken = confirmationTokenService.create(user);
+        
+        EmailRequest emailRequest = new EmailRequest(registerRequest.getEmail(),"Verify email", "Please, verify your email", registerRequest.getFirstName());
+        emailService.sendVerificationEmail(confirmationToken.getId(), emailRequest);
+
         scheduleConfirmationTask(userResponse.getEmail());
-        return userRepository.findByEmail(userResponse.getEmail());
+        return userService.findByEmail(userResponse.getEmail());
     }
 
     public AuthenticationResponce confirm(UUID confirmationTokenId){
         ConfirmationToken token = this.confirmationTokenService.read(confirmationTokenId);
-        User user = token.getUser();
-        user.setVerified(true);
-        this.userRepository.save(user);
+        UUID userId = token.getUser().getId();
+
+        userService.confirmUser(userId);
 
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("id", user.getId());
+        extraClaims.put("id", userId);
 
-        var jwtToken = jwtService.generateToken(extraClaims, user);
+        var jwtToken = jwtService.generateToken(extraClaims, userService.readByIdEntity(userId));
         return AuthenticationResponce.builder()
                 .token(jwtToken)
                 .build();
