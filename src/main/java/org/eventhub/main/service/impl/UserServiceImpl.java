@@ -12,18 +12,23 @@ import org.eventhub.main.repository.UserRepository;
 import org.eventhub.main.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 //@RequiredArgsConstructor
 @Service
+@EnableScheduling
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userDtoMapper;
@@ -88,14 +93,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteByEmail(String email){
-        User user = this.findByEmail(email);
-        if(!user.isVerified()){
-            userRepository.delete(this.findByEmail(email));
-        }
-    }
-
-    @Override
     public List<UserResponse> getAll() {
         return userRepository.findAll()
                 .stream()
@@ -149,6 +146,8 @@ public class UserServiceImpl implements UserService {
         user.setPassword(newPassword);
         return userDtoMapper.entityToResponse(userRepository.save(user));
     }
+
+
 //    public User readByEmail(String email) {
 //        return userRepository.findByEmail(email);
 //    }

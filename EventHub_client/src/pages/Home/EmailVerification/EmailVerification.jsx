@@ -1,17 +1,26 @@
+import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { message } from "antd";
 import CountdownCircle from "../../../components/CountdownCircle/CountdownCircle";
 import ResendButton from "./ResendButton/ResendButton";
 import styles from "./EmailVerification.module.css";
-import { deleteUserByEmail } from "../../../api/tryDeleteUserByUnverifiedEmail";
+import ProcessingEffect from "../../../components/ProcessingEffect/ProcessingEffect";
 import image from "../../../images/EmailImage1.png";
 
 const EmailVerification = () => {
   const navigate = useNavigate();
+  const [processing, setProcessing] = useState(true);
   const [searchParams] = useSearchParams();
-  const onFinish = async () =>{
-    await deleteUserByEmail(searchParams.get("email"));
-    navigate("/");
-  }
+
+  useEffect(() => {
+    function checkEmail() {
+      if (!searchParams.get("email")) {
+        navigate("/register");
+      }
+    }
+    checkEmail();
+  }, [searchParams]);
+
   return (
     <div className={styles.OuterContainer}>
       <div className={styles.InnerContainer}>
@@ -31,7 +40,7 @@ const EmailVerification = () => {
         </p>
         <div className={styles.Bottom}>
           <ResendButton />
-          <CountdownCircle seconds={60} onFinish={onFinish} />
+          <CountdownCircle seconds={60} onFinish={() => navigate("/")} />
         </div>
       </div>
     </div>

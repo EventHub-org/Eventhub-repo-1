@@ -52,4 +52,10 @@ public class GlobalExceptionHandler {
         log.error("Bad request with user password: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleNullPointerException(NullPointerException ex){
+        log.error("Null pointer exception" + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 }

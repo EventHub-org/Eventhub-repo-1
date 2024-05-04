@@ -110,13 +110,6 @@ public class UserController {
         return new ResponseEntity<>(new OperationResponse("User " + name + " deleted successfully"), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{user_email}/email")
-    public ResponseEntity<OperationResponse> deleteByEmail(@PathVariable("user_email") String userEmail){
-        String name = userService.findByEmail(userEmail).getFirstName();
-        log.info("**/deleted user(email) = " + userEmail);
-        userService.deleteByEmail(userEmail);
-        return new ResponseEntity<>(new OperationResponse("User " + name + " deleted successfully"), HttpStatus.OK);
-    }
     @PutMapping("/change-password")
     public ResponseEntity<UserResponse> changePassword( @RequestHeader("Authorization") String token,
                                                         @Validated @RequestBody PasswordRequest passwordRequest,

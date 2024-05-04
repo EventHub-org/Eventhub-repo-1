@@ -23,8 +23,6 @@ public interface UserService extends UserDetailsService {
 
     void delete(UUID id);
 
-    void deleteByEmail(String email);
-
     List<UserResponse> getAll();
 
     User findByEmail(String email);
@@ -33,4 +31,5 @@ public interface UserService extends UserDetailsService {
 
     void deleteImage(UUID userId, Photo image);
     UserResponse changePassword(UUID userId, PasswordRequest passwordRequest);
+
 }

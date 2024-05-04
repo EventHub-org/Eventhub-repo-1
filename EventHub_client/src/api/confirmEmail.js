@@ -11,5 +11,5 @@ export const confirmEmail = async (token) => {
   const response = await authAxios.get(
     `authentication/confirm-account?token=${token}`
   );
-  return response.data;
+  return response;
 };
