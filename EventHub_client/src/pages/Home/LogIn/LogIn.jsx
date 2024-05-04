@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "../../../api/axios";
 import styles from "./LogIn.module.css";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, Redirect } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, message } from "antd";
@@ -13,6 +13,8 @@ const LogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [navigate, setNavigate] = useState(false);
+
+  const navigateHook = useNavigate();
   const navigateToHome = useNavigate();
   const onFinish = async () => {
     try {
@@ -94,6 +96,30 @@ const LogIn = () => {
     return <Navigate to="/" />;
   }
 
+  const handleGoogleLogin = async () => {
+    try {
+      const authAxios = axios.create({
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "content-type",
+          "Access-Control-Allow-Credentials": "true",
+        },
+      });
+      const response = await authAxios.get("/oauth2/authorization/google");
+      // navigateHook("http://localhost:9090/oauth2/authorization/google");
+      window.location.replace(
+        "http://localhost:9090/oauth2/authorization/google"
+      );
+
+      // const response = await authAxios.get("/oauth2/authorization/google");
+
+      // window.location.href = response.data.redirectUrl;
+      // console.log(response);
+    } catch (error) {
+      console.error("Error initiating Google login:", error);
+    }
+  };
+
   return (
     <div className={styles.outerContainer}>
       <div className={styles.container}>
@@ -162,23 +188,49 @@ const LogIn = () => {
               Login
             </Button>
           </Form.Item>
-          {/*<p style={{ textAlign: "center" }}>Or</p>*/}
-          {/*<Form.Item style={{ marginBottom: "0px" }}>*/}
-          {/*    <div className={styles.loginButtonContainer}>*/}
-          {/*        <Button type="link" htmlType="button" className={styles.socialMediaLogin}>*/}
-          {/*            <img className={styles.loginImg} src="/images/fb_logo.png"*/}
-          {/*                 alt="Continue with Facebook" />*/}
-          {/*        </Button>*/}
-          {/*        <Button type="link" htmlType="button" className={styles.socialMediaLogin}>*/}
-          {/*            <img className={styles.loginImg} src="/images/apple_logo.png"*/}
-          {/*                 alt="Continue with Apple" />*/}
-          {/*        </Button>*/}
-          {/*        <Button type="link" htmlType="button" className={styles.socialMediaLogin}>*/}
-          {/*            <img className={styles.loginImg} src="/images/google_logo.png"*/}
-          {/*                 alt="Continue with Google" />*/}
-          {/*        </Button>*/}
-          {/*    </div>*/}
-          {/*</Form.Item>*/}
+          <p style={{ textAlign: "center" }}>Or</p>
+          <Form.Item style={{ marginBottom: "0px" }}>
+            <div className={styles.loginButtonContainer}>
+              <Button
+                type="link"
+                htmlType="button"
+                className={styles.socialMediaLogin}
+              >
+                <img
+                  className={styles.loginImg}
+                  src="/images/fb_logo.png"
+                  alt="Continue with Facebook"
+                />
+              </Button>
+              <Button
+                type="link"
+                htmlType="button"
+                className={styles.socialMediaLogin}
+              >
+                <img
+                  className={styles.loginImg}
+                  src="/images/apple_logo.png"
+                  alt="Continue with Apple"
+                />
+              </Button>
+              <Button
+                // href="http://localhost:9090/oauth2/authorization/google"
+                type="link"
+                htmlType="button"
+                onClick={handleGoogleLogin}
+                className={styles.socialMediaLogin}
+              >
+                <img
+                  className={styles.loginImg}
+                  src="/images/google_logo.png"
+                  alt="Continue with Google"
+                />
+              </Button>
+            </div>
+            <a href="http://localhost:9090/oauth2/authorization/google">
+              goggle
+            </a>
+          </Form.Item>
           <p style={{ textAlign: "center", fontSize: "12px" }}>
             Don’t have an account in EventHub yet?{" "}
             <Link to="/register">Register!</Link>
