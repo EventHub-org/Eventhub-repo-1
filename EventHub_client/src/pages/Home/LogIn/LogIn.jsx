@@ -106,10 +106,12 @@ const LogIn = () => {
         },
       });
       const response = await authAxios.get("/oauth2/authorization/google");
+      // const response = await authAxios.get("/auth/google");
+      window.location.href = response.data.redirectUrl;
       // navigateHook("http://localhost:9090/oauth2/authorization/google");
-      window.location.replace(
-        "http://localhost:9090/oauth2/authorization/google"
-      );
+      // window.location.replace(
+      //   "http://localhost:9090/oauth2/authorization/google"
+      // );
 
       // const response = await authAxios.get("/oauth2/authorization/google");
 
@@ -230,6 +232,7 @@ const LogIn = () => {
             <a href="http://localhost:9090/oauth2/authorization/google">
               goggle
             </a>
+            <a href="http://localhost:9090/login/oauth2/code/google">goggle2</a>
           </Form.Item>
           <p style={{ textAlign: "center", fontSize: "12px" }}>
             Don’t have an account in EventHub yet?{" "}
