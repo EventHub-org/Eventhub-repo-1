@@ -48,6 +48,14 @@ public class AuthenticationController {
         User user = this.authService.register(userRequest);
         return new ResponseEntity<>(user.getEmail(), HttpStatus.CREATED);
     }
+
+    @GetMapping("/resend")
+    public ResponseEntity<String> resendVerificationEmail(@RequestParam("email") String email) throws IOException {
+
+        authService.resendRegistrationEmail(email);
+        return new ResponseEntity<>(email, HttpStatus.CREATED);
+    }
+
     @GetMapping("/confirm-account")
     public ResponseEntity<AuthenticationResponce> confirm(@RequestParam("token")String confirmationToken) {
         log.info("**/confirm token(id) = " + confirmationToken);

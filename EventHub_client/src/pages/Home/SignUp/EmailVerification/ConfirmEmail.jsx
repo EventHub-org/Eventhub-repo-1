@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { message } from "antd";
-import { confirmEmail } from "../../../api/confirmEmail";
+import { confirmEmail } from "../../../../api/confirmEmail";
 
 const ConfirmEmail = () => {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ const ConfirmEmail = () => {
     };
 
     confirmUserEmail();
-  }, []);
+  }, [confirmationToken]);
 };
 
 export default ConfirmEmail;

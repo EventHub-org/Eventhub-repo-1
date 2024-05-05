@@ -22,6 +22,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import java.util.*;
+import java.util.concurrent.ScheduledFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -35,15 +36,29 @@ public class AuthenticationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
     private final ThreadPoolTaskScheduler scheduler;
+    private final Map<String, ScheduledFuture<?>> confirmationTasks = new HashMap<>();
+
 
     private void scheduleConfirmationTask(String email) {
-        int timeForVerification = 75;
-        scheduler.schedule(() -> {
+        int timeForVerification = 68;
+        ScheduledFuture<?> task = scheduler.schedule(() -> {
             User user = userService.findByEmail(email);
             if (!user.isVerified()) {
                 userService.delete(user.getId());
             }
+
+            confirmationTasks.remove(email);
         }, Instant.now().plusSeconds(timeForVerification));
+
+        confirmationTasks.put(email, task);
+    }
+
+    private void cancelConfirmationTask(String email) {
+        ScheduledFuture<?> task = confirmationTasks.get(email);
+        if (task != null && !task.isDone()) {
+            task.cancel(true);
+            confirmationTasks.remove(email);
+        }
     }
 
     public User register(UserRequestCreate registerRequest) throws IOException {
@@ -58,6 +73,16 @@ public class AuthenticationService {
 
         scheduleConfirmationTask(userResponse.getEmail());
         return userService.findByEmail(userResponse.getEmail());
+    }
+
+    public void resendRegistrationEmail(String email) throws IOException {
+        User user = userService.findByEmail(email);
+
+        EmailRequest emailRequest = new EmailRequest(email, "Verify email", "Please, verify your email", user.getFirstName());
+        emailService.sendVerificationEmail(user.getId(), emailRequest);
+
+        cancelConfirmationTask(email);
+        scheduleConfirmationTask(email);
     }
 
     public AuthenticationResponce confirm(UUID confirmationTokenId){
