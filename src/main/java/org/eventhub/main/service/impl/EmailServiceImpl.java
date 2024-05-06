@@ -21,8 +21,7 @@ public class EmailServiceImpl implements EmailService {
     private final Email emailFrom;
 
     public EmailServiceImpl(){
-        String key = System.getenv("sendgrid_key");
-        this.sendGrid = new SendGrid(key);
+        this.sendGrid = new SendGrid(System.getenv("sendgrid_key"));
         this.emailFrom = new Email(System.getenv("email"));
     }
 

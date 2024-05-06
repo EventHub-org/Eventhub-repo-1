@@ -75,7 +75,6 @@ const Registration = ({setUserEmail, setIsRegistered}) => {
       
       setIsRegistered(true);
       setUserEmail(userData.email);
-      
 
     } catch (err) {
       if (!err.response) {
