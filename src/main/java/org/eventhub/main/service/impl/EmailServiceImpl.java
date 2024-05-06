@@ -23,7 +23,7 @@ public class EmailServiceImpl implements EmailService {
     public EmailServiceImpl(){
         String key = System.getenv("sendgrid_key");
         this.sendGrid = new SendGrid(key);
-        this.emailFrom = new Email("protsnazar2004@gmail.com");
+        this.emailFrom = new Email(System.getenv("email"));
     }
 
     @Override
