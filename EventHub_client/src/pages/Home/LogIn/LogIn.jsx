@@ -105,13 +105,11 @@ const LogIn = () => {
           "Access-Control-Allow-Credentials": "true",
         },
       });
-      const response = await authAxios.get("/oauth2/authorization/google");
+      const response = await authAxios.get("/logine/google");
       // const response = await authAxios.get("/auth/google");
-      window.location.href = response.data.redirectUrl;
+      // navigateHook(response.data.url);
       // navigateHook("http://localhost:9090/oauth2/authorization/google");
-      // window.location.replace(
-      //   "http://localhost:9090/oauth2/authorization/google"
-      // );
+      window.location.replace(response.data.url);
 
       // const response = await authAxios.get("/oauth2/authorization/google");
 
