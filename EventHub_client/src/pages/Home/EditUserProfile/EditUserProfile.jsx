@@ -143,7 +143,7 @@ const EditUserProfile = () => {
 
   const handleClose = (e) => {
     // e.preventDefault();
-    navigate(-1);
+    navigate("/");
   };
   return (
     <div className={styles.OuterContainer}>
