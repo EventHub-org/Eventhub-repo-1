@@ -72,7 +72,7 @@ public class AuthenticationService {
         emailService.sendVerificationEmail(confirmationToken.getId(), emailRequest);
 
         scheduleConfirmationTask(userResponse.getEmail());
-        return userService.findByEmail(userResponse.getEmail());
+        return user;
     }
 
     public void resendRegistrationEmail(String email) throws IOException {

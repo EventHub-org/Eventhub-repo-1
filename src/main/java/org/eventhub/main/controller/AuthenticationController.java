@@ -51,8 +51,9 @@ public class AuthenticationController {
 
     @GetMapping("/resend")
     public ResponseEntity<String> resendVerificationEmail(@RequestParam("email") String email) throws IOException {
-
         authService.resendRegistrationEmail(email);
+
+        log.info("**/resend confirmation email to = " + email);
         return new ResponseEntity<>(email, HttpStatus.CREATED);
     }
 
