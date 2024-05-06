@@ -43,6 +43,8 @@ public class EmailServiceImpl implements EmailService {
         mail.addPersonalization(personalization);
         mail.setTemplateId(System.getenv("template_id"));
 
+        System.out.println("Email is sent!");
+
         Request request = new Request();
 
         request.setMethod(Method.POST);

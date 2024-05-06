@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Timer;
@@ -78,8 +79,12 @@ public class AuthenticationService {
     public void resendRegistrationEmail(String email) throws IOException {
         User user = userService.findByEmail(email);
 
+        if(user.isVerified()){
+            throw new AccessDeniedException("User is already verified!");
+        }
+
         EmailRequest emailRequest = new EmailRequest(email, "Verify email", "Please, verify your email", user.getFirstName());
-        emailService.sendVerificationEmail(user.getId(), emailRequest);
+        emailService.sendVerificationEmail(user.getConfirmationToken().getId(), emailRequest);
 
         cancelConfirmationTask(email);
         scheduleConfirmationTask(email);
