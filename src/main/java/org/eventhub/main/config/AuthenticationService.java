@@ -18,9 +18,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
@@ -80,7 +77,7 @@ public class AuthenticationService {
         User user = userService.findByEmail(email);
 
         if(user.isVerified()){
-            throw new AccessDeniedException("User is already verified!");
+            throw new AccessIsDeniedException("User is already verified!");
         }
 
         EmailRequest emailRequest = new EmailRequest(email, "Verify email", "Please, verify your email", user.getFirstName());

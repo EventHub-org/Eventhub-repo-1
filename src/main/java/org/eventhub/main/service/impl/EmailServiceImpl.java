@@ -29,13 +29,11 @@ public class EmailServiceImpl implements EmailService {
     public Response sendVerificationEmail(UUID tokenId, EmailRequest emailRequest) throws IOException {
         String verificationEndPoint = "http://localhost:3000/confirm/" + tokenId.toString();
 
-        String subject = emailRequest.getSubject();
-        Email to = new Email(emailRequest.getTo());
-        Content content = new Content("text/html", emailRequest.getBody());
-        Mail mail = new Mail(this.emailFrom, subject, to, content);
+        Mail mail = new Mail();
+        mail.setFrom(this.emailFrom);
 
         Personalization personalization = new Personalization();
-        personalization.addTo(to);
+        personalization.addTo(new Email(emailRequest.getTo()));
 
         personalization.addDynamicTemplateData("first_name", emailRequest.getName());
         personalization.addDynamicTemplateData("url",verificationEndPoint);
@@ -43,7 +41,6 @@ public class EmailServiceImpl implements EmailService {
         mail.addPersonalization(personalization);
         mail.setTemplateId(System.getenv("template_id"));
 
-        System.out.println("Email is sent!");
 
         Request request = new Request();
 

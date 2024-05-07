@@ -16,7 +16,11 @@ const ConfirmEmail = () => {
 
         message.success("Registration successful!");
       } catch (error) {
-        message.error("Error confirming email!");
+        if (error.response) {
+          message.error(error.response.data);
+        } else {
+          message.error("Error confirming email!");
+        }
       } finally {
         navigate("/");
       }
