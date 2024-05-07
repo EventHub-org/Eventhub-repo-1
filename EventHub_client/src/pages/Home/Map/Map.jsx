@@ -1,7 +1,9 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import queryString from "query-string";
 import { getEventsData } from "../../../api/getEventsLocation";
-import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
+import { GoogleMap, Marker, InfoWindow, MarkerClusterer } from "@react-google-maps/api";
+
+
 import styles from "./Map.module.css";
 import { useSearchParams, useParams } from "react-router-dom";
 import { getEventsDataSearch } from "../../../api/getEventsData";
@@ -13,6 +15,7 @@ import { getFilteredEvents } from "../../../api/getFilteredEvents";
 import GetLocationByCoordinates from "../../../api/getLocationByCoordinates";
 import useAuth from "../../../hooks/useAuth";
 import { message } from "antd";
+
 
 const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 const containerStyle = {
@@ -63,6 +66,7 @@ const Map = ({ center }) => {
         try {
           const data = await getEventsDataSearch(searchValue);
           setEvents(data);
+
         } catch (error) {
           console.error("Error getting events data:", error);
         }
@@ -88,7 +92,7 @@ const Map = ({ center }) => {
           console.error("Error getting events data:", error);
         }
       } else {
-        getEventsData()
+        await getEventsData()
           .then((data) => {
             setEvents(data);
           })
@@ -99,6 +103,7 @@ const Map = ({ center }) => {
     };
 
     fetchData();
+    
   }, [searchParams]);
   const onMarkerClick = (event) => {
     setSelectedEvent(event);
@@ -108,9 +113,6 @@ const Map = ({ center }) => {
     });
   };
 
-  const onMapClick = () => {
-    setSelectedEvent(null);
-  };
   const handleMapClick = async (event) => {
     if (!auth.token) {
       message.info("You need to login to create an event");
@@ -129,6 +131,7 @@ const Map = ({ center }) => {
       console.log("Error fetching location data");
     }
   };
+
   return (
     <div className={styles.mapcontainer}>
       <GoogleMap
@@ -140,6 +143,30 @@ const Map = ({ center }) => {
         options={defaultOption}
         onClick={handleMapClick}
       >
+       {/* <MarkerClusterer>
+  {(clusterer) =>
+    events.map((event) => {
+      console.log(clusterer); // Розмістіть console.log тут
+      return (
+        <Marker
+          key={event.id}
+          position={{
+            lat: Number(event.latitude),
+            lng: Number(event.longitude),
+          }}
+          icon={{
+            url: "/images/pin.svg",
+            scaledSize: new window.google.maps.Size(40, 40),
+          }}
+          onClick={() => onMarkerClick(event)}
+          clusterer={clusterer}
+        />
+      );
+    })
+  }
+</MarkerClusterer> */}
+
+      
         <></>
         {events &&
           events.map((event) => {
@@ -158,7 +185,7 @@ const Map = ({ center }) => {
               />
             );
           })}
-        {selectedPlace && showMarker && (
+          {selectedPlace && showMarker && (
           <Marker
             position={{ lat: selectedPlace.lat, lng: selectedPlace.lng }}
             icon={{
@@ -187,5 +214,6 @@ const Map = ({ center }) => {
     </div>
   );
 };
+
 
 export { Map };
