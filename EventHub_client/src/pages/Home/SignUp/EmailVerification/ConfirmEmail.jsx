@@ -27,7 +27,7 @@ const ConfirmEmail = () => {
     };
 
     confirmUserEmail();
-  }, [confirmationToken]);
+  }, []);
 };
 
 export default ConfirmEmail;

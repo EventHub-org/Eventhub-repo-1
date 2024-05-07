@@ -25,7 +25,7 @@
 
     width: 40%;
     margin: auto;
-    background-color: #FFF;
+    background-color: var(--primary-popup-background);
     padding: 20px;
     border: 2px solid #ccc;
     border-radius: 15px;
