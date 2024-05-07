@@ -1,5 +1,5 @@
 import styles from "./SignUp.module.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "../../../api/axios";
 import { useNavigate, Link } from "react-router-dom";
 import LogIn from "../LogIn/LogIn";
@@ -87,7 +87,17 @@ const SignUp = () => {
       }
     }
   };
-
+  const handleKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      navigate("/");
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
   return (
     <div className={styles.outerContainer}>
       <div className={styles.container}>
