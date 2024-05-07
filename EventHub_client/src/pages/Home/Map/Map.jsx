@@ -8,6 +8,7 @@ import styles from "./Map.module.css";
 import { useSearchParams, useParams } from "react-router-dom";
 import { getEventsDataSearch } from "../../../api/getEventsData";
 import { getCheckbuttonsEvents } from "../../../api/getCheckbuttonsEvents";
+import { RoundButton } from "../../../components/Buttons/RoundButton/roundButton";
 import { light } from "./Theme";
 
 import { useNavigate } from "react-router-dom";
@@ -15,7 +16,7 @@ import { getFilteredEvents } from "../../../api/getFilteredEvents";
 import GetLocationByCoordinates from "../../../api/getLocationByCoordinates";
 import useAuth from "../../../hooks/useAuth";
 import { message } from "antd";
-
+import {AimOutlined} from "@ant-design/icons";
 
 const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 const containerStyle = {
@@ -37,11 +38,22 @@ const defaultOption = {
   styles: light,
   minZoom: 5,
   maxZoom: 20,
+  restriction: {
+    latLngBounds: {
+      north: 85, 
+      south: -80,
+      west: -180,
+      east: 180, 
+    },
+    strictBounds: false, 
+  },
+
 };
 
-const Map = ({ center }) => {
+const Map = ({defaultCenter}) => {
   const mapRef = useRef(undefined);
   const { auth, setAuth } = useAuth();
+  const [center, setCenter] = useState(defaultCenter);
 
   const navigate = useNavigate();
   const onLoad = useCallback(function callback(map) {
@@ -103,7 +115,8 @@ const Map = ({ center }) => {
     };
 
     fetchData();
-    
+    // Запитати локацію користувача при вході
+    handleCenterMap()
   }, [searchParams]);
   const onMarkerClick = (event) => {
     setSelectedEvent(event);
@@ -131,7 +144,21 @@ const Map = ({ center }) => {
       console.log("Error fetching location data");
     }
   };
-
+  const handleCenterMap = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCenter({ lat: latitude, lng: longitude });
+        },
+        (error) => {
+          console.error("Error getting user location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  };
   return (
     <div className={styles.mapcontainer}>
       <GoogleMap
@@ -210,7 +237,11 @@ const Map = ({ center }) => {
               onClick={() => onMarkerClick(event)}
             />
           ))}
+          
       </GoogleMap>
+      <div className={styles.centerButton}>
+        <RoundButton icon={<AimOutlined />} onClick={handleCenterMap}/>
+      </div>
     </div>
   );
 };
