@@ -28,6 +28,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public Response sendVerificationEmail(UUID tokenId, EmailRequest emailRequest) throws IOException {
         String verificationEndPoint = "http://localhost:3000/confirm/" + tokenId.toString();
+        String toEventHub = "http://localhost:3000/";
 
         Mail mail = new Mail();
         mail.setFrom(this.emailFrom);
@@ -36,6 +37,7 @@ public class EmailServiceImpl implements EmailService {
         personalization.addTo(new Email(emailRequest.getTo()));
 
         personalization.addDynamicTemplateData("first_name", emailRequest.getName());
+        personalization.addDynamicTemplateData("eventhub", toEventHub);
         personalization.addDynamicTemplateData("url",verificationEndPoint);
 
         mail.addPersonalization(personalization);
