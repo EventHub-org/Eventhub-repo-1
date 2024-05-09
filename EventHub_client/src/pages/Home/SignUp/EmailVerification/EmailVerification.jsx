@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import CountdownCircle from "../../../../components/CountdownCircle/CountdownCircle";
 import { resedVerificationEmail } from "../../../../api/resendVerificationEmail";
-import ResendButton from "./ResendButton/ResendButton";
+import PrimaryButton from "../../../../components/Buttons/PrimaryButton/PrimaryButton"
 import ProcessingEffect from "../../../../components/ProcessingEffect/ProcessingEffect";
 import styles from "./EmailVerification.module.css";
 import image from "../../../../images/EmailImage1.png";
@@ -42,7 +42,7 @@ const EmailVerification = ({ email }) => {
           If you haven’t got any email just press the button to resend it!
         </p>
         <div className={styles.Bottom}>
-          <ResendButton onClick={() => resendEmail(email)} />
+          <PrimaryButton children={"Resend Email"} onClick={() => resendEmail(email)} className={styles.Button}/>
           <CountdownCircle seconds={60} onFinish={() => navigate("/")} />
         </div>
       </div>

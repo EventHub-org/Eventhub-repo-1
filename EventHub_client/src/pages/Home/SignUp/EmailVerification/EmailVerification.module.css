@@ -74,3 +74,13 @@
     justify-content: center;
     align-items: center;
 }
+
+
+.Button{
+    font-size: 20px;
+    font-weight: 500;;
+    width: 180px;
+    height: 45px;
+    cursor: pointer;
+    line-height: normal;
+}
