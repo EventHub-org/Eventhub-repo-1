@@ -31,6 +31,6 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
     @Override
     public ConfirmationToken read(UUID id){
-        return this.confirmationTokenRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Token with " + id + " not found"));
+        return this.confirmationTokenRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Token is not valid!"));
     }
 }
