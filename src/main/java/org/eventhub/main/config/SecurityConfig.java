@@ -64,7 +64,7 @@ public class SecurityConfig {
 
                 .requestMatchers(
                         "/authentication/**",
-                        "/**",
+//                        "/**",
                         "/users/events/{event_id}",
                         "/users/{user_id}",
                         "/users/{username}/profile",
@@ -80,8 +80,6 @@ public class SecurityConfig {
                 .anyRequest()
                 .authenticated()
                 .and()
-
-//                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

@@ -230,7 +230,9 @@ const LogIn = () => {
             <a href="http://localhost:9090/oauth2/authorization/google">
               goggle
             </a>
-            <a href="http://localhost:9090/login/oauth2/code/google">goggle2</a>
+            <a href="http://localhost:9090/oauth2/authorization/github">
+              Github
+            </a>
           </Form.Item>
           <p style={{ textAlign: "center", fontSize: "12px" }}>
             Don’t have an account in EventHub yet?{" "}

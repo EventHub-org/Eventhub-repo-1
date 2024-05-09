@@ -29,9 +29,39 @@ public class OAuth2Controller {
         this.clientService = clientService;
     }
 
-    @GetMapping("/logine/google")
-    public RedirectView loginSuccess(@AuthenticationPrincipal OAuth2User principal) {
-        logger.info("Inside oauth controller!!!");
+    @GetMapping("/apilogin/{provider}")
+    public RedirectView loginSuccess(@PathVariable String provider, @AuthenticationPrincipal OAuth2User principal) {
+        logger.info("Inside API oauth controller!!!" + provider);
+
+//        OAuth2AuthorizedClient client = clientService.loadAuthorizedClient(
+//                authenticationToken.getAuthorizedClientRegistrationId(),
+//                authenticationToken.getName()
+//        );
+//        logger.info("Princip name: " + principal.getName());
+
+
+
+        return new RedirectView("http://localhost:3000/");
+    }
+
+    @GetMapping("/login/oauth2/code/{provider}")
+    public RedirectView loginSuccessGoogle(@PathVariable String provider, @AuthenticationPrincipal OAuth2User principal) {
+        logger.info("Inside oauth controller!!!" + provider);
+
+//        OAuth2AuthorizedClient client = clientService.loadAuthorizedClient(
+//                authenticationToken.getAuthorizedClientRegistrationId(),
+//                authenticationToken.getName()
+//        );
+//        logger.info("Princip name: " + principal.getName());
+
+
+
+        return new RedirectView("http://localhost:3000/");
+    }
+
+    @GetMapping("/customlogin/oauth2/code/{provider}")
+    public RedirectView loginSuccessCustom(@PathVariable String provider, @AuthenticationPrincipal OAuth2User principal) {
+        logger.info("Inside custom oauth controller!!!" + provider);
 
 //        OAuth2AuthorizedClient client = clientService.loadAuthorizedClient(
 //                authenticationToken.getAuthorizedClientRegistrationId(),
@@ -46,13 +76,28 @@ public class OAuth2Controller {
 
     @GetMapping
     public RedirectView loginSuccess2(@AuthenticationPrincipal OAuth2User principal) {
-        logger.info("Inside oauth controller!!!");
+        logger.info("Inside oauth controller222!!!");
 
 //        OAuth2AuthorizedClient client = clientService.loadAuthorizedClient(
 //                authenticationToken.getAuthorizedClientRegistrationId(),
 //                authenticationToken.getName()
 //        );
-        logger.info("Princip name: " + principal.getName());
+//        logger.info("Princip name: " + principal.getName());
+
+
+
+        return new RedirectView("http://localhost:3000/");
+    }
+
+    @GetMapping("/login")
+    public RedirectView loginSuccessLogin(@AuthenticationPrincipal OAuth2User principal) {
+        logger.info("Inside oauth LOGin!!!");
+
+//        OAuth2AuthorizedClient client = clientService.loadAuthorizedClient(
+//                authenticationToken.getAuthorizedClientRegistrationId(),
+//                authenticationToken.getName()
+//        );
+//        logger.info("Princip name: " + principal.getName());
 
 
 
