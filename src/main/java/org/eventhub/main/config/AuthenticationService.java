@@ -32,7 +32,7 @@ public class AuthenticationService {
     private final RegisterMapper registerMapper;
     private final RefreshTokenService refreshTokenService;
 
-    public AuthenticationResponce register(RegisterRequest registerRequest) {
+    public JwtResponse register(RegisterRequest registerRequest) {
         registerRequest.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         UserRequest userRequest = registerMapper.requestToEntity(registerRequest, new UserRequest());
         UserResponse userResponse = userService.create(userRequest);
@@ -41,9 +41,14 @@ public class AuthenticationService {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("id", user.getId());
 
-        var jwtToken = jwtService.generateToken(extraClaims, user);
-        return AuthenticationResponce.builder()
-                .token(jwtToken)
+        var accessToken = jwtService.generateToken(extraClaims, user);
+
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(registerRequest.getEmail());
+
+        return JwtResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken.getToken())
+                .expiryDate(jwtService.expDate(accessToken))
                 .build();
     }
 
@@ -66,6 +71,7 @@ public class AuthenticationService {
         return JwtResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken.getToken())
+                .expiryDate(jwtService.expDate(accessToken))
                 .build();
     }
 
@@ -86,4 +92,7 @@ public class AuthenticationService {
                         "Refresh token is not in database"));
     }
 
+    public void logout(String token) {
+        refreshTokenService.deleteTokenByUserId(jwtService.getId(token));
+    }
 }

@@ -32,7 +32,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(user)
                 .token(UUID.randomUUID().toString())
-                .expiryDate(new Date(System.currentTimeMillis() + 1000 * 60 * 5))
+                .expiryDate(new Date(System.currentTimeMillis() + 1000 * 60 * 2))
                 .build();
         return refreshTokenRepository.save(refreshToken);
     }
@@ -48,6 +48,11 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
             refreshTokenRepository.delete(token);
             throw new RuntimeException(token.getToken() + " Refresh token was expired . Please make a sigh in request");
         }
-        return token;
+        return token;   
+    }
+
+    @Override
+    public void deleteTokenByUserId(UUID userId) {
+        refreshTokenRepository.delete(refreshTokenRepository.findRefreshTokenByUserId(userId));
     }
 }

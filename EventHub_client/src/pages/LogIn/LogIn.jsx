@@ -1,44 +1,19 @@
-import React, { useState } from "react";
-import axios from "../../api/axios";
+import React, { useContext, useState } from "react";
 import styles from "./LogIn.module.css";
 import { Link, Navigate } from "react-router-dom";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, message } from "antd";
 import { checkEmail } from "../SignUp/validation";
+import AuthContext from "../../context/authProvider";
 
-const REGISTER_URL = "/authentication/login";
 const LogIn = () => {
+  const { login } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [navigate, setNavigate] = useState(false);
   const onFinish = async () => {
     try {
-      const res = await axios.post(
-        REGISTER_URL,
-        {
-          email,
-          password,
-        },
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      //console.log(res?.data);
-
-      const accessToken = res?.data?.accessToken;
-      const refreshToken = res?.data?.refreshToken;
-
-      localStorage.setItem("token", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-
-      console.log(accessToken);
-      console.log(refreshToken);
-
-      //console.log(res.data);
-
-      axios.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${res.data["token"]}`;
+      await login(email, password);
 
       message.success("Login successful!");
       setNavigate(true);

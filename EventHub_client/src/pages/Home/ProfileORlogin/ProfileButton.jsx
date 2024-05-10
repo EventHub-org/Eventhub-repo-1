@@ -6,16 +6,20 @@ import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import ProfileInfo from "../../../components/ProfileInfo/ProfileInfo";
 import styles from "./Buttons.module.css";
 import { Link } from "react-router-dom";
+import { logout } from "../../../jwt/logout";
 
 const MenuButton = () => {
   const { setAuth } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleMenuClick = (e) => {
+  const handleMenuClick = async (e) => {
     if (e.key === "profile") {
       console.log("Profile clicked");
     } else if (e.key === "logout") {
+      await logout();
       localStorage.removeItem("token");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("expDate");
       setAuth({});
     }
     setIsOpen(false);

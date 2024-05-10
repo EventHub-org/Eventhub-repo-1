@@ -1,13 +1,9 @@
 import axios from "../api/axios";
 
-export const refreshToken = async () => {
+export const refreshToken = async (token) => {
   const DATA_URL = "/authentication/refreshToken";
 
   const accessToken = localStorage.getItem("token");
-  const token = localStorage.getItem("refreshToken");
-
-  console.log(accessToken);
-  console.log(token);
 
   try {
     const response = await axios.post(
@@ -18,6 +14,7 @@ export const refreshToken = async () => {
       {
         headers: {
           "Content-Type": "application/json",
+          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
         },
       }
     );
@@ -30,6 +27,6 @@ export const refreshToken = async () => {
 
     return response.data;
   } catch (error) {
-    console.log("Error refreshing tokens", error);
+    throw error;
   }
 };

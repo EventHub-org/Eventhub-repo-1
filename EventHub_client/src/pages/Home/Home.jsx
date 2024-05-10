@@ -15,6 +15,7 @@ import EventFilter from "./Filter/Filter";
 import FilteredEvents from "./Filter/FilteredEvents";
 import MyEvents from "./MyEvents/MyEvents";
 import EventInfoSideBar from "./EventInfoSideBar/EventInfoSideBar";
+import { useNavigate } from "react-router-dom";
 
 const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
