@@ -19,10 +19,7 @@ import useLogin from "../../hooks/useLogin";
 
 const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
-const defaultCenter = {
-  lat: 49.83826,
-  lng: 24.02324,
-};
+
 const libraries = ["places"];
 const Home = () => {
   const authenticated = useLogin();
@@ -42,7 +39,7 @@ const Home = () => {
     <div className={styles.Home}>
       {isLoaded ? (
         <>
-          <Map center={defaultCenter} />
+          <Map  />
 
           {authenticated ? <MenuButton /> : <LoginRegisterButton />}
 

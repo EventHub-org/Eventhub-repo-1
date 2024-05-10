@@ -49,8 +49,11 @@ const defaultOption = {
   },
 
 };
-
-const Map = ({defaultCenter}) => {
+const defaultCenter = {
+  lat: 49.83826,
+  lng: 24.02324,
+};
+const Map = () => {
   const mapRef = useRef(undefined);
   const { auth, setAuth } = useAuth();
   const [center, setCenter] = useState(defaultCenter);
