@@ -84,10 +84,12 @@ public class SecurityConfig {
                 .authenticated()
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .oauth2Login()
-                .successHandler(oAuth2LoginSuccessHandler)
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                .oauth2Login()
+//                .successHandler(oAuth2LoginSuccessHandler)
+//                .loginPage("http://localhost:3000/login")
+
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

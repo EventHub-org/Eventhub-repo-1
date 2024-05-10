@@ -7,19 +7,56 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, message } from "antd";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import { checkEmail } from "../SignUp/validation";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
-const REGISTER_URL = "/authentication/login";
+const LOGIN_URL = "/authentication/login";
+const GOOGLE_AUTH_URL = "/authentication/google";
 const LogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [navigate, setNavigate] = useState(false);
-
-  const navigateHook = useNavigate();
   const navigateToHome = useNavigate();
+
+  const successGoogleLogin = (credentialResponse) => {
+    const decodedUserInfo = jwtDecode(credentialResponse.credential);
+    // const userData = {
+    //   first_name: decoded.given_name,
+    //   last_name: decoded.family_name,
+    //   username: decoded.given_name + decoded.family_name,
+    //   email: decoded.email,
+    //   provider: "google",
+    // };
+
+    const googleAuth = async () => {
+      try {
+        const res = await axios.post(GOOGLE_AUTH_URL, decodedUserInfo, {
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const accessToken = res?.data?.token;
+        localStorage.setItem("token", accessToken);
+        console.log(res);
+        console.log("Response:", res.data);
+        message.success("Auth successful!");
+        setNavigate(true);
+      } catch (err) {
+        if (!err.response) {
+          // Помилка з'єднання з сервером
+          message.error("No server response");
+        } else {
+          const status = err.response.status;
+          message.error(err.response.data);
+        }
+      }
+    };
+    googleAuth();
+  };
+
   const onFinish = async () => {
     try {
       const res = await axios.post(
-        REGISTER_URL,
+        LOGIN_URL,
         {
           email,
           password,
@@ -96,30 +133,6 @@ const LogIn = () => {
     return <Navigate to="/" />;
   }
 
-  const handleGoogleLogin = async () => {
-    try {
-      const authAxios = axios.create({
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Headers": "content-type",
-          "Access-Control-Allow-Credentials": "true",
-        },
-      });
-      const response = await authAxios.get("/logine/google");
-      // const response = await authAxios.get("/auth/google");
-      // navigateHook(response.data.url);
-      // navigateHook("http://localhost:9090/oauth2/authorization/google");
-      window.location.replace(response.data.url);
-
-      // const response = await authAxios.get("/oauth2/authorization/google");
-
-      // window.location.href = response.data.redirectUrl;
-      // console.log(response);
-    } catch (error) {
-      console.error("Error initiating Google login:", error);
-    }
-  };
-
   return (
     <div className={styles.outerContainer}>
       <div className={styles.container}>
@@ -189,51 +202,17 @@ const LogIn = () => {
             </Button>
           </Form.Item>
           <p style={{ textAlign: "center" }}>Or</p>
-          <Form.Item style={{ marginBottom: "0px" }}>
-            <div className={styles.loginButtonContainer}>
-              <Button
-                type="link"
-                htmlType="button"
-                className={styles.socialMediaLogin}
-              >
-                <img
-                  className={styles.loginImg}
-                  src="/images/fb_logo.png"
-                  alt="Continue with Facebook"
-                />
-              </Button>
-              <Button
-                type="link"
-                htmlType="button"
-                className={styles.socialMediaLogin}
-              >
-                <img
-                  className={styles.loginImg}
-                  src="/images/apple_logo.png"
-                  alt="Continue with Apple"
-                />
-              </Button>
-              <Button
-                // href="http://localhost:9090/oauth2/authorization/google"
-                type="link"
-                htmlType="button"
-                onClick={handleGoogleLogin}
-                className={styles.socialMediaLogin}
-              >
-                <img
-                  className={styles.loginImg}
-                  src="/images/google_logo.png"
-                  alt="Continue with Google"
-                />
-              </Button>
-            </div>
-            <a href="http://localhost:9090/oauth2/authorization/google">
-              goggle
-            </a>
-            <a href="http://localhost:9090/oauth2/authorization/github">
-              Github
-            </a>
-          </Form.Item>
+          <div className={styles.oauthContainer}>
+            <GoogleLogin
+              onSuccess={successGoogleLogin}
+              onError={() => {
+                console.log("Login Failed");
+              }}
+              useOneTap
+              shape="pill"
+            />
+          </div>
+
           <p style={{ textAlign: "center", fontSize: "12px" }}>
             Don’t have an account in EventHub yet?{" "}
             <Link to="/register">Register!</Link>

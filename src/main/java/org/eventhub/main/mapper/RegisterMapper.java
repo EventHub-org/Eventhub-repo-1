@@ -1,5 +1,6 @@
 package org.eventhub.main.mapper;
 
+import org.eventhub.main.dto.OAuthGoogleRequest;
 import org.eventhub.main.dto.RegisterRequest;
 import org.eventhub.main.dto.UserRequestCreate;
 import org.eventhub.main.exception.NullDtoReferenceException;
@@ -33,6 +34,17 @@ public class RegisterMapper {
         userRequest.setPassword(registerRequest.getPassword());
         userRequest.setCity(registerRequest.getCity());
         userRequest.setGender(registerRequest.getGender());
+        userRequest.setProvider(registerRequest.getProvider());
         return userRequest;
+    }
+
+    public RegisterRequest googleRequestToRegisterRequest(OAuthGoogleRequest googleRequest) {
+        return RegisterRequest.builder()
+                .email(googleRequest.getEmail())
+                .firstName(googleRequest.getGivenName())
+                .lastName(googleRequest.getFamilyName())
+                .provider("Google")
+                .username(googleRequest.getGivenName()+googleRequest.getFamilyName())
+                .build();
     }
 }

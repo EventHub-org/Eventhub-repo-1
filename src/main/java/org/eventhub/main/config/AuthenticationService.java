@@ -32,7 +32,10 @@ public class AuthenticationService {
     private final RegisterMapper registerMapper;
 
     public AuthenticationResponce register(RegisterRequest registerRequest) {
-        registerRequest.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        if (registerRequest.getPassword() != null) {
+            registerRequest.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        }
+
         UserRequestCreate userRequest = registerMapper.requestToEntity(registerRequest, new UserRequestCreate());
         UserResponse userResponse = userService.create(userRequest);
         var user = userRepository.findByEmail(userRequest.getEmail());
@@ -62,5 +65,20 @@ public class AuthenticationService {
         return AuthenticationResponce.builder()
                 .token(jwtToken)
                 .build();
+    }
+    public AuthenticationResponce googleLogin(OAuthGoogleRequest request) {
+        var user = userRepository.findByEmail(request.getEmail());
+        if (user != null) {
+            Map<String, Object> extraClaims = new HashMap<>();
+            extraClaims.put("id", user.getId());
+
+            var jwtToken = jwtService.generateToken(extraClaims, user);
+            return AuthenticationResponce.builder()
+                    .token(jwtToken)
+                    .build();
+        }
+
+        RegisterRequest registerRequest = registerMapper.googleRequestToRegisterRequest(request);
+        return register(registerRequest);
     }
 }

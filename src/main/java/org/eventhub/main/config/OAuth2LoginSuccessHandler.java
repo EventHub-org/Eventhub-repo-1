@@ -58,30 +58,6 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
             RegisterRequest registerRequest = new RegisterRequest();
             registerRequest.setEmail(email);
-//            registerRequest.s
-//            this.logger.info(email);
-
-
-//            userService.findByEmail(email)
-//                    .ifPresentOrElse(user -> {
-//                        DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(user.getRole().name())),
-//                                attributes, "id");
-//                        Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(user.getRole().name())),
-//                                oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
-//                        SecurityContextHolder.getContext().setAuthentication(securityAuth);
-//                    }, () -> {
-//                        UserEntity userEntity = new UserEntity();
-//                        userEntity.setRole(UserRole.ROLE_USER);
-//                        userEntity.setEmail(email);
-//                        userEntity.setName(name);
-//                        userEntity.setSource(RegistrationSource.GITHUB);
-//                        userService.save(userEntity);
-//                        DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(userEntity.getRole().name())),
-//                                attributes, "id");
-//                        Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(userEntity.getRole().name())),
-//                                oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
-//                        SecurityContextHolder.getContext().setAuthentication(securityAuth);
-//                    });
         }
 
         else if ("google".equals(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId())) {
@@ -96,15 +72,14 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             String lastName = dividedName[1];
 
 
-            RegisterRequest registerRequest = new RegisterRequest();
-            registerRequest.setEmail(email);
-            registerRequest.setFirstName(firstName);
-            registerRequest.setLastName(lastName);
-            registerRequest.setCity("Test");
-            registerRequest.setGender(Gender.MALE);
-            registerRequest.setUsername("testUsername");
+            UserRequestCreate userRequest = new UserRequestCreate();
+            userRequest.setCity("testCity");
+            userRequest.setGender(Gender.OTHER);
+            userRequest.setEmail(email);
+            userRequest.setUsername(firstName+lastName);
+            userRequest.setFirstName(firstName);
+            userRequest.setLastName(lastName);
 
-            UserRequestCreate userRequest = registerMapper.requestToEntity(registerRequest, new UserRequestCreate());
             UserResponse userResponse = userService.create(userRequest);
             User user = userService.findByEmail(email);
 
@@ -112,20 +87,16 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             extraClaims.put("id", user.getId());
             String jwtToken = jwtService.generateToken(extraClaims, user);
 
-//            // Create a cookie to store the JWT token
-//            Map<String, Object> responseBody = new HashMap<>();
-//            responseBody.put("token", jwtToken);
-//            // You can add other data to the response body if needed
-//
-//            // Write the response
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            response.setContentType("application/json");
-//            response.setCharacterEncoding("UTF-8");
-//            response.getWriter().write(objectMapper.writeValueAsString(responseBody));
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"token\": \"" + jwtToken + "\"}");
+
+            response.setStatus(HttpServletResponse.SC_OK);
+//            Cookie jwtCookie = new Cookie("token", jwtToken);
+//            response.addCookie(jwtCookie);
 
 
-
-//            authenticationService.register(registerRequest);
         }
         this.setAlwaysUseDefaultTargetUrl(true);
         this.setDefaultTargetUrl("http://localhost:3000/");

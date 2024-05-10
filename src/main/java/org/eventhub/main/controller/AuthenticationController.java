@@ -40,4 +40,9 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponce> login(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
+    @PostMapping("/google")
+    public ResponseEntity<AuthenticationResponce> googleAuthentication(@RequestBody OAuthGoogleRequest request) {
+
+        return ResponseEntity.ok(authService.googleLogin(request));
+    }
 }

@@ -37,7 +37,7 @@ public class User implements UserDetails {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Size(min = 3, max = 15)
+    @Size(min = 3, max = 20)
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
@@ -64,7 +64,7 @@ public class User implements UserDetails {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "location_city", nullable = false)
+    @Column(name = "location_city", nullable = true)
     private String city;
 
     @Past

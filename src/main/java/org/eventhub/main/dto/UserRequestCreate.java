@@ -42,18 +42,21 @@ public class UserRequestCreate {
 
     private String city;
 
+    private String provider;
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
     public UserRequestCreate() {}
 
-    public UserRequestCreate(String firstName, String lastName, String username, String email, String password, String city, Gender gender) {
+    public UserRequestCreate(String firstName, String lastName, String username, String email, String password, String city, String provider, Gender gender) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.email = email;
         this.password = password;
         this.city = city;
+        this.provider = provider;
         this.gender = gender;
     }
 }
