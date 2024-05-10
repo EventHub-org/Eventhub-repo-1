@@ -53,7 +53,7 @@ public class User implements UserDetails {
 //            message = "Must contain at least one uppercase letter")
 //    @Pattern(regexp = ".*[a-z].*",
 //            message = "Must contain at least one lowercase letter")
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = true)
     private String password;
 
     @Size(max = 255,
@@ -74,6 +74,9 @@ public class User implements UserDetails {
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @Column(name = "provider", nullable = true)
+    private String provider;
 
     @Column (name = "show_email")
     private boolean showEmail;
