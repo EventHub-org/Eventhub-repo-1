@@ -153,6 +153,15 @@ public class UserServiceImpl implements UserService {
         return userDtoMapper.entityToResponse(this.userRepository.save(user));
     }
 
+    @Override
+    public List<UserResponse> findApprovedUsersByEventId(UUID eventId){
+        List<User> users = this.userRepository.findApprovedUsersByEventId(eventId);
+
+        return users.stream()
+                .map(this.userDtoMapper::entityToResponse)
+                .collect(Collectors.toList());
+    }
+
 //    public User readByEmail(String email) {
 //        return userRepository.findByEmail(email);
 //    }

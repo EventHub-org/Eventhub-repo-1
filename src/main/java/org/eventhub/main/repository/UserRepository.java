@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.security.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
@@ -15,5 +16,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query("SELECT u FROM User u WHERE u.username = :username")
     User findByUsername(String username);
+
+    @Query("SELECT DISTINCT p.user FROM Participant p " +
+            "WHERE p.event.id = :eventId AND p.isApproved = true")
+    List<User> findApprovedUsersByEventId(UUID eventId);
 
 }
