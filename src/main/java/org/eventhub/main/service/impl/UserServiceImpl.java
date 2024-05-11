@@ -154,11 +154,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponse> findApprovedUsersByEventId(UUID eventId){
+    public List<UserResponseBriefInfo> findApprovedUsersByEventId(UUID eventId){
         List<User> users = this.userRepository.findApprovedUsersByEventId(eventId);
 
         return users.stream()
-                .map(this.userDtoMapper::entityToResponse)
+                .map(this.userDtoMapper::entityToBriefResponse)
                 .collect(Collectors.toList());
     }
 

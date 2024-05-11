@@ -5,7 +5,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.eventhub.main.dto.EventRequest;
-import org.eventhub.main.dto.UserResponse;
+import org.eventhub.main.dto.UserResponseBriefInfo;
 import org.eventhub.main.model.Event;
 import org.eventhub.main.service.EmailService;
 import org.eventhub.main.service.EventService;
@@ -26,7 +26,7 @@ public class EmailNotificationAspect {
     private final UserService userService;
     private final EventService eventService;
     private final Map<UUID, String> eventTitleMap = new HashMap<>();
-    private final Map<UUID,List<UserResponse>> eventParticipantsMap = new HashMap<>();
+    private final Map<UUID,List<UserResponseBriefInfo>> eventParticipantsMap = new HashMap<>();
 
     @Autowired
     public EmailNotificationAspect(EmailService emailService, UserService userService, EventService eventService){
@@ -49,7 +49,7 @@ public class EmailNotificationAspect {
 
     @AfterReturning(pointcut = "updateEvent(id, eventRequest, token)", returning = "response", argNames = "id,eventRequest,token,response")
     public void afterEventUpdate(UUID id, EventRequest eventRequest, String token, Object response) throws IOException {
-        List<UserResponse> users = this.userService.findApprovedUsersByEventId(id);
+        List<UserResponseBriefInfo> users = this.userService.findApprovedUsersByEventId(id);
         if (!users.isEmpty()) {
             this.emailService.sendEmailAboutUpdate(users, id, this.eventTitleMap.get(id));
         }
@@ -63,14 +63,15 @@ public class EmailNotificationAspect {
 
     @Before(value = "deleteEvent(id, token)", argNames = "id,token")
     public void beforeEventDelete(UUID id, String token) throws IOException {
-        this.eventTitleMap.put(id,this.eventService.readById(id).getTitle());
+        this.eventTitleMap.put(id,this.eventService.readByIdEntity(id).getTitle());
         this.eventParticipantsMap.put(id, this.userService.findApprovedUsersByEventId(id));
     }
 
     @AfterReturning(value = "deleteEvent(id, token)", argNames = "id,token")
     public void afterEventDelete(UUID id, String token) throws IOException {
-        if(!this.eventParticipantsMap.get(id).isEmpty()){
-            this.emailService.sendEventCancellationEmail(this.eventParticipantsMap.get(id), this.eventTitleMap.get(id));
+        List<UserResponseBriefInfo> users = this.eventParticipantsMap.get(id);
+        if(!users.isEmpty()){
+            this.emailService.sendEventCancellationEmail(users, this.eventTitleMap.get(id));
         }
         eventTitleMap.remove(id);
         eventParticipantsMap.remove(id);

@@ -10,6 +10,7 @@ import com.sendgrid.helpers.mail.objects.Email;
 import com.sendgrid.helpers.mail.objects.Personalization;
 import org.eventhub.main.dto.EmailRequest;
 import org.eventhub.main.dto.UserResponse;
+import org.eventhub.main.dto.UserResponseBriefInfo;
 import org.eventhub.main.model.User;
 import org.eventhub.main.service.EmailService;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,25 @@ public class EmailServiceImpl implements EmailService {
         return this.sendGrid.api(request);
     }
 
+    private Response sendEmailAboutEvent(List<UserResponseBriefInfo> users, String eventTitle, String url, String template) throws IOException {
+        Mail mail = new Mail();
+        mail.setFrom(this.emailFrom);
+        mail.setTemplateId(template);
+
+        for (UserResponseBriefInfo user : users) {
+            Personalization personalization = new Personalization();
+            personalization.addTo(new Email(user.getEmail()));
+
+            personalization.addDynamicTemplateData("first_name", user.getFirstName());
+            personalization.addDynamicTemplateData("event_title", eventTitle);
+            personalization.addDynamicTemplateData("url", url);
+
+            mail.addPersonalization(personalization);
+        }
+
+        return this.sendEmail(mail);
+    }
+
     @Override
     public Response sendVerificationEmail(UUID tokenId, EmailRequest emailRequest) throws IOException {
         String verificationEndPoint = this.url + "confirm/" + tokenId.toString();
@@ -60,41 +80,13 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public Response sendEmailAboutUpdate(List<UserResponse> users, UUID eventId, String eventTitle) throws IOException {
-        Mail mail = new Mail();
-        mail.setFrom(this.emailFrom);
-        mail.setTemplateId(System.getenv("update_template"));
-
-        for (UserResponse user : users) {
-            Personalization personalization = new Personalization();
-            personalization.addTo(new Email(user.getEmail()));
-
-            personalization.addDynamicTemplateData("first_name", user.getFirstName());
-            personalization.addDynamicTemplateData("event_title", eventTitle);
-            personalization.addDynamicTemplateData("url", this.url + "event/" + eventId);
-
-            mail.addPersonalization(personalization);
-        }
-        return this.sendEmail(mail);
+    public Response sendEmailAboutUpdate(List<UserResponseBriefInfo> users, UUID eventId, String eventTitle) throws IOException {
+        return this.sendEmailAboutEvent(users, eventTitle,this.url + "event/" + eventId,System.getenv("update_template"));
     }
 
     @Override
-    public Response sendEventCancellationEmail(List<UserResponse> users, String eventTitle)throws IOException{
-        Mail mail = new Mail();
-        mail.setFrom(this.emailFrom);
-        mail.setTemplateId(System.getenv("cancellation_template"));
-
-        for (UserResponse user : users) {
-            Personalization personalization = new Personalization();
-            personalization.addTo(new Email(user.getEmail()));
-
-            personalization.addDynamicTemplateData("first_name", user.getFirstName());
-            personalization.addDynamicTemplateData("event_title", eventTitle);
-            personalization.addDynamicTemplateData("url", this.url);
-
-            mail.addPersonalization(personalization);
-        }
-        return this.sendEmail(mail);
+    public Response sendEventCancellationEmail(List<UserResponseBriefInfo> users, String eventTitle)throws IOException{
+        return this.sendEmailAboutEvent(users,eventTitle, this.url,System.getenv("cancellation_template"));
     }
 
 }

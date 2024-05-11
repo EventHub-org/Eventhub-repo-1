@@ -33,5 +33,5 @@ public interface UserService extends UserDetailsService {
     UserResponse changePassword(UUID userId, PasswordRequest passwordRequest);
 
     UserResponse confirmUser(UUID id);
-    List<UserResponse> findApprovedUsersByEventId(UUID eventId);
+    List<UserResponseBriefInfo> findApprovedUsersByEventId(UUID eventId);
 }
