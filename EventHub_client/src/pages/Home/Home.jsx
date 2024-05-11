@@ -8,6 +8,7 @@ import styles from "./Home.module.css";
 import { useJsApiLoader } from "@react-google-maps/api";
 import MenuButton from "./ProfileORlogin/ProfileButton";
 import LoginRegisterButton from "./ProfileORlogin/LoginRegisterButton";
+import React, { useContext } from "react";
 
 import SearchEvents from "./Search/Search";
 import CreateEvent from "./CreateEvent/CreateEvent";
@@ -28,6 +29,7 @@ const defaultCenter = {
 const libraries = ["places"];
 const Home = () => {
   const authenticated = useLogin();
+  const { auth } = useAuth();
   const location = useLocation();
 
   const outlet = useOutlet();

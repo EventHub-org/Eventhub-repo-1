@@ -1,5 +1,5 @@
 // MenuButton.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Dropdown, Menu } from "antd";
 import useAuth from "../../../hooks/useAuth";
 import { useLocation } from "react-router-dom";
@@ -13,10 +13,12 @@ import {
 import ProfileInfo from "../../../components/ProfileInfo/ProfileInfo";
 import { getUsername } from "../../../api/getUsername";
 import styles from "./Buttons.module.css";
-import { logout } from "../../../jwt/logout";
 import { Link, useNavigate } from "react-router-dom";
+import AuthContext from "../../../context/authProvider";
 
 const MenuButton = () => {
+  const { logout } = useContext(AuthContext);
+
   const { setAuth } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [linkToProfile, setLinkToProfile] = useState();
@@ -45,10 +47,6 @@ const MenuButton = () => {
       console.log("Profile clicked");
     } else if (e.key === "logout") {
       await logout();
-      localStorage.removeItem("token");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("expDate");
-      setAuth({});
     }
     setIsOpen(false);
   };

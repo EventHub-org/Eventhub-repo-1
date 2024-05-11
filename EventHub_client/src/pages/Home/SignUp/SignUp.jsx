@@ -1,5 +1,5 @@
 import styles from "./SignUp.module.css";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "../../../api/axios";
 import { useNavigate, Link } from "react-router-dom";
 import LogIn from "../LogIn/LogIn";
@@ -12,7 +12,6 @@ import AuthContext from "../../../context/authProvider";
 import { Button, Checkbox, Col, Form, Input, Row, Select, message } from "antd";
 
 const { Option } = Select;
-const REGISTER_URL = "/authentication/register";
 
 const formItemLayout = {
   labelCol: {

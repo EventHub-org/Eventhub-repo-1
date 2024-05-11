@@ -5,6 +5,7 @@ import { message } from "antd";
 
 const LOGIN_URL = "/authentication/login";
 const REGISTER_URL = "/authentication/register";
+const LOGOUT_URL = "/authentication/logout";
 
 const AuthContext = createContext({});
 
@@ -81,13 +82,40 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const logout = async () => {
+    const accessToken = localStorage.getItem("token");
+
+    try {
+      const response = await axios.post(
+        LOGOUT_URL,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("expDate");
+
+      message.error("You are loged out");
+      setAuth({});
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     const refresh = async (token) => {
       try {
         console.log("not-exp");
         await refreshToken(token);
       } catch (error) {
-        console.error(error);
         console.log("Refresh token expired.");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("token");
@@ -121,7 +149,7 @@ export const AuthProvider = ({ children }) => {
   }, [auth]);
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth, login, register }}>
+    <AuthContext.Provider value={{ auth, setAuth, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
