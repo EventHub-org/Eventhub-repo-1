@@ -29,40 +29,36 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    try {
-      const res = await axios.post(
-        LOGIN_URL,
-        {
-          email,
-          password,
-        },
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+    const res = await axios.post(
+      LOGIN_URL,
+      {
+        email,
+        password,
+      },
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
 
-      const accessToken = res?.data?.accessToken;
-      const refToken = res?.data?.refreshToken;
-      const expiryDate = res?.data?.expiryDate;
+    const accessToken = res?.data?.accessToken;
+    const refToken = res?.data?.refreshToken;
+    const expiryDate = res?.data?.expiryDate;
 
-      localStorage.setItem("token", accessToken);
-      localStorage.setItem("refreshToken", refToken);
-      localStorage.setItem("expDate", expiryDate);
+    localStorage.setItem("token", accessToken);
+    localStorage.setItem("refreshToken", refToken);
+    localStorage.setItem("expDate", expiryDate);
 
-      //setAuth({ refToken: refToken, expDate: expiryDate });
+    //setAuth({ refToken: refToken, expDate: expiryDate });
 
-      // console.log(accessToken);
-      // console.log(refToken);
-      // console.log(expiryDate);
-      // console.log(auth.refToken);
-      // console.log(auth.expDate);
+    // console.log(accessToken);
+    // console.log(refToken);
+    // console.log(expiryDate);
+    // console.log(auth.refToken);
+    // console.log(auth.expDate);
 
-      axios.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${res.data["token"]}`;
-    } catch (error) {
-      console.error(error);
-    }
+    axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${res.data["token"]}`;
   };
 
   const register = async (userData) => {

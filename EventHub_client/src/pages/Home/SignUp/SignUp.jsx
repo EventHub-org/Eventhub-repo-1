@@ -44,7 +44,6 @@ const tailFormItemLayout = {
   },
 };
 const SignUp = () => {
-  const { setAuth } = useAuth();
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
@@ -73,6 +72,7 @@ const SignUp = () => {
 
       message.success("Registration successful!");
       navigate("/");
+      window.location.reload();
     } catch (err) {
       if (!err.response) {
         // Помилка з'єднання з сервером

@@ -19,7 +19,6 @@ import AuthContext from "../../../context/authProvider";
 const MenuButton = () => {
   const { logout } = useContext(AuthContext);
 
-  const { setAuth } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [linkToProfile, setLinkToProfile] = useState();
 

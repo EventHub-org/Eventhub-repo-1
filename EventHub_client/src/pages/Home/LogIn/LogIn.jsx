@@ -21,7 +21,9 @@ const LogIn = () => {
       await login(email, password);
 
       message.success("Login successful!");
-      setNavigate(true);
+      navigateToHome("/");
+      window.location.reload();
+      //setNavigate(true);
     } catch (err) {
       if (!err.response) {
         // Помилка з'єднання з сервером

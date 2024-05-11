@@ -28,8 +28,8 @@ const defaultCenter = {
 };
 const libraries = ["places"];
 const Home = () => {
-  const authenticated = useLogin();
-  const { auth } = useAuth();
+  //const authenticated = useLogin();
+  const { auth, setAuth } = useAuth();
   const location = useLocation();
 
   const outlet = useOutlet();
@@ -46,7 +46,7 @@ const Home = () => {
         <>
           <Map center={defaultCenter} />
 
-          {authenticated ? <MenuButton /> : <LoginRegisterButton />}
+          {auth.token ? <MenuButton /> : <LoginRegisterButton />}
 
           <SearchEvents />
           <CreateEvent />
