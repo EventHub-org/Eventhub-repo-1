@@ -1,9 +1,6 @@
 package org.eventhub.main.mapper;
 
-import org.eventhub.main.dto.PhotoResponse;
-import org.eventhub.main.dto.UserRequestCreate;
-import org.eventhub.main.dto.UserRequestUpdate;
-import org.eventhub.main.dto.UserResponse;
+import org.eventhub.main.dto.*;
 import org.eventhub.main.exception.NullDtoReferenceException;
 import org.eventhub.main.exception.NullEntityReferenceException;
 import org.eventhub.main.model.Photo;
@@ -16,12 +13,14 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class UserMapper {
     private final PhotoMapper photoMapper;
     private final PhotoRepository photoRepository;
+
     @Autowired
     public UserMapper(PhotoMapper photoMapper, PhotoRepository photoRepository){
         this.photoMapper = photoMapper;
@@ -74,6 +73,7 @@ public class UserMapper {
         user.setGender(userRequest.getGender());
         user.setShowEmail(false);
         user.setProvider(userRequest.getProvider());
+
         return user;
     }
 

@@ -44,12 +44,14 @@ public class UserRequestCreate {
 
     private String provider;
 
+    private String photoUrl;
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
     public UserRequestCreate() {}
 
-    public UserRequestCreate(String firstName, String lastName, String username, String email, String password, String city, String provider, Gender gender) {
+    public UserRequestCreate(String firstName, String lastName, String username, String email, String password, String city, String provider, String photoUrl, Gender gender) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -57,6 +59,7 @@ public class UserRequestCreate {
         this.password = password;
         this.city = city;
         this.provider = provider;
+        this.photoUrl = photoUrl;
         this.gender = gender;
     }
 }

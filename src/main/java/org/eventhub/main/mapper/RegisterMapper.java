@@ -35,6 +35,11 @@ public class RegisterMapper {
         userRequest.setCity(registerRequest.getCity());
         userRequest.setGender(registerRequest.getGender());
         userRequest.setProvider(registerRequest.getProvider());
+
+        if (registerRequest.getPhotoUrl() != null) {
+            userRequest.setPhotoUrl(registerRequest.getPhotoUrl());
+        }
+
         return userRequest;
     }
     public RegisterRequest googlePayloadToRegisterRequest(GoogleIdToken.Payload payload) {
@@ -45,6 +50,7 @@ public class RegisterMapper {
                 .lastName((String) payload.get("family_name"))
                 .provider("Google")
                 .username((String) payload.get("given_name") + (String) payload.get("family_name"))
+                .photoUrl((String) payload.get("picture"))
                 .build();
     }
 

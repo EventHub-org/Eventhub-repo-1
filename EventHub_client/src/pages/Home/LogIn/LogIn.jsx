@@ -204,7 +204,9 @@ const LogIn = () => {
                 console.log("Login Failed");
               }}
               useOneTap
+              ux_mode="popup"
               shape="pill"
+              // login_uri="http://localhost:3000/login"
             />
           </div>
           <p style={{ textAlign: "center", fontSize: "12px" }}>

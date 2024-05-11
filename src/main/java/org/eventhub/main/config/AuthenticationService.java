@@ -48,6 +48,7 @@ public class AuthenticationService {
         if (registerRequest.getPassword() != null) {
             registerRequest.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         }
+        logger.info("Inside register meth");
 
         UserRequestCreate userRequest = registerMapper.requestToEntity(registerRequest, new UserRequestCreate());
         UserResponse userResponse = userService.create(userRequest);

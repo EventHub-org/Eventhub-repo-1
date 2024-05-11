@@ -45,9 +45,11 @@ public class RegisterRequest {
 
     private String provider;
 
+    private String photoUrl;
+
     public RegisterRequest() {}
 
-    public RegisterRequest(String firstName, String lastName, String username, String email, String password, String city, Gender gender, String provider) {
+    public RegisterRequest(String firstName, String lastName, String username, String email, String password, String city, Gender gender, String provider, String photoUrl) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -56,5 +58,6 @@ public class RegisterRequest {
         this.city = city;
         this.gender = gender;
         this.provider = provider;
+        this.photoUrl = photoUrl;
     }
 }
