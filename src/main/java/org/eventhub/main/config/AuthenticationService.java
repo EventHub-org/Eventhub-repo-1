@@ -1,6 +1,7 @@
 package org.eventhub.main.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.eventhub.main.dto.*;
 import org.eventhub.main.exception.AccessIsDeniedException;
 import org.eventhub.main.model.ConfirmationToken;
@@ -8,6 +9,9 @@ import org.eventhub.main.model.User;
 import org.eventhub.main.repository.UserRepository;
 import org.eventhub.main.service.ConfirmationTokenService;
 import org.eventhub.main.service.EmailService;
+
+import org.eventhub.main.model.RefreshToken;
+import org.eventhub.main.service.RefreshTokenService;
 import org.eventhub.main.service.UserService;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,12 +20,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 import java.time.Instant;
 
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -31,9 +35,12 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
+
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
     private final ThreadPoolTaskScheduler scheduler;
+
+    private final RefreshTokenService refreshTokenService;
     private final Map<String, ScheduledFuture<?>> confirmationTasks = new HashMap<>();
 
 
@@ -87,7 +94,7 @@ public class AuthenticationService {
         scheduleConfirmationTask(email);
     }
 
-    public AuthenticationResponce confirm(UUID confirmationTokenId){
+    public JwtResponse confirm(UUID confirmationTokenId){
         ConfirmationToken token = this.confirmationTokenService.read(confirmationTokenId);
         UUID userId = token.getUser().getId();
 
@@ -96,13 +103,18 @@ public class AuthenticationService {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("id", userId);
 
-        var jwtToken = jwtService.generateToken(extraClaims, userService.readByIdEntity(userId));
-        return AuthenticationResponce.builder()
-                .token(jwtToken)
+        var accessToken = jwtService.generateToken(extraClaims, token.getUser());
+
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(token.getUser().getEmail());
+
+        return JwtResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken.getToken())
+                .expiryDate(jwtService.expDate(accessToken))
                 .build();
     }
 
-    public AuthenticationResponce login(AuthenticationRequest request) {
+    public JwtResponse login(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -117,9 +129,35 @@ public class AuthenticationService {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("id", user.getId());
 
-        var jwtToken = jwtService.generateToken(extraClaims, user);
-        return AuthenticationResponce.builder()
-                .token(jwtToken)
+        var accessToken = jwtService.generateToken(extraClaims, user);
+
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
+
+        return JwtResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken.getToken())
+                .expiryDate(jwtService.expDate(accessToken))
                 .build();
+    }
+
+    public JwtResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        return refreshTokenService.findByToken(refreshTokenRequest.getToken())
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    Map<String, Object> extraClaims = new HashMap<>();
+                    extraClaims.put("id", user.getId());
+
+                    String accessToken = jwtService.generateToken(extraClaims, user);
+                    return JwtResponse.builder()
+                            .accessToken(accessToken)
+                            .refreshToken(refreshTokenRequest.getToken())
+                            .build();
+                }).orElseThrow(() -> new RuntimeException(
+                        "Refresh token is not in database"));
+    }
+
+    public void logout(String token) {
+        refreshTokenService.deleteTokenByUserId(jwtService.getId(token));
     }
 }

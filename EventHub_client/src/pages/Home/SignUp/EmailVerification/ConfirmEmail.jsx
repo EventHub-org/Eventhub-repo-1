@@ -1,18 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { message } from "antd";
-import { confirmEmail } from "../../../../api/confirmEmail";
+import AuthContext from "../../../../context/authProvider";
 
 const ConfirmEmail = () => {
   const navigate = useNavigate();
   const { confirmationToken } = useParams();
+  const { confirmEmail } = useContext(AuthContext);
 
   useEffect(() => {
     const confirmUserEmail = async () => {
       try {
-        const res = await confirmEmail(confirmationToken);
-        const accessToken = res?.data?.token;
-        localStorage.setItem("token", accessToken);
+        await confirmEmail(confirmationToken);
 
         message.success("Registration successful!");
       } catch (error) {
@@ -22,6 +21,7 @@ const ConfirmEmail = () => {
           message.error("Error confirming email!");
         }
       } finally {
+        window.location.reload();
         navigate("/");
       }
     };

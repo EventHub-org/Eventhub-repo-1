@@ -1,5 +1,5 @@
 import styles from "./Registration.module.css";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "../../../../api/axios";
 import { useNavigate, Link } from "react-router-dom";
 import { PlacesAutocomplete } from "../../../../components/PlaceAutocomplete/PlaceAutocomplete";
@@ -7,11 +7,11 @@ import { checkEmail, checkName, checkPassword } from "./validation";
 import CloseWindowButton from "../../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import ProcessingEffect from "../../../../components/ProcessingEffect/ProcessingEffect";
 import useAuth from "../../../../hooks/useAuth";
+import AuthContext from "../../../../context/authProvider";
 
 import { Button, Checkbox, Col, Form, Input, Row, Select, message } from "antd";
 
 const { Option } = Select;
-const REGISTER_URL = "/authentication/register";
 
 const formItemLayout = {
   labelCol: {
@@ -44,7 +44,7 @@ const tailFormItemLayout = {
   },
 };
 
-const Registration = ({setUserEmail, setIsRegistered}) => {
+const Registration = ({ setUserEmail, setIsRegistered }) => {
   const [form] = Form.useForm();
   const [processing, setProcessing] = useState(false);
   const navigate = useNavigate();
@@ -56,6 +56,8 @@ const Registration = ({setUserEmail, setIsRegistered}) => {
   const [gender, setGender] = useState("");
   const [city, setCity] = useState("");
   const [email, setEmail] = useState("");
+
+  const { register } = useContext(AuthContext);
 
   const handleSubmit = async () => {
     const userData = {
@@ -69,13 +71,10 @@ const Registration = ({setUserEmail, setIsRegistered}) => {
     };
     try {
       setProcessing(true);
-      const res = await axios.post(REGISTER_URL, userData, {
-        headers: { "Content-Type": "application/json" },
-      });
-      
+      await register(userData);
+
       setIsRegistered(true);
       setUserEmail(userData.email);
-
     } catch (err) {
       if (!err.response) {
         message.error("No server response");
