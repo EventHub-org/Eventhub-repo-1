@@ -16,15 +16,15 @@ import java.time.LocalDate;
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserRequestCreate {
-    @Pattern(regexp = "[A-Z][a-z]+",
+    @Pattern(regexp = "\\p{Lu}\\p{Ll}+",
             message = "First Name must start with a capital letter followed by one or more lowercase letters")
     private String firstName;
 
-    @Pattern(regexp = "[A-Z][a-z]+",
+    @Pattern(regexp = "\\p{Lu}\\p{Ll}+",
             message = "Last Name must start with a capital letter followed by one or more lowercase letters")
     private String lastName;
 
-    @Size(min = 3, max = 15)
+    @Size(min = 3, max = 20)
     private String username;
 
     @Pattern(regexp = "[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}", message = "Must be a valid e-mail address")
