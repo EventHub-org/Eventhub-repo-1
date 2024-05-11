@@ -43,6 +43,7 @@ public class UserMapper {
                 .birthDate(user.getBirthDate())
                 .gender(user.getGender())
                 .showEmail(user.isShowEmail())
+                .provider(user.getProvider())
                 .photoResponses(user.getProfileImages()
                         .stream()
                         .map(photoMapper::entityToResponse)
@@ -72,6 +73,7 @@ public class UserMapper {
         user.setCity(userRequest.getCity());
         user.setGender(userRequest.getGender());
         user.setShowEmail(false);
+        user.setProvider(userRequest.getProvider());
         return user;
     }
 

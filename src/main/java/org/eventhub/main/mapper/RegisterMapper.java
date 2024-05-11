@@ -1,6 +1,6 @@
 package org.eventhub.main.mapper;
 
-import org.eventhub.main.dto.OAuthGoogleRequest;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import org.eventhub.main.dto.RegisterRequest;
 import org.eventhub.main.dto.UserRequestCreate;
 import org.eventhub.main.exception.NullDtoReferenceException;
@@ -37,14 +37,15 @@ public class RegisterMapper {
         userRequest.setProvider(registerRequest.getProvider());
         return userRequest;
     }
+    public RegisterRequest googlePayloadToRegisterRequest(GoogleIdToken.Payload payload) {
 
-    public RegisterRequest googleRequestToRegisterRequest(OAuthGoogleRequest googleRequest) {
         return RegisterRequest.builder()
-                .email(googleRequest.getEmail())
-                .firstName(googleRequest.getGivenName())
-                .lastName(googleRequest.getFamilyName())
+                .email(payload.getEmail())
+                .firstName((String) payload.get("given_name"))
+                .lastName((String) payload.get("family_name"))
                 .provider("Google")
-                .username(googleRequest.getGivenName()+googleRequest.getFamilyName())
+                .username((String) payload.get("given_name") + (String) payload.get("family_name"))
                 .build();
     }
+
 }

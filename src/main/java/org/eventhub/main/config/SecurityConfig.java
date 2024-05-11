@@ -24,19 +24,6 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
-
-    @Autowired
-    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private String googleClientId;
-
-    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-    private String googleClientSecret;
-
-//    @Autowired
-//    private OAuth2LoginSuccessHandler loginSuccessHandler;
-
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -64,10 +51,8 @@ public class SecurityConfig {
                 .disable()
                 .cors(c -> c.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests()
-
                 .requestMatchers(
                         "/authentication/**",
-//                        "/**",
                         "/users/events/{event_id}",
                         "/users/{user_id}",
                         "/users/{username}/profile",
@@ -84,40 +69,10 @@ public class SecurityConfig {
                 .authenticated()
                 .and()
                 .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .oauth2Login()
-//                .successHandler(oAuth2LoginSuccessHandler)
-//                .loginPage("http://localhost:3000/login")
-
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
-//    @Bean
-//    public ClientRegistrationRepository clientRegistrationRepository() {
-//        return new InMemoryClientRegistrationRepository(this.googleClientRegistration());
-//    }
-//
-//    private ClientRegistration googleClientRegistration() {
-//        return ClientRegistration.withRegistrationId("google")
-//                .clientId(googleClientId)
-//                .clientSecret(googleClientSecret)
-//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-//                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-//                .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
-//                .scope("openid", "profile", "email", "address", "phone")
-//                .authorizationUri("https://accounts.google.com/o/oauth2/v2/auth")
-//                .tokenUri("https://www.googleapis.com/oauth2/v4/token")
-//                .userInfoUri("https://www.googleapis.com/oauth2/v3/userinfo")
-//                .userNameAttributeName(IdTokenClaimNames.SUB)
-//                .jwkSetUri("https://www.googleapis.com/oauth2/v3/certs")
-//                .clientName("Google")
-//                .build();
-//    }
-
-    
 }

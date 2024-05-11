@@ -19,20 +19,21 @@ const LogIn = () => {
   const navigateToHome = useNavigate();
 
   const successGoogleLogin = (credentialResponse) => {
-    const decodedUserInfo = jwtDecode(credentialResponse.credential);
-    // const userData = {
-    //   first_name: decoded.given_name,
-    //   last_name: decoded.family_name,
-    //   username: decoded.given_name + decoded.family_name,
-    //   email: decoded.email,
-    //   provider: "google",
-    // };
+    // const decodedUserInfo = jwtDecode(credentialResponse.credential);
+    const googleToken = credentialResponse.credential;
+    console.log(googleToken);
 
     const googleAuth = async () => {
       try {
-        const res = await axios.post(GOOGLE_AUTH_URL, decodedUserInfo, {
-          headers: { "Content-Type": "application/json" },
-        });
+        const res = await axios.post(
+          GOOGLE_AUTH_URL,
+          { google_token: googleToken },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         const accessToken = res?.data?.token;
         localStorage.setItem("token", accessToken);
@@ -45,13 +46,17 @@ const LogIn = () => {
           // Помилка з'єднання з сервером
           message.error("No server response");
         } else {
-          const status = err.response.status;
           message.error(err.response.data);
         }
       }
     };
     googleAuth();
   };
+
+  const loginGoogle2 = useGoogleLogin({
+    onSuccess: (codeResponse) => console.log(codeResponse),
+    // flow: "auth-code",
+  });
 
   const onFinish = async () => {
     try {
@@ -212,6 +217,7 @@ const LogIn = () => {
               shape="pill"
             />
           </div>
+          <p onClick={() => loginGoogle2()}>Googl</p>
 
           <p style={{ textAlign: "center", fontSize: "12px" }}>
             Don’t have an account in EventHub yet?{" "}

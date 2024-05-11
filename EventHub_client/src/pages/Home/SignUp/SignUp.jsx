@@ -65,6 +65,7 @@ const SignUp = () => {
       password,
       city,
       gender,
+      provider: "EventHub",
     };
     try {
       const res = await axios.post(REGISTER_URL, userData, {
@@ -252,13 +253,17 @@ const SignUp = () => {
                 label="City"
                 rules={[
                   {
-                    required:true,
+                    required: true,
                     message: "Please select your City",
                     whitespace: true,
                   },
                 ]}
               >
-                <PlacesAutocomplete onSelectLocation={(value) => setCity(value)} initialValue={null} onChange={(value) => setCity(value)}/>
+                <PlacesAutocomplete
+                  onSelectLocation={(value) => setCity(value)}
+                  initialValue={null}
+                  onChange={(value) => setCity(value)}
+                />
               </Form.Item>
             </Col>
             <Col xs={24} sm={12}>
