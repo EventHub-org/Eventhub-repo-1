@@ -1,6 +1,6 @@
 import axios from "./axios";
 
-export const getFullEventById = async (userId, eventId) => {
+export const getFullEventById = async (eventId) => {
   const accessToken = localStorage.getItem("token");
 
   const authAxios = axios.create({
@@ -12,10 +12,6 @@ export const getFullEventById = async (userId, eventId) => {
     },
   });
 
-  try {
-    const response = await authAxios.get(`/users/${userId}/events/${eventId}`);
-    return response.data;
-  } catch (error) {
-    console.log("Error getting event with Id: ", error);
-  }
+  const response = await axios.get(`/users/events/${eventId}`);
+  return response.data;
 };

@@ -12,10 +12,6 @@ export const getUserById = async (userId) => {
     },
   });
 
-  try {
-    const response = await authAxios.get(`users/${userId}`);
-    return response.data;
-  } catch (error) {
-    console.log("Error getting user with Id: ", error);
-  }
+  const response = await authAxios.get(`users/${userId}`);
+  return response.data;
 };

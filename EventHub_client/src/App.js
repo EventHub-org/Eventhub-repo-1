@@ -1,36 +1,36 @@
-import SignUp from './pages/SignUp/SignUp';
-import LogIn from './pages/LogIn/LogIn';
-import {Home} from "./pages/Home/Home";
-import styles from "./App.css"
-import './App.css';
-import Profile from "./pages/Profile/Profile.jsx"
-import UserInfo from "./pages/Profile/UserInfo/UserInfo.jsx"
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-} from "react-router-dom";
+import SignUp from "./pages/Home/SignUp/SignUp.jsx";
+import LogIn from "./pages/Home/LogIn/LogIn.jsx";
+import { Home } from "./pages/Home/Home";
+import ChangePassword from "./pages/Home/ChangePassword/ChangePassword";
+import "./App.css";
 
+import EditEvent from "./pages/Home/EditEvent/EditEvent.jsx";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import UserProfile from "./pages/Home/UserProfile/UserProfile";
+import EditUserProfile from "./pages/Home/EditUserProfile/EditUserProfile";
+import EventInfoSideBar from "./pages/Home/EventInfoSideBar/EventInfoSideBar.jsx";
 
 function App() {
   return (
-      <Router>
-        <div>
-          <Routes>
-            <Route path="/" element={<Home />}>
-              <Route path="event/:ownerId/:eventId" />
-            </Route>
-            <Route path="/register" element={<SignUp/>}/>
-            <Route path="/login" element={<LogIn/>}/> 
-            <Route path="/profile/:userId" element={<Profile/>}>
-              <Route path='/profile/:userId/account' element={<UserInfo />} />
-            </Route>
-          </Routes>
-        </div>
-      </Router>
-      
-    );
-  }
+    <Router>
+      <div>
+        <Routes>
+          <Route path="/" element={<Home />}>
+            <Route path="event/:eventId" element={<EventInfoSideBar/>}/>
+            <Route path="/edit" element={<EditEvent />} />
+            <Route
+              path="/profile/change-password"
+              element={<ChangePassword />}
+            />
+            <Route path="/profile/:username" element={<UserProfile />} />
+            <Route path="/profile/edit" element={<EditUserProfile />} />
+            <Route path="/register" element={<SignUp />} />
+            <Route path="/login" element={<LogIn />} />
+          </Route>
+        </Routes>
+      </div>
+    </Router>
+  );
+}
 
-export default App
+export default App;

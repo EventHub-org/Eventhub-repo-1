@@ -1,5 +1,6 @@
 import styles from "./MyEvents.module.css";
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Checkbox } from "antd";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import ListEvents from "../../../components/ListEvents/ListEvents";
@@ -12,6 +13,8 @@ const MyEventsList = ({ handleButtonClose }) => {
   const [checkboxPending, setCheckboxPending] = useState(false);
   const [checkboxArchive, setCheckboxArchive] = useState(false);
 
+  const [searchParams, setSearchParams] = useSearchParams("");
+
   const sendCheckboxes = async () => {
     try {
       const data = await getCheckbuttonsEvents(
@@ -21,6 +24,13 @@ const MyEventsList = ({ handleButtonClose }) => {
         checkboxArchive
       );
       setEvents(data);
+      setSearchParams({
+        my_events: true,
+        checkboxMy,
+        checkboxJoined,
+        checkboxPending,
+        checkboxArchive,
+      });
     } catch (error) {
       console.error("Error getting events data:", error);
     }
@@ -79,7 +89,7 @@ const MyEventsList = ({ handleButtonClose }) => {
       </div>
 
       <div className={styles.EventResults}>
-        <ListEvents eventsData={events} />
+        <ListEvents eventsData={events} searchParams={searchParams} />
       </div>
     </div>
   );

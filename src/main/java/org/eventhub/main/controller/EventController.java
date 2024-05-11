@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -30,7 +31,7 @@ public class EventController {
 
     @PostMapping("/{user_id}/events")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<EventFullInfoResponse> create(@PathVariable("user_id") UUID userId, @Validated @RequestBody EventRequest request,
+    public ResponseEntity<EventFullInfoResponse> create(@RequestHeader(name="Authorization") String token, @PathVariable("user_id") UUID userId, @Validated @RequestBody EventRequest request,
                                                         BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new ResponseStatusException("Invalid Input");
@@ -39,7 +40,7 @@ public class EventController {
 
         if(request.isWithOwner()) {
             ParticipantResponse participantResponse = participantService.create(new ParticipantRequest(response.getId(), userId));
-            participantService.addParticipant(participantResponse.getId());
+            participantService.addParticipant(participantResponse.getId(), response.getId(), token);
             response.setParticipantCount(response.getParticipantCount() + 1);
         }
 
@@ -60,7 +61,7 @@ public class EventController {
         return new ResponseEntity<>(eventService.getAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{owner_id}/events/{event_id}")
+    @GetMapping("/events/{event_id}")
     public ResponseEntity<EventFullInfoResponse> getById(@PathVariable("event_id") UUID eventId){
         EventFullInfoResponse response = eventService.readById(eventId);
         log.info("**/get by id event(id) = " + response.getId());
@@ -68,22 +69,24 @@ public class EventController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/{owner_id}/events/{event_id}")
-    public ResponseEntity<EventFullInfoResponse> update(@Validated @RequestBody EventRequest request,
-                                                        BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            throw new ResponseStatusException("Invalid Input");
+    @PutMapping("/events/{event_id}")
+    public ResponseEntity<EventFullInfoResponse> update(@RequestHeader (name="Authorization") String token, @PathVariable("event_id") UUID eventId,
+                                                        @Validated @RequestBody EventRequest request, BindingResult result) {
+
+
+        if(result.hasErrors()){
+            throw new ResponseStatusException(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        EventFullInfoResponse response = eventService.update(request);
+        EventFullInfoResponse response = eventService.update(eventId, request, token);
         log.info("**/updated event(id) = " + response.getId());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{owner_id}/events/{event_id}")
-    public ResponseEntity<OperationResponse> delete(@PathVariable("event_id") UUID eventId) {
+    @DeleteMapping("/events/{event_id}")
+    public ResponseEntity<OperationResponse> delete(@RequestHeader (name="Authorization") String token, @PathVariable("event_id") UUID eventId) {
         String title = eventService.readById(eventId).getTitle();
-        eventService.delete(eventId);
+        eventService.delete(eventId, token);
         log.info("**/deleted event(id) = " + eventId);
 
         return new ResponseEntity<>(new OperationResponse("Event with title '"+title+"' deleted successfully"), HttpStatus.OK);

@@ -1,6 +1,7 @@
 package org.eventhub.main.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -26,12 +27,12 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Pattern(regexp = "[A-Z][a-z]+",
+    @Pattern(regexp = "\\p{Lu}\\p{Ll}+",
             message = "Must start with a capital letter followed by one or more lowercase letters")
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Pattern(regexp = "[A-Z][a-z]+",
+    @Pattern(regexp = "\\p{Lu}\\p{Ll}+",
             message = "Must start with a capital letter followed by one or more lowercase letters")
     @Column(name = "last_name", nullable = false)
     private String lastName;
@@ -55,6 +56,8 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Size(max = 255,
+            message = "Description length cannot be greater than 255 symbols")
     @Column(name = "description", nullable = true)
     private String description;
 
@@ -71,6 +74,9 @@ public class User implements UserDetails {
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @Column (name = "show_email")
+    private boolean showEmail;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     private List<Event> userEvents;
@@ -114,4 +120,6 @@ public class User implements UserDetails {
     public String getUsername() {
         return email;
     }
+
+    public String getNickname() {return username;}
 }

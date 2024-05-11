@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useOutlet } from "react-router-dom";
 import AuthContext from "../../context/authProvider";
-import { Link, Outlet, useParams } from "react-router-dom";
+import { Link, Outlet, useParams, useLocation } from "react-router-dom";
 import { Map } from "./Map/Map";
 import useAuth from "../../hooks/useAuth";
 import { Button } from "antd";
@@ -12,10 +12,12 @@ import LoginRegisterButton from "./ProfileORlogin/LoginRegisterButton";
 import SearchEvents from "./Search/Search";
 import CreateEvent from "./CreateEvent/CreateEvent";
 import EventFilter from "./Filter/Filter";
-import FilteredEvents from "./Filter/FilteredEvents";
+import ProcessingEffect from "../../components/ProcessingEffect/ProcessingEffect";
 import MyEvents from "./MyEvents/MyEvents";
 import EventInfoSideBar from "./EventInfoSideBar/EventInfoSideBar";
 import { useNavigate } from "react-router-dom";
+
+import useLogin from "../../hooks/useLogin";
 
 const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
@@ -25,9 +27,10 @@ const defaultCenter = {
 };
 const libraries = ["places"];
 const Home = () => {
-  const { auth, setAuth } = useAuth();
+  const authenticated = useLogin();
+  const location = useLocation();
 
-  const { ownerId, eventId } = useParams();
+  const outlet = useOutlet();
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -41,19 +44,17 @@ const Home = () => {
         <>
           <Map center={defaultCenter} />
 
-          {auth.token ? <MenuButton /> : <LoginRegisterButton />}
+          {authenticated ? <MenuButton /> : <LoginRegisterButton />}
 
           <SearchEvents />
           <CreateEvent />
           <EventFilter />
           <MyEvents />
 
-          {ownerId && eventId && (
-            <EventInfoSideBar ownerId={ownerId} eventId={eventId} />
-          )}
+          {outlet}
         </>
       ) : (
-        <h1>Loading</h1>
+        <ProcessingEffect />
       )}
     </div>
   );

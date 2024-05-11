@@ -5,6 +5,7 @@ import org.eventhub.main.config.AuthenticationService;
 import org.eventhub.main.config.JwtService;
 import org.eventhub.main.dto.CheckboxRequest;
 import org.eventhub.main.dto.EventFilterRequest;
+import org.eventhub.main.dto.EventResponseXY;
 import org.eventhub.main.dto.EventSearchResponse;
 import org.eventhub.main.service.FilterService;
 import org.eventhub.main.service.RefreshTokenService;
@@ -46,5 +47,11 @@ public class FilterController {
         request.setUserId(jwtService.getId(token));
         log.info("**/get filtered events with checkbox");
         return new ResponseEntity<>(filterService.filterCheckboxEvents(request), HttpStatus.OK);
+    }
+
+    @GetMapping("/events/all-live-upcoming")
+    public ResponseEntity<List<EventResponseXY>> getAllLiveAndUpcoming() {
+        log.info("**/get all live and upcoming events ");
+        return new ResponseEntity<>(filterService.allLiveAndUpcomingEvents(), HttpStatus.OK);
     }
 }

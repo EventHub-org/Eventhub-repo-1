@@ -1,9 +1,13 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
+import queryString from "query-string";
 import { getEventsData } from "../../../api/getEventsLocation";
-import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
+import { GoogleMap, Marker, InfoWindow, MarkerClusterer } from "@react-google-maps/api";
+
+
 import styles from "./Map.module.css";
 import { useSearchParams, useParams } from "react-router-dom";
 import { getEventsDataSearch } from "../../../api/getEventsData";
+import { getCheckbuttonsEvents } from "../../../api/getCheckbuttonsEvents";
 import { light } from "./Theme";
 
 import { useNavigate } from "react-router-dom";
@@ -11,6 +15,7 @@ import { getFilteredEvents } from "../../../api/getFilteredEvents";
 import GetLocationByCoordinates from "../../../api/getLocationByCoordinates";
 import useAuth from "../../../hooks/useAuth";
 import { message } from "antd";
+
 
 const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 const containerStyle = {
@@ -30,6 +35,8 @@ const defaultOption = {
   scrollwheel: true,
   disableDoubleClickZoom: true,
   styles: light,
+  minZoom: 5,
+  maxZoom: 20,
 };
 
 const Map = ({ center }) => {
@@ -59,18 +66,33 @@ const Map = ({ center }) => {
         try {
           const data = await getEventsDataSearch(searchValue);
           setEvents(data);
+
         } catch (error) {
           console.error("Error getting events data:", error);
         }
-      } else if (searchParams.get("show_filter")) {
+      } else if (searchParams.get("filter")) {
         try {
           const data = await getFilteredEvents();
           setEvents(data);
         } catch (error) {
           console.error("Error getting events data:", error);
         }
+      } else if (searchParams.get("my_events")) {
+        const parsed = queryString.parse(window.location.search);
+
+        try {
+          const data = await getCheckbuttonsEvents(
+            parsed.checkboxMy === "true",
+            parsed.checkboxJoined === "true",
+            parsed.checkboxPending === "true",
+            parsed.checkboxArchive === "true"
+          );
+          setEvents(data);
+        } catch (error) {
+          console.error("Error getting events data:", error);
+        }
       } else {
-        getEventsData()
+        await getEventsData()
           .then((data) => {
             setEvents(data);
           })
@@ -81,15 +103,16 @@ const Map = ({ center }) => {
     };
 
     fetchData();
+    
   }, [searchParams]);
   const onMarkerClick = (event) => {
     setSelectedEvent(event);
-    navigate(`/event/${event.owner_id}/${event.id}`);
+    navigate({
+      pathname: `/event/${event.id}`,
+      search: `?${searchParams.toString()}`,
+    });
   };
 
-  const onMapClick = () => {
-    setSelectedEvent(null);
-  };
   const handleMapClick = async (event) => {
     if (!auth.token) {
       message.info("You need to login to create an event");
@@ -108,6 +131,7 @@ const Map = ({ center }) => {
       console.log("Error fetching location data");
     }
   };
+
   return (
     <div className={styles.mapcontainer}>
       <GoogleMap
@@ -119,6 +143,30 @@ const Map = ({ center }) => {
         options={defaultOption}
         onClick={handleMapClick}
       >
+       {/* <MarkerClusterer>
+  {(clusterer) =>
+    events.map((event) => {
+      console.log(clusterer); // Розмістіть console.log тут
+      return (
+        <Marker
+          key={event.id}
+          position={{
+            lat: Number(event.latitude),
+            lng: Number(event.longitude),
+          }}
+          icon={{
+            url: "/images/pin.svg",
+            scaledSize: new window.google.maps.Size(40, 40),
+          }}
+          onClick={() => onMarkerClick(event)}
+          clusterer={clusterer}
+        />
+      );
+    })
+  }
+</MarkerClusterer> */}
+
+      
         <></>
         {events &&
           events.map((event) => {
@@ -137,7 +185,7 @@ const Map = ({ center }) => {
               />
             );
           })}
-        {selectedPlace && showMarker && (
+          {selectedPlace && showMarker && (
           <Marker
             position={{ lat: selectedPlace.lat, lng: selectedPlace.lng }}
             icon={{
@@ -166,5 +214,6 @@ const Map = ({ center }) => {
     </div>
   );
 };
+
 
 export { Map };
