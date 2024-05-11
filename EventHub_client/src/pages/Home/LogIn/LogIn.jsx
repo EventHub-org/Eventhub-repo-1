@@ -8,7 +8,6 @@ import { Button, Checkbox, Form, Input, message } from "antd";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import { checkEmail } from "../SignUp/validation";
 import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 
 const LOGIN_URL = "/authentication/login";
 const GOOGLE_AUTH_URL = "/authentication/google";
@@ -19,9 +18,7 @@ const LogIn = () => {
   const navigateToHome = useNavigate();
 
   const successGoogleLogin = (credentialResponse) => {
-    // const decodedUserInfo = jwtDecode(credentialResponse.credential);
     const googleToken = credentialResponse.credential;
-    console.log(googleToken);
 
     const googleAuth = async () => {
       try {
@@ -37,9 +34,7 @@ const LogIn = () => {
 
         const accessToken = res?.data?.token;
         localStorage.setItem("token", accessToken);
-        console.log(res);
-        console.log("Response:", res.data);
-        message.success("Auth successful!");
+        message.success("Login successful!");
         setNavigate(true);
       } catch (err) {
         if (!err.response) {
@@ -52,11 +47,6 @@ const LogIn = () => {
     };
     googleAuth();
   };
-
-  const loginGoogle2 = useGoogleLogin({
-    onSuccess: (codeResponse) => console.log(codeResponse),
-    // flow: "auth-code",
-  });
 
   const onFinish = async () => {
     try {
@@ -217,8 +207,6 @@ const LogIn = () => {
               shape="pill"
             />
           </div>
-          <p onClick={() => loginGoogle2()}>Googl</p>
-
           <p style={{ textAlign: "center", fontSize: "12px" }}>
             Don’t have an account in EventHub yet?{" "}
             <Link to="/register">Register!</Link>
