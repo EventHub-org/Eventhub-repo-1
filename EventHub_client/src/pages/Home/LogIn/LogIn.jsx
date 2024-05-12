@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import axios from "../../../api/axios";
 import styles from "./LogIn.module.css";
-import { Link, Navigate, Redirect } from "react-router-dom";
+import { Link, Navigate, Redirect, useAsyncError } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, message } from "antd";
@@ -9,6 +9,7 @@ import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/Clo
 import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import { checkEmail } from "../SignUp/Registration/validation";
 import AuthContext from "../../../context/authProvider";
+import EmailVerification from "../SignUp/EmailVerification/EmailVerification";
 
 const GOOGLE_AUTH_URL = "/authentication/google";
 
@@ -18,6 +19,7 @@ const LogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [navigate, setNavigate] = useState(false);
+  const [isVerified, setIsVerified] = useState(true);
   const navigateToHome = useNavigate();
 
   const successGoogleLogin = (credentialResponse) => {
@@ -39,16 +41,23 @@ const LogIn = () => {
         const refToken = res?.data?.refreshToken;
         const expiryDate = res?.data?.expiryDate;
 
-        localStorage.setItem("token", accessToken);
-        localStorage.setItem("refreshToken", refToken);
-        localStorage.setItem("expDate", expiryDate);
+        const email = res?.data?.email;
+        setEmail(email);
 
-        axios.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${res.data["token"]}`;
-        message.success("Login successful!");
+        if (accessToken && refToken && expiryDate) {
+          localStorage.setItem("token", accessToken);
+          localStorage.setItem("refreshToken", refToken);
+          localStorage.setItem("expDate", expiryDate);
 
-        setNavigate(true);
+          setNavigate(true);
+          message.success("Login successful!");
+        } else {
+          setIsVerified(false);
+        }
+
+        // axios.defaults.headers.common[
+        //   "Authorization"
+        // ] = `Bearer ${res.data["token"]}`;
       } catch (err) {
         if (!err.response) {
           // Помилка з'єднання з сервером
@@ -126,7 +135,7 @@ const LogIn = () => {
     return <Navigate to="/" />;
   }
 
-  return (
+  return isVerified ? (
     <div className={styles.outerContainer}>
       <div className={styles.container}>
         <div className={styles.Buttons}>
@@ -214,6 +223,8 @@ const LogIn = () => {
         </Form>
       </div>
     </div>
+  ) : (
+    <EmailVerification email={email} />
   );
 };
 export default LogIn;
