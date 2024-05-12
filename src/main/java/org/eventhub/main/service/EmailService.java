@@ -13,5 +13,7 @@ import java.util.UUID;
 public interface EmailService {
     Response sendVerificationEmail(UUID tokenId, EmailRequest emailRequest) throws IOException;
     Response sendEmailAboutUpdate(List<UserResponseBriefInfo> users, UUID eventId, String eventTitle) throws IOException;
-    Response sendEventCancellationEmail(List<UserResponseBriefInfo> users, String eventTitle)throws IOException;
+    Response sendEventCancellationEmail(List<UserResponseBriefInfo> users, String eventTitle) throws IOException;
+    Response sendApprovalEmail(UserResponseBriefInfo user, UUID eventId, String eventTitle)throws IOException;
+    Response sendExclusionEmail(UserResponseBriefInfo user, UUID eventId, String eventTitle) throws  IOException;
 }

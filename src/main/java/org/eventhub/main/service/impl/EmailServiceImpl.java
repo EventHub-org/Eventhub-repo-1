@@ -46,17 +46,21 @@ public class EmailServiceImpl implements EmailService {
         mail.setTemplateId(template);
 
         for (UserResponseBriefInfo user : users) {
-            Personalization personalization = new Personalization();
-            personalization.addTo(new Email(user.getEmail()));
-
-            personalization.addDynamicTemplateData("first_name", user.getFirstName());
-            personalization.addDynamicTemplateData("event_title", eventTitle);
-            personalization.addDynamicTemplateData("url", url);
-
-            mail.addPersonalization(personalization);
+            this.sendEmailToParticipant(user, eventTitle, url, mail);
         }
 
         return this.sendEmail(mail);
+    }
+
+    private void sendEmailToParticipant(UserResponseBriefInfo user, String eventTitle, String url, Mail mail) throws IOException{
+        Personalization personalization = new Personalization();
+        personalization.addTo(new Email(user.getEmail()));
+
+        personalization.addDynamicTemplateData("first_name", user.getFirstName());
+        personalization.addDynamicTemplateData("event_title", eventTitle);
+        personalization.addDynamicTemplateData("url", url);
+
+        mail.addPersonalization(personalization);
     }
 
     @Override
@@ -88,5 +92,26 @@ public class EmailServiceImpl implements EmailService {
     public Response sendEventCancellationEmail(List<UserResponseBriefInfo> users, String eventTitle)throws IOException{
         return this.sendEmailAboutEvent(users,eventTitle, this.url,System.getenv("cancellation_template"));
     }
+
+    @Override
+    public Response sendApprovalEmail(UserResponseBriefInfo user, UUID eventId, String eventTitle) throws IOException {
+        Mail mail = new Mail();
+        mail.setFrom(this.emailFrom);
+        mail.setTemplateId(System.getenv("approval_template"));
+
+        this.sendEmailToParticipant(user, eventTitle, this.url + "event/" + eventId, mail);
+        return this.sendEmail(mail);
+    }
+
+    @Override
+    public Response sendExclusionEmail(UserResponseBriefInfo user, UUID eventId, String eventTitle) throws IOException {
+        Mail mail = new Mail();
+        mail.setFrom(this.emailFrom);
+        mail.setTemplateId(System.getenv(System.getenv("exclusion_template")));
+
+        this.sendEmailToParticipant(user, eventTitle, this.url, mail);
+        return this.sendEmail(mail);
+    }
+
 
 }

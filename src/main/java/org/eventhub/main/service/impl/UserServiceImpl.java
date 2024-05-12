@@ -59,6 +59,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponseBriefInfo readByIdBriefInfo(UUID id) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("User with " + id + " not found"));
+        return userDtoMapper.entityToBriefResponse(user);
+    }
+
+    @Override
     public UserResponse readByUsername(String username){
         User user = userRepository.findByUsername(username);
         if(user == null)
