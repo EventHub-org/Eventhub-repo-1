@@ -35,7 +35,7 @@ public class RegisterMapper {
         userRequest.setCity(registerRequest.getCity());
         userRequest.setGender(registerRequest.getGender());
         userRequest.setProvider(registerRequest.getProvider());
-
+        userRequest.setVerified(registerRequest.isVerified());
         if (registerRequest.getPhotoUrl() != null) {
             userRequest.setPhotoUrl(registerRequest.getPhotoUrl());
         }
@@ -51,6 +51,7 @@ public class RegisterMapper {
                 .provider("Google")
                 .username((String) payload.get("given_name") + (String) payload.get("family_name"))
                 .photoUrl((String) payload.get("picture"))
+                .isVerified(payload.getEmailVerified())
                 .build();
     }
 

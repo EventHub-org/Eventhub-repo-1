@@ -49,9 +49,11 @@ public class UserRequestCreate {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    private boolean isVerified;
+
     public UserRequestCreate() {}
 
-    public UserRequestCreate(String firstName, String lastName, String username, String email, String password, String city, String provider, String photoUrl, Gender gender) {
+    public UserRequestCreate(String firstName, String lastName, String username, String email, String password, String city, String provider, String photoUrl, Gender gender, boolean isVerified) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -61,5 +63,6 @@ public class UserRequestCreate {
         this.provider = provider;
         this.photoUrl = photoUrl;
         this.gender = gender;
+        this.isVerified = isVerified;
     }
 }

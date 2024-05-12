@@ -47,9 +47,11 @@ public class RegisterRequest {
 
     private String photoUrl;
 
+    private boolean isVerified;
+
     public RegisterRequest() {}
 
-    public RegisterRequest(String firstName, String lastName, String username, String email, String password, String city, Gender gender, String provider, String photoUrl) {
+    public RegisterRequest(String firstName, String lastName, String username, String email, String password, String city, Gender gender, String provider, String photoUrl, boolean isVerified) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -59,5 +61,6 @@ public class RegisterRequest {
         this.gender = gender;
         this.provider = provider;
         this.photoUrl = photoUrl;
+        this.isVerified = isVerified;
     }
 }

@@ -159,7 +159,7 @@ public class AuthenticationService {
                 .expiryDate(jwtService.expDate(accessToken))
                 .build();
     }
-    public AuthenticationResponce googleLogin(GoogleOauthRequest request) throws GeneralSecurityException, IOException {
+    public GoogleJwtResponse googleLogin(GoogleOauthRequest request) throws GeneralSecurityException, IOException {
         HttpTransport transport = new com.google.api.client.http.javanet.NetHttpTransport();
         JsonFactory jsonFactory = com.google.api.client.json.gson.GsonFactory.getDefaultInstance();
 
@@ -172,26 +172,56 @@ public class AuthenticationService {
         GoogleIdToken idToken = verifier.verify(request.getGoogleToken());
         if (idToken != null) {
             Payload payload = idToken.getPayload();
+            String email = payload.getEmail();
 
-            User user = userRepository.findByEmail(payload.getEmail());
+            User user = userRepository.findByEmail(email);
             if (user != null) {
                 Map<String, Object> extraClaims = new HashMap<>();
                 extraClaims.put("id", user.getId());
 
-                var jwtToken = jwtService.generateToken(extraClaims, user);
-                return AuthenticationResponce.builder()
-                        .token(jwtToken)
+                String accessToken = jwtService.generateToken(extraClaims, user);
+                RefreshToken refreshToken = refreshTokenService.createRefreshToken(email);
+                return GoogleJwtResponse.builder()
+                        .email(email)
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken.getToken())
+                        .expiryDate(jwtService.expDate(accessToken))
                         .build();
             }
 
-
+            boolean emailVerified = payload.getEmailVerified();
             RegisterRequest registerRequest = registerMapper.googlePayloadToRegisterRequest(payload);
-            return register(registerRequest);
+            UserRequestCreate userRequest = registerMapper.requestToEntity(registerRequest, new UserRequestCreate());
+
+            if (emailVerified) {
+                logger.info("Registering verified(email) user");
+
+                userService.create(userRequest);
+                User userToCreate = userRepository.findByEmail(email);
+
+                Map<String, Object> extraClaims = new HashMap<>();
+                extraClaims.put("id", userToCreate.getId());
+
+                String accessToken = jwtService.generateToken(extraClaims, userToCreate);
+                RefreshToken refreshToken = refreshTokenService.createRefreshToken(email);
+                return GoogleJwtResponse.builder()
+                        .email(email)
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken.getToken())
+                        .expiryDate(jwtService.expDate(accessToken))
+                        .build();
+            }
+
+            register(userRequest);
+            return GoogleJwtResponse.builder()
+                    .email(email)
+                    .build();
 
 
         } else {
             throw new AccessIsDeniedException("Invalid ID token.");
         }
+    }
 
     public JwtResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
         return refreshTokenService.findByToken(refreshTokenRequest.getToken())

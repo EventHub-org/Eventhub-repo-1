@@ -83,7 +83,7 @@ public class UserMapper {
         user.setShowEmail(false);
         user.setProvider(userRequest.getProvider());
 
-        user.setVerified(false);
+        user.setVerified(userRequest.isVerified());
         return user;
     }
 

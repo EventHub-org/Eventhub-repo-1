@@ -21,6 +21,7 @@ import java.security.GeneralSecurityException;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,11 +32,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequestMapping("/authentication")
 @RequiredArgsConstructor
-@Slf4j
 public class AuthenticationController {
 
     private final AuthenticationService authService;
-    private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
+    private final Logger log = LoggerFactory.getLogger(AuthenticationController.class);
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
 
@@ -69,9 +69,10 @@ public class AuthenticationController {
         return ResponseEntity.ok(authService.login(request));
     }
     @PostMapping("/google")
-    public ResponseEntity<AuthenticationResponce> googleAuthentication(@RequestBody GoogleOauthRequest request) throws GeneralSecurityException, IOException {
-        logger.info("Authorizing with google");
+    public ResponseEntity<GoogleJwtResponse> googleAuthentication(@RequestBody GoogleOauthRequest request) throws GeneralSecurityException, IOException {
+        log.info("Authorizing with google");
         return ResponseEntity.ok(authService.googleLogin(request));
+    }
 
     @PostMapping("/refreshToken")
     public ResponseEntity<JwtResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {

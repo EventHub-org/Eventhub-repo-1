@@ -103,7 +103,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("expDate");
 
-      message.error("You are loged out");
+      message.info("You are loged out");
       setAuth({});
 
       return response.data;
