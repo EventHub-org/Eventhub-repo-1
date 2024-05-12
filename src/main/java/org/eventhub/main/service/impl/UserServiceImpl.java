@@ -54,7 +54,8 @@ public class UserServiceImpl implements UserService {
             logger.info("User entity saved");
             if (userRequest.getPhotoUrl() != null) {
                 photoService.addUserPhotoByUrl(response.getId(), userRequest.getPhotoUrl());
-                logger.info("Photo added");
+
+                logger.info("Photo added: " + userRequest.getPhotoUrl());
             }
 
             return response;
