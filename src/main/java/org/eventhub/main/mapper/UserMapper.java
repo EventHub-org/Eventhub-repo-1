@@ -55,6 +55,15 @@ public class UserMapper {
         return response;
     }
 
+    public UserResponseBriefInfo entityToBriefResponse(User user){
+        return UserResponseBriefInfo.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .build();
+    }
+
     public User createRequestToEntity(UserRequestCreate userRequest, User user) {
         if(userRequest == null){
             throw new NullDtoReferenceException("UserRequest can't be null");
@@ -74,6 +83,7 @@ public class UserMapper {
         user.setShowEmail(false);
         user.setProvider(userRequest.getProvider());
 
+        user.setVerified(false);
         return user;
     }
 
