@@ -49,7 +49,8 @@ const LogIn = () => {
           localStorage.setItem("refreshToken", refToken);
           localStorage.setItem("expDate", expiryDate);
 
-          setNavigate(true);
+          navigateToHome("/");
+          window.location.reload();
           message.success("Login successful!");
         } else {
           setIsVerified(false);
