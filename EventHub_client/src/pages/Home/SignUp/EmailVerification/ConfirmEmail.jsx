@@ -22,11 +22,11 @@ const ConfirmEmail = () => {
         }
       } finally {
         navigate("/");
+        window.location.reload();
       }
     };
 
     confirmUserEmail();
-    // return () => navigate("/");
   }, []);
 };
 
