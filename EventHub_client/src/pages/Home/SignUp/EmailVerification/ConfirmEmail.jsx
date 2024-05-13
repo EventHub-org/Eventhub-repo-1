@@ -21,12 +21,12 @@ const ConfirmEmail = () => {
           message.error("Error confirming email!");
         }
       } finally {
-        window.location.reload();
         navigate("/");
       }
     };
 
     confirmUserEmail();
+    // return () => navigate("/");
   }, []);
 };
 

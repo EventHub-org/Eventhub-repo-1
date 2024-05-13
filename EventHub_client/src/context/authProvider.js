@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }) => {
   const confirmEmail = async (emailToken) => {
     const res = await axios.get(
       `authentication/confirm-account?token=${emailToken}`,
-      emailToken,
+
       {
         headers: { "Content-Type": "application/json" },
       }
