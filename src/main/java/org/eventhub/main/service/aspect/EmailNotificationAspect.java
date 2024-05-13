@@ -1,9 +1,7 @@
 package org.eventhub.main.service.aspect;
 
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import groovy.util.logging.Slf4j;
+import org.aspectj.lang.annotation.*;
 import org.eventhub.main.dto.EventRequest;
 import org.eventhub.main.dto.ParticipantResponse;
 import org.eventhub.main.dto.UserResponseBriefInfo;
@@ -22,6 +20,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Aspect
+@Slf4j
 @Component
 public class EmailNotificationAspect {
     private final EmailService emailService;
@@ -39,17 +38,22 @@ public class EmailNotificationAspect {
         this.eventService = eventService;
         this.participantService = participantService;
     }
-
-    @Pointcut(value = "execution(* org.eventhub.main.service.EventService.update(..)) " +
-            "&& args(id, eventRequest, token)", argNames = "id,eventRequest,token")
+    // to send email about event update
+    @Pointcut(value = "execution(* org.eventhub.main.service.EventService.update(..)) && args(id, eventRequest, token)", argNames = "id,eventRequest,token")
     public void updateEvent(UUID id, EventRequest eventRequest, String token) {}
 
     @Before(value = "updateEvent(id, eventRequest, token)", argNames = "id,eventRequest,token")
     public void beforeEventUpdate(UUID id, EventRequest eventRequest, String token) {
-        Event event = this.eventService.readByIdEntity(id);
+        Event event = eventService.readByIdEntity(id);
         if (event != null) {
             eventTitleMap.put(id, event.getTitle());
         }
+    }
+
+    @AfterThrowing(pointcut = "updateEvent(id, eventRequest, token)", throwing = "exception", argNames = "id,eventRequest,token,exception")
+    public void afterEventUpdateException(UUID id, EventRequest eventRequest, String token, Throwable exception) {
+        System.out.println("--------------In error block-------------");
+        eventTitleMap.remove(id);
     }
 
     @AfterReturning(pointcut = "updateEvent(id, eventRequest, token)", returning = "response", argNames = "id,eventRequest,token,response")
@@ -61,7 +65,7 @@ public class EmailNotificationAspect {
         this.eventTitleMap.remove(id);
     }
 
-
+    // to send email about event delete
     @Pointcut(value = "execution(* org.eventhub.main.service.EventService.delete(..))" +
             "&& args(id, token)", argNames = "id,token")
     public void deleteEvent(UUID id, String token) {}
@@ -82,6 +86,7 @@ public class EmailNotificationAspect {
         eventParticipantsMap.remove(id);
     }
 
+    // to send email about participant add
     @Pointcut(value = "execution(* org.eventhub.main.service.ParticipantService.addParticipant(..)) " +
             "&& args(participantId, eventId, token)", argNames = "participantId,eventId,token")
     public void addParticipant(UUID participantId, UUID eventId, String token) {}
@@ -93,6 +98,7 @@ public class EmailNotificationAspect {
         this.emailService.sendApprovalEmail(user, eventId, this.eventService.readByIdEntity(eventId).getTitle());
     }
 
+    // to send email about participant delete
     @Pointcut(value = "execution(* org.eventhub.main.service.ParticipantService.delete(..)) " +
             "&& args(id, eventId, token)", argNames = "id, eventId, token")
     public void deleteParticipant(UUID id, UUID eventId, String token) {}
@@ -107,5 +113,4 @@ public class EmailNotificationAspect {
         this.emailService.sendExclusionEmail(this.participantMap.get(id),eventId, this.eventService.readById(eventId).getTitle());
         this.participantMap.remove(id);
     }
-
 }

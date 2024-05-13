@@ -107,7 +107,7 @@ public class EmailServiceImpl implements EmailService {
     public Response sendExclusionEmail(UserResponseBriefInfo user, UUID eventId, String eventTitle) throws IOException {
         Mail mail = new Mail();
         mail.setFrom(this.emailFrom);
-        mail.setTemplateId(System.getenv(System.getenv("exclusion_template")));
+        mail.setTemplateId(System.getenv("exclusion_template"));
 
         this.sendEmailToParticipant(user, eventTitle, this.url, mail);
         return this.sendEmail(mail);
