@@ -146,61 +146,6 @@
 			<version>12.25.1</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/net.oauth.core/oauth -->
-<!--		<dependency>-->
-<!--			<groupId>net.oauth.core</groupId>-->
-<!--			<artifactId>oauth</artifactId>-->
-<!--			<version>20100527</version>-->
-<!--		</dependency>-->
-
-<!--		 https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-client-->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.security</groupId>-->
-<!--			<artifactId>spring-security-oauth2-client</artifactId>-->
-<!--			<version>6.2.4</version>-->
-<!--		</dependency>-->
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-client</artifactId>
-		</dependency>
-
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.security.oauth.boot</groupId>-->
-<!--			<artifactId>spring-security-oauth2-autoconfigure</artifactId>-->
-<!--			<version>2.1.0.RELEASE</version>-->
-<!--		</dependency>-->
-
-		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-jose -->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.security</groupId>-->
-<!--			<artifactId>spring-security-oauth2-jose</artifactId>-->
-<!--			<version>6.2.4</version>-->
-<!--		</dependency>-->
-
-<!--		 https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-resource-server-->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.security</groupId>-->
-<!--			<artifactId>spring-security-oauth2-resource-server</artifactId>-->
-<!--			<version>6.2.4</version>-->
-<!--		</dependency>-->
-
-		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.security</groupId>-->
-<!--			<artifactId>spring-security-core</artifactId>-->
-<!--			<version>6.2.4</version>-->
-<!--		</dependency>-->
-
-
-		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-security -->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.cloud</groupId>-->
-<!--			<artifactId>spring-cloud-starter-security</artifactId>-->
-<!--			<version>2.2.5.RELEASE</version>-->
-<!--		</dependency>-->
-
-		<!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client -->
 		<dependency>
 			<groupId>com.google.api-client</groupId>
 			<artifactId>google-api-client</artifactId>

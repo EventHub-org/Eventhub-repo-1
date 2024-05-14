@@ -6,15 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, message } from "antd";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import { checkEmail } from "../SignUp/Registration/validation";
 import AuthContext from "../../../context/authProvider";
 import EmailVerification from "../SignUp/EmailVerification/EmailVerification";
 
-const GOOGLE_AUTH_URL = "/authentication/google";
-
 const LogIn = () => {
-  const { login } = useContext(AuthContext);
+  const { login, googleAuth } = useContext(AuthContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,53 +20,29 @@ const LogIn = () => {
   const [isVerified, setIsVerified] = useState(true);
   const navigateToHome = useNavigate();
 
-  const successGoogleLogin = (credentialResponse) => {
+  const successGoogleLogin = async (credentialResponse) => {
     const googleToken = credentialResponse.credential;
 
-    const googleAuth = async () => {
-      try {
-        const res = await axios.post(
-          GOOGLE_AUTH_URL,
-          { google_token: googleToken },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+    const res = await googleAuth(googleToken);
 
-        const accessToken = res?.data?.accessToken;
-        const refToken = res?.data?.refreshToken;
-        const expiryDate = res?.data?.expiryDate;
+    const accessToken = res?.data?.accessToken;
+    const refToken = res?.data?.refreshToken;
+    const expiryDate = res?.data?.expiryDate;
 
-        const email = res?.data?.email;
-        setEmail(email);
+    const email = res?.data?.email;
+    setEmail(email);
 
-        if (accessToken && refToken && expiryDate) {
-          localStorage.setItem("token", accessToken);
-          localStorage.setItem("refreshToken", refToken);
-          localStorage.setItem("expDate", expiryDate);
+    if (accessToken && refToken && expiryDate) {
+      localStorage.setItem("token", accessToken);
+      localStorage.setItem("refreshToken", refToken);
+      localStorage.setItem("expDate", expiryDate);
 
-          navigateToHome("/");
-          window.location.reload();
-          message.success("Login successful!");
-        } else {
-          setIsVerified(false);
-        }
-
-        // axios.defaults.headers.common[
-        //   "Authorization"
-        // ] = `Bearer ${res.data["token"]}`;
-      } catch (err) {
-        if (!err.response) {
-          // Помилка з'єднання з сервером
-          message.error("No server response");
-        } else {
-          message.error(err.response.data);
-        }
-      }
-    };
-    googleAuth();
+      navigateToHome("/");
+      window.location.reload();
+      message.success("Login successful!");
+    } else {
+      setIsVerified(false);
+    }
   };
 
   const onFinish = async () => {
