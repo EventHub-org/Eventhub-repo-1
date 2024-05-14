@@ -25,23 +25,15 @@ const LogIn = () => {
 
     const res = await googleAuth(googleToken);
 
-    const accessToken = res?.data?.accessToken;
-    const refToken = res?.data?.refreshToken;
-    const expiryDate = res?.data?.expiryDate;
-
     const email = res?.data?.email;
+    const accessToken = res?.data?.accessToken;
     setEmail(email);
-
-    if (accessToken && refToken && expiryDate) {
-      localStorage.setItem("token", accessToken);
-      localStorage.setItem("refreshToken", refToken);
-      localStorage.setItem("expDate", expiryDate);
-
+    if (!accessToken) {
+      setIsVerified(false);
+    } else {
       navigateToHome("/");
       window.location.reload();
       message.success("Login successful!");
-    } else {
-      setIsVerified(false);
     }
   };
 

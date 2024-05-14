@@ -125,6 +125,16 @@ export const AuthProvider = ({ children }) => {
         }
       );
 
+      const accessToken = res?.data?.accessToken;
+      const refToken = res?.data?.refreshToken;
+      const expiryDate = res?.data?.expiryDate;
+
+      if (accessToken && refToken && expiryDate) {
+        localStorage.setItem("token", accessToken);
+        localStorage.setItem("refreshToken", refToken);
+        localStorage.setItem("expDate", expiryDate);
+      }
+
       return res;
     } catch (err) {
       if (!err.response) {
