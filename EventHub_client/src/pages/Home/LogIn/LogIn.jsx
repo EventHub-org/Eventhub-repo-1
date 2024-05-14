@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "../../../api/axios";
 import styles from "./LogIn.module.css";
 import { Link, Navigate } from "react-router-dom";
@@ -6,37 +6,25 @@ import { useNavigate } from "react-router-dom";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, message } from "antd";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
-import { checkEmail } from "../SignUp/validation";
 
-const REGISTER_URL = "/authentication/login";
+import { checkEmail } from "../SignUp/Registration/validation";
+import AuthContext from "../../../context/authProvider";
+
 const LogIn = () => {
+  const { login } = useContext(AuthContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [navigate, setNavigate] = useState(false);
   const navigateToHome = useNavigate();
   const onFinish = async () => {
     try {
-      const res = await axios.post(
-        REGISTER_URL,
-        {
-          email,
-          password,
-        },
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      console.log(res?.data);
-      const accessToken = res?.data?.token;
-      localStorage.setItem("token", accessToken);
-      console.log(res.data);
-
-      axios.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${res.data["token"]}`;
+      await login(email, password);
 
       message.success("Login successful!");
-      setNavigate(true);
+      navigateToHome("/");
+      window.location.reload();
+      //setNavigate(true);
     } catch (err) {
       if (!err.response) {
         // Помилка з'єднання з сервером
@@ -90,7 +78,7 @@ const LogIn = () => {
     }
   };
   const handleKeyDown = (event) => {
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       navigateToHome("/");
     }
   };
