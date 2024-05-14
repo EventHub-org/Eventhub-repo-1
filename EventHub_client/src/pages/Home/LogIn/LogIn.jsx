@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "../../../api/axios";
 import styles from "./LogIn.module.css";
 import { Link, Navigate, Redirect, useAsyncError } from "react-router-dom";
@@ -97,7 +97,17 @@ const LogIn = () => {
       }
     }
   };
-
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") {
+      navigateToHome("/");
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
   if (navigate) {
     return <Navigate to="/" />;
   }
