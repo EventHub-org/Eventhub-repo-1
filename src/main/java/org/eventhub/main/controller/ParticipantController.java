@@ -20,7 +20,6 @@ import java.util.UUID;
 
 
 @RestController
-@EnableAsync
 @Slf4j
 @RequestMapping("/events/{event_id}/participants")
 public class ParticipantController {
