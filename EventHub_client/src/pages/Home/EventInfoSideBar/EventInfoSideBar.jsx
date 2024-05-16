@@ -187,10 +187,6 @@ const EventInfoSideBar = () => {
     resetSideBar();
   }, [eventId]);
 
-  useEffect(() => {
-    showAllParticipants && setIsLoading(true);
-  }, [showAllParticipants]);
-
   // Funcs
 
   const handleShowAllParticipants = () => {
@@ -507,7 +503,6 @@ const EventInfoSideBar = () => {
 
       {showAllParticipants && !showRequests && joinedParticipants && owner && (
         <ParticipantsList
-          setIsLoading={setIsLoading}
           handleGoBackToSideBar={handleShowAllParticipants}
           handleCloseWindow={handleCloseWindow}
           handleShowRequests={handleShowRequests}
