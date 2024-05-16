@@ -5,22 +5,22 @@ import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.eventhub.main.dto.*;
 import org.eventhub.main.exception.AccessIsDeniedException;
+import org.eventhub.main.exception.PasswordException;
 import org.eventhub.main.mapper.RegisterMapper;
 import org.eventhub.main.model.ConfirmationToken;
+import org.eventhub.main.model.PasswordResetToken;
 import org.eventhub.main.model.User;
 import org.eventhub.main.repository.UserRepository;
-import org.eventhub.main.service.ConfirmationTokenService;
-import org.eventhub.main.service.EmailService;
+import org.eventhub.main.service.*;
 
 import org.eventhub.main.model.RefreshToken;
-import org.eventhub.main.service.RefreshTokenService;
-import org.eventhub.main.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,10 +33,8 @@ import com.google.api.client.json.JsonFactory;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.*;
-import java.io.IOException;
 import java.time.Instant;
 
-import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 
 @Slf4j
@@ -52,6 +50,7 @@ public class AuthenticationService {
     private final RegisterMapper registerMapper;
 
     private final ConfirmationTokenService confirmationTokenService;
+    private final PasswordResetTokenService passwordResetTokenService;
     private final EmailService emailService;
     private final ThreadPoolTaskScheduler scheduler;
 
@@ -134,6 +133,43 @@ public class AuthenticationService {
                 .build();
     }
 
+    public void resetPassword(String email) throws IOException {
+        User user = this.userService.findByEmail(email);
+        PasswordResetToken token = passwordResetTokenService.create(user);
+
+        EmailRequest emailRequest = new EmailRequest(email,"Reset password", "Please, reset your password", user.getFirstName());
+        emailService.sendResetPasswordEmail(token.getId(),emailRequest);
+    }
+    public JwtResponse confirmResetPassword(PasswordResetRequest request){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String newPassword = encoder.encode(request.getNewPassword());
+        PasswordResetToken token = passwordResetTokenService.read(request.getTokenId());
+        if(token.isExpired()){
+            passwordResetTokenService.delete(request.getTokenId());
+            throw new PasswordException("Token is not valid!");
+        }
+
+        User user = token.getUser();
+        if(encoder.matches(user.getPassword(), newPassword)){
+            throw new PasswordException("A new password cannot be the same as the old one!");
+        }
+
+        user.setPassword(newPassword);
+        passwordResetTokenService.delete(request.getTokenId());
+
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("id", user.getId());
+
+        var accessToken = jwtService.generateToken(extraClaims, user);
+
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getEmail());
+
+        return JwtResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken.getToken())
+                .expiryDate(jwtService.expDate(accessToken))
+                .build();
+    }
     public JwtResponse login(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

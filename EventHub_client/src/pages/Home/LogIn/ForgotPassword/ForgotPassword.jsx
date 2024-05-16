@@ -1,14 +1,15 @@
-import { useState} from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaLock } from "react-icons/fa";
 import { MdOutlineMailLock } from "react-icons/md";
-import { Input } from "antd";
+import { Input, message } from "antd";
 import PrimaryButton from "../../../../components/Buttons/PrimaryButton/PrimaryButton";
 import CloseWindowButton from "../../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import GoBackButtn from "../../../../components/Buttons/GoBackButton/GoBackButton";
+import { resetPassword } from "../../../../api/resetPassword";
 import styles from "./ForgotPassword.module.css";
 
-const ForgotPassword = ({logIn}) => {
+const ForgotPassword = ({ logIn }) => {
   const [email, setEmail] = useState("");
   const [showButton, setShowButton] = useState(false);
   const navigate = useNavigate();
@@ -21,11 +22,26 @@ const ForgotPassword = ({logIn}) => {
     setShowButton(emailRegex.test(value));
   };
 
+  const handleResetPassword = async () => {
+    if (showButton) {
+      try {
+        await resetPassword(email);
+        message.success("Email has been sent!");
+      } catch (error) {
+        if (error.response) {
+          message.error(error.response.data);
+        } else {
+          message.error("Error!");
+        }
+      }
+    }
+  };
+
   return (
     <div className={styles.Container}>
       <div className={styles.Close}>
-        <GoBackButtn onClick={logIn}/>
-        <CloseWindowButton onClick={()=>navigate("/")}/>
+        <GoBackButtn onClick={logIn} />
+        <CloseWindowButton onClick={() => navigate("/")} />
       </div>
       <FaLock className={styles.Lock} />
       <div className={styles.Main}>
@@ -39,11 +55,14 @@ const ForgotPassword = ({logIn}) => {
       </p>
       <Input
         prefix={<MdOutlineMailLock className="site-form-item-icon" />}
-        className={`${styles.Input} ${email ? (showButton ? styles.InputValid : styles.InputInvalid) : ''}`}
+        className={`${styles.Input} ${
+          email ? (showButton ? styles.InputValid : styles.InputInvalid) : ""
+        }`}
         placeholder="Enter your email address"
         onChange={handleEmailChange}
       />
       <PrimaryButton
+        onClick={handleResetPassword}
         children={"Reset Password"}
         className={`${styles.Button} ${
           showButton ? styles.ActiveButton : styles.DisabledButton

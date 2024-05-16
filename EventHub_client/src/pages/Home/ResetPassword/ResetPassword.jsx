@@ -1,16 +1,55 @@
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Input, message } from "antd";
 import { FaUnlock } from "react-icons/fa";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButton";
+import {confirmResetPassword} from "../../../api/resetPassword"
 import styles from "./ResetPassword.module.css";
 
 const ResetPassword = () => {
+  const navigate = useNavigate();
+  const { token } = useParams();
+
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const handleSubmit = async () => {
+    if (newPassword !== confirmNewPassword) {
+      message.error("Passwords do not match");
+      return;
+    }
+
+    if (!token) {
+      message.error("Token is missing");
+      return;
+    }
+    try{
+      await confirmResetPassword({
+        token_id: token,
+        new_password: newPassword,
+      });
+      message.success("Login successful!");
+      navigate("/");
+      window.location.reload();
+    }
+    catch(error){
+      if (error.response) {
+        message.error(error.response.data);
+      } else {
+        message.error("Error!");
+      }
+    }
+  };
   return (
     <div className={styles.OuterContainer}>
       <div className={styles.InnerContainer}>
         <div className={styles.Buttons}>
           <p className={styles.Caption}>Reset password</p>
-          <CloseWindowButton onClick={() => {}} />
+          <CloseWindowButton
+            onClick={() => {
+              navigate("/");
+            }}
+          />
         </div>
         <FaUnlock className={styles.Lock} />
         <div className={styles.InstructionsContainer}>
@@ -33,6 +72,8 @@ const ResetPassword = () => {
               type="password"
               placeholder="Enter new password"
               name="new_password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
             />
           </div>
           <div className={styles.Password}>
@@ -42,10 +83,12 @@ const ResetPassword = () => {
               type="password"
               placeholder="Confirm new password"
               name="confirmNewPassword"
+              value={confirmNewPassword}
+              onChange={(e) => setConfirmNewPassword(e.target.value)}
             />
           </div>
         </div>
-        <PrimaryButton children={"Reset"} className={styles.ResetButton} />
+        <PrimaryButton children={"Reset"} className={styles.ResetButton} onClick={handleSubmit}/>
       </div>
     </div>
   );

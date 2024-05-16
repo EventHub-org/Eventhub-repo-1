@@ -23,7 +23,7 @@ function App() {
               element={<ChangePassword />}
             />
             <Route
-              path="/reset-password"
+              path="/reset-password/:token"
               element={<ResetPassword />}
             />
             <Route path="/profile/:username" element={<UserProfile />} />
