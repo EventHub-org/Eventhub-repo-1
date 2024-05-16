@@ -147,19 +147,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const refresh = async (token) => {
-      try {
-        //console.log("oboba");
-        await refreshToken(token);
-      } catch (error) {
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("token");
-        localStorage.removeItem("expDate");
-        message.error("You are loged out");
-        setAuth({});
-      }
-    };
-
     //const { token, expDate } = auth;
 
     const accessToken = localStorage.getItem("token");
@@ -176,7 +163,16 @@ export const AuthProvider = ({ children }) => {
 
     if (accessToken) {
       const interval = setInterval(async () => {
-        await refresh(token);
+        try {
+          console.log("refresh");
+          await refreshToken(token);
+        } catch (error) {
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("token");
+          localStorage.removeItem("expDate");
+          message.error("You are loged out");
+          setAuth({});
+        }
       }, intervalTime);
 
       return () => clearInterval(interval);
