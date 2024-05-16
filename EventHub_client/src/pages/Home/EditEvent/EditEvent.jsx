@@ -392,9 +392,8 @@ const EditEvent = () => {
     }
   };
   const handleKeyDown = (event) => {
-
-    if (event.key === 'Escape') {
-      event.preventDefault(); 
+    if (event.key === "Escape") {
+      event.preventDefault();
       clearEventData();
     }
   };
@@ -529,7 +528,7 @@ const EditEvent = () => {
                 />
               </div>
               <div className={styles.ParamContainer}>
-                <div className={styles.ParamLabel}>Participants</div>
+                <div className={styles.ParamLabel}>Max participants</div>
                 <Input
                   placeholder="Participants"
                   className={styles.Param}
