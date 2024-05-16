@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
+
     if (savedToken) {
       setAuth({ token: savedToken });
     }
@@ -48,14 +49,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("token", accessToken);
     localStorage.setItem("refreshToken", refToken);
     localStorage.setItem("expDate", expiryDate);
-
-    //setAuth({ refToken: refToken, expDate: expiryDate });
-
-    // console.log(accessToken);
-    // console.log(refToken);
-    // console.log(expiryDate);
-    // console.log(auth.refToken);
-    // console.log(auth.expDate);
 
     axios.defaults.headers.common[
       "Authorization"
@@ -147,19 +140,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    //const { token, expDate } = auth;
-
     const accessToken = localStorage.getItem("token");
     const token = localStorage.getItem("refreshToken");
-
-    //const token = auth.refToken;
-
     const expDate = new Date(localStorage.getItem("expDate"));
-    const intervalTime = expDate.getTime() - Date.now() - 20000;
 
-    //const expDate = new Date(auth.expDate);
-    // const expiry = new Date(expDate);
-    // const intervalTime = expiry.getTime() - Date.now() - 20000;
+    const intervalTime = expDate.getTime() - Date.now() - 20000;
 
     if (accessToken) {
       const interval = setInterval(async () => {
