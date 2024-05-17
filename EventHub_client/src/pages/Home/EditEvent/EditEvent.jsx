@@ -365,11 +365,9 @@ const EditEvent = () => {
     } catch (error) {
       if (error.response.status === 403) {
         message.error(error.response.data);
-        navigate("/");
       } else {
         console.error("Error submitting event:", error);
         message.error(error.response.data);
-        navigate("/");
       }
     } finally {
       setSubmitChanges(false);
