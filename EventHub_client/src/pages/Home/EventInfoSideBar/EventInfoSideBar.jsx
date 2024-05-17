@@ -288,7 +288,7 @@ const EventInfoSideBar = () => {
 
   const getFormattedDate = (dateTimeString) => {
     const date = new Date(dateTimeString);
-    const month = date.toLocaleString("default", { month: "short" });
+    const month = date.toLocaleString("eng", { month: "short" });
     const day = date.getDate();
     return `${month} ${day}`;
   };

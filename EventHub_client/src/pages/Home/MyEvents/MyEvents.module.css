@@ -15,7 +15,7 @@
   background-color: var(--secondary-popup-background);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border: 1px solid #cacaca;
-  border-radius: 25px 25px 25px 25px;
+  border-radius: 25px;
   padding: 8px 8px 16px 8px;
   box-sizing: border-box;
   width: 352px;
