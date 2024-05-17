@@ -7,6 +7,7 @@ import PrimaryButton from "../../../../components/Buttons/PrimaryButton/PrimaryB
 import CloseWindowButton from "../../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import GoBackButtn from "../../../../components/Buttons/GoBackButton/GoBackButton";
 import { resetPassword } from "../../../../api/resetPassword";
+import ProcessingEffect from "../../../../components/ProcessingEffect/ProcessingEffect";
 import styles from "./ForgotPassword.module.css";
 
 const ForgotPassword = ({ logIn }) => {
@@ -14,6 +15,7 @@ const ForgotPassword = ({ logIn }) => {
   const [showButton, setShowButton] = useState(false);
   const navigate = useNavigate();
 
+  const [isProcessed, setIsProcessed] = useState(false);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const handleEmailChange = (e) => {
@@ -25,6 +27,7 @@ const ForgotPassword = ({ logIn }) => {
   const handleResetPassword = async () => {
     if (showButton) {
       try {
+        setIsProcessed(true);
         await resetPassword(email);
         message.success("Email has been sent!");
       } catch (error) {
@@ -33,42 +36,47 @@ const ForgotPassword = ({ logIn }) => {
         } else {
           message.error("Error!");
         }
+      } finally {
+        setIsProcessed(false);
       }
     }
   };
 
   return (
-    <div className={styles.Container}>
-      <div className={styles.Close}>
-        <GoBackButtn onClick={logIn} />
-        <CloseWindowButton onClick={() => navigate("/")} />
+    <>
+      {isProcessed && <ProcessingEffect />}
+      <div className={styles.Container}>
+        <div className={styles.Close}>
+          <GoBackButtn onClick={logIn} />
+          <CloseWindowButton onClick={() => navigate("/")} />
+        </div>
+        <FaLock className={styles.Lock} />
+        <div className={styles.Main}>
+          <p className={styles.MainText}>Forgot Password?</p>
+          <p className={styles.SecondText}>You can reset your password here.</p>
+        </div>
+        <p className={styles.EmailPrompt}>
+          Please enter the email address associated with your account. We will
+          send you a link to reset your password. If you do not receive an email
+          within a few minutes, please check your spam folder or try again.
+        </p>
+        <Input
+          prefix={<MdOutlineMailLock className="site-form-item-icon" />}
+          className={`${styles.Input} ${
+            email ? (showButton ? styles.InputValid : styles.InputInvalid) : ""
+          }`}
+          placeholder="Enter your email address"
+          onChange={handleEmailChange}
+        />
+        <PrimaryButton
+          onClick={handleResetPassword}
+          children={"Reset Password"}
+          className={`${styles.Button} ${
+            showButton ? styles.ActiveButton : styles.DisabledButton
+          }`}
+        />
       </div>
-      <FaLock className={styles.Lock} />
-      <div className={styles.Main}>
-        <p className={styles.MainText}>Forgot Password?</p>
-        <p className={styles.SecondText}>You can reset your password here.</p>
-      </div>
-      <p className={styles.EmailPrompt}>
-        Please enter the email address associated with your account. We will
-        send you a link to reset your password. If you do not receive an email
-        within a few minutes, please check your spam folder or try again.
-      </p>
-      <Input
-        prefix={<MdOutlineMailLock className="site-form-item-icon" />}
-        className={`${styles.Input} ${
-          email ? (showButton ? styles.InputValid : styles.InputInvalid) : ""
-        }`}
-        placeholder="Enter your email address"
-        onChange={handleEmailChange}
-      />
-      <PrimaryButton
-        onClick={handleResetPassword}
-        children={"Reset Password"}
-        className={`${styles.Button} ${
-          showButton ? styles.ActiveButton : styles.DisabledButton
-        }`}
-      />
-    </div>
+    </>
   );
 };
 

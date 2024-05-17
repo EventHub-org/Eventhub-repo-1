@@ -12,7 +12,7 @@ import java.util.UUID;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class PasswordResetRequest {
     @NotNull
-    private UUID tokenId;
+    private String token;
 
     @Pattern(regexp = "[A-Za-z\\d]{6,}",
             message = "Must be minimum 6 symbols long, using digits and latin letters")
@@ -27,8 +27,8 @@ public class PasswordResetRequest {
     public PasswordResetRequest(){
 
     }
-    public PasswordResetRequest(UUID id, String newPassword) {
-        this.tokenId = id;
+    public PasswordResetRequest(String token, String newPassword) {
+        this.token = token;
         this.newPassword = newPassword;
     }
 }

@@ -77,7 +77,7 @@ public class AuthenticationController {
         if(result.hasErrors()){
             throw new ResponseStatusException(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        log.info("**/reset password, token = " + request.getTokenId());
+        log.info("**/reset password, token = " + request.getToken());
         return ResponseEntity.ok(authService.confirmResetPassword(request));
     }
 

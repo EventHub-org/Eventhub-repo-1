@@ -88,8 +88,8 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public Response sendResetPasswordEmail(UUID tokenId, EmailRequest emailRequest) throws IOException {
-        String verificationEndPoint = this.url + "reset-password/" + tokenId.toString();
+    public Response sendResetPasswordEmail(String token, EmailRequest emailRequest) throws IOException {
+        String verificationEndPoint = this.url + "reset-password/" + token;
         return this.sendSecurityEmail(emailRequest, verificationEndPoint, "reset_password_template");
     }
 

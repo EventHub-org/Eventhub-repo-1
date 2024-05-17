@@ -135,27 +135,30 @@ public class AuthenticationService {
 
     public void resetPassword(String email) throws IOException {
         User user = this.userService.findByEmail(email);
-        PasswordResetToken token = passwordResetTokenService.create(user);
+        if(user.getPasswordResetToken() == null) {
+           PasswordResetToken token = passwordResetTokenService.create(user);
+           user.setPasswordResetToken(token);
+        }
 
         EmailRequest emailRequest = new EmailRequest(email,"Reset password", "Please, reset your password", user.getFirstName());
-        emailService.sendResetPasswordEmail(token.getId(),emailRequest);
+        emailService.sendResetPasswordEmail(user.getPasswordResetToken().getToken(),emailRequest);
     }
     public JwtResponse confirmResetPassword(PasswordResetRequest request){
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String newPassword = encoder.encode(request.getNewPassword());
-        PasswordResetToken token = passwordResetTokenService.read(request.getTokenId());
+        PasswordResetToken token = passwordResetTokenService.findByToken(request.getToken());
         if(token.isExpired()){
-            passwordResetTokenService.delete(request.getTokenId());
+            passwordResetTokenService.delete(token.getId());
             throw new PasswordException("Token is not valid!");
         }
 
         User user = token.getUser();
-        if(encoder.matches(user.getPassword(), newPassword)){
+        if(encoder.matches(request.getNewPassword(),user.getPassword())){
             throw new PasswordException("A new password cannot be the same as the old one!");
         }
 
+        String newPassword = encoder.encode(request.getNewPassword());
         user.setPassword(newPassword);
-        passwordResetTokenService.delete(request.getTokenId());
+        passwordResetTokenService.delete(token.getId());
 
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("id", user.getId());

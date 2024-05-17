@@ -21,6 +21,9 @@ public class PasswordResetToken {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(name = "token", nullable = false)
+    String token;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date expiryDate;
