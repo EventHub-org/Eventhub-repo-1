@@ -31,6 +31,7 @@ import RequestsCount from "../../../components/RequestsCount/RequestsCount";
 import { message } from "antd";
 import { getUserParticipants } from "../../../api/getUserParticipants";
 import { leaveEvent } from "../../../api/leaveEvent";
+import useStore from '../../../hooks/useStore';
 
 const EventInfoSideBar = () => {
   // States
@@ -62,6 +63,8 @@ const EventInfoSideBar = () => {
 
   const [isFull, setIsFull] = useState(true);
 
+  const setLocation = useStore((state) => state.setLocation);
+
   // Params
   const [searchParams] = useSearchParams();
 
@@ -75,6 +78,12 @@ const EventInfoSideBar = () => {
   const sideBar = useRef(null);
   const showMoreBtn = useRef(null);
   const aboutText = useRef(null);
+
+  
+  const handleLocationClick = () => {
+    setLocation(event.latitude, event.longitude);
+  };
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -354,8 +363,14 @@ const EventInfoSideBar = () => {
               </div>
 
               <div className={styles["vl"]}></div>
-              <div className={styles["location"]}>{event.location}</div>
-            </div>
+              <div
+                style={{cursor:"pointer"}}
+                className={styles["location"]}
+                onClick={handleLocationClick}
+
+              >
+                {event.location}
+              </div>            </div>
 
             {/* Participants */}
             <h3 className={styles["heading"]}>Participants</h3>
