@@ -18,6 +18,10 @@ const ResetPassword = () => {
   const [isProcessed, setIsProcessed] = useState(false);
 
   const handleSubmit = async () => {
+    if(newPassword === "" || confirmNewPassword === ""){
+      message.error("Password cannot be empty!");
+      return;
+    }
     if (newPassword !== confirmNewPassword) {
       message.error("Passwords do not match");
       return;

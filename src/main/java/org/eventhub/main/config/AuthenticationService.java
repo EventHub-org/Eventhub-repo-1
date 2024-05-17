@@ -30,13 +30,10 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.json.JsonFactory;
 
-
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.*;
 import java.time.Instant;
-
-import java.util.concurrent.ScheduledFuture;
 
 @Slf4j
 @Service
