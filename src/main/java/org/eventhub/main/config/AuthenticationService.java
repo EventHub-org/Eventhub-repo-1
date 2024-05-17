@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.eventhub.main.dto.*;
 import org.eventhub.main.exception.AccessIsDeniedException;
 import org.eventhub.main.exception.PasswordException;
+import org.eventhub.main.exception.ResponseStatusException;
 import org.eventhub.main.mapper.RegisterMapper;
 import org.eventhub.main.model.ConfirmationToken;
 import org.eventhub.main.model.PasswordResetToken;
@@ -55,34 +56,21 @@ public class AuthenticationService {
     private final ThreadPoolTaskScheduler scheduler;
 
     private final RefreshTokenService refreshTokenService;
-    private final Map<String, ScheduledFuture<?>> confirmationTasks = new HashMap<>();
 
     private final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
     @Value("${google.clientId}")
     private String googleClientId;
 
-
     private void scheduleConfirmationTask(String email) {
-        int timeForVerification = 68;
-        ScheduledFuture<?> task = scheduler.schedule(() -> {
+        int timeForVerification = 110;
+        scheduler.schedule(() -> {
             User user = userService.findByEmail(email);
             if (!user.isVerified()) {
                 userService.delete(user.getId());
             }
 
-            confirmationTasks.remove(email);
         }, Instant.now().plusSeconds(timeForVerification));
-
-        confirmationTasks.put(email, task);
-    }
-
-    private void cancelConfirmationTask(String email) {
-        ScheduledFuture<?> task = confirmationTasks.get(email);
-        if (task != null && !task.isDone()) {
-            task.cancel(true);
-            confirmationTasks.remove(email);
-        }
     }
 
     public User register(UserRequestCreate registerRequest) throws IOException {
@@ -93,7 +81,7 @@ public class AuthenticationService {
         ConfirmationToken confirmationToken = confirmationTokenService.create(user);
         
         EmailRequest emailRequest = new EmailRequest(registerRequest.getEmail(),"Verify email", "Please, verify your email", registerRequest.getFirstName());
-        emailService.sendVerificationEmail(confirmationToken.getId(), emailRequest);
+        emailService.sendVerificationEmail(confirmationToken.getToken(), emailRequest);
 
         scheduleConfirmationTask(userResponse.getEmail());
         return user;
@@ -107,17 +95,19 @@ public class AuthenticationService {
         }
 
         EmailRequest emailRequest = new EmailRequest(email, "Verify email", "Please, verify your email", user.getFirstName());
-        emailService.sendVerificationEmail(user.getConfirmationToken().getId(), emailRequest);
-
-        cancelConfirmationTask(email);
-        scheduleConfirmationTask(email);
+        emailService.sendVerificationEmail(user.getConfirmationToken().getToken(), emailRequest);
     }
 
-    public JwtResponse confirm(UUID confirmationTokenId){
-        ConfirmationToken token = this.confirmationTokenService.read(confirmationTokenId);
+    public JwtResponse confirm(String confirmationToken){
+        ConfirmationToken token = this.confirmationTokenService.findByToken(confirmationToken);
+        if(token.isExpired()){
+            this.confirmationTokenService.delete(token.getId());
+            throw new ResponseStatusException("Token is not valid!");
+        }
         UUID userId = token.getUser().getId();
 
         userService.confirmUser(userId);
+        confirmationTokenService.delete(token.getId());
 
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("id", userId);

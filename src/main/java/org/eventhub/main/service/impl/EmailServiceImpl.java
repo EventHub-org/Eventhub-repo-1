@@ -82,8 +82,8 @@ public class EmailServiceImpl implements EmailService {
         return this.sendEmail(mail);
     }
     @Override
-    public Response sendVerificationEmail(UUID tokenId, EmailRequest emailRequest) throws IOException {
-        String verificationEndPoint = this.url + "confirm/" + tokenId.toString();
+    public Response sendVerificationEmail(String token, EmailRequest emailRequest) throws IOException {
+        String verificationEndPoint = this.url + "confirm/" + token;
         return this.sendSecurityEmail(emailRequest, verificationEndPoint, "verification_template");
     }
 

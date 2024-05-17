@@ -20,11 +20,18 @@ public class ConfirmationToken {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "created_at")
+    @Column(name = "token", nullable = false)
+    String token;
+
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    @Column(nullable = false)
+    private Date expiryDate;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name="user_id")
     private User user;
+
+    public boolean isExpired() {
+        return new Date().after(this.expiryDate);
+    }
 }
