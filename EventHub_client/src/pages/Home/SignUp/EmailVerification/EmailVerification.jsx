@@ -43,7 +43,7 @@ const EmailVerification = ({ email }) => {
         </p>
         <div className={styles.Bottom}>
           <PrimaryButton children={"Resend Email"} onClick={() => resendEmail(email)} className={styles.Button}/>
-          <CountdownCircle seconds={60} onFinish={() => {}} />
+          <CountdownCircle seconds={60} onFinish={() => navigate("/")} />
         </div>
       </div>
     </div>
