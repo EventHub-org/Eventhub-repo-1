@@ -65,6 +65,7 @@ export const PlacesAutocomplete = ({
       disabled={!ready}
       placeholder="Where do you live?"
       className={styles.Select}
+      style={{ width: "100%", fontSize: "2vh", border: "0.5px solid var(--third-color)" }}
       defaultActiveFirstOption={false}
     />
   );

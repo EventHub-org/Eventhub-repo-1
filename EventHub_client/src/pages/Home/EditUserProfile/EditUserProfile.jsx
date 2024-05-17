@@ -241,7 +241,7 @@ const EditUserProfile = () => {
                   <Select
                     name="gender"
                     placeholder="Gender"
-                    className={styles.Select}
+                    className={styles.Param}
                     value={user.gender}
                     onChange={(value) => setUser({ ...user, gender: value })}
                   >
@@ -253,7 +253,7 @@ const EditUserProfile = () => {
                 <div className={styles.InputContainer}>
                   <p className={styles.Caption}>Birthday</p>
                   <DatePicker
-                    className={styles.Param}
+                    style={{ width: "100%", fontSize: "2vh", border: "0.5px solid var(--third-color)" }}
                     format={"YYYY-MM-DD"}
                     name="birth_date"
                     value={user.birth_date}
@@ -268,6 +268,7 @@ const EditUserProfile = () => {
                     name="show_email"
                     onChange={updateUserInfo}
                     value={!user.show_email}
+                    className={styles.CheckBox}
                   >
                     <p className={styles.Caption}>Show e-mail for others</p>
                   </Checkbox>
@@ -277,7 +278,7 @@ const EditUserProfile = () => {
             <div className={styles.Description}>
               <p className={styles.Caption}>About</p>
               <TextArea
-                autoSize={{ minRows: 5, maxRows: 5 }}
+                autoSize={{ minRows: 4, maxRows: 4 }}
                 name="description"
                 placeholder="Enter description..."
                 className={styles.TextArea}

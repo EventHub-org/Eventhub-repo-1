@@ -3,6 +3,7 @@
   }
 
 .Select {
+    font-size: 2vh !important;
     width: 100%;
     padding: 0;
     border: 0.5px solid var(--third-color);

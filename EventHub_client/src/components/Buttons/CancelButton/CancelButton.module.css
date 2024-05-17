@@ -1,9 +1,9 @@
 .CancelButton{
     font-family: var(--primary-font-family);
-    font-size: 20px;
+    font-size: 2.5vh;
     color: var(--third-color);
-    width: 160px;
-    height: 36px;
+    width: 20vh;
+    height: 5vh;
     background-color: var(--primary-2-popup-background);
     border: 2px solid var(--third-color);
     border-radius: 25px;
