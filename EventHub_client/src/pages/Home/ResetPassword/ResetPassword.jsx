@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Input, message } from "antd";
 import { FaUnlock } from "react-icons/fa";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButton";
 import ProcessingEffect from "../../../components/ProcessingEffect/ProcessingEffect";
-import { confirmResetPassword } from "../../../api/resetPassword";
+import AuthContext from "../../../context/authProvider";
 import styles from "./ResetPassword.module.css";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
   const { token } = useParams();
+  const { confirmResetPassword } = useContext(AuthContext);
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
