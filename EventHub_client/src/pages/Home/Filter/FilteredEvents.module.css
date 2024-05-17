@@ -15,7 +15,7 @@
   border-radius: 25px;
   font-family: var(--secondary-font-family), sans-serif;
   box-shadow: 0px 0 4px 1px var(--third-color);
-  padding: 0 10px 10px;
+  padding: 8px 8px 16px 8px;
 }
 
 .Heading {
@@ -27,6 +27,14 @@
   align-items: center;
   justify-content: space-between;
   font-size: 1.1rem;
+}
+
+.FilterResultContainer hr {
+  background-color: #cacaca;
+}
+
+.Heading h2 {
+  margin: 5px;
 }
 
 .ListEvents {

@@ -67,3 +67,7 @@
   font-size: 1.1rem;
   border-bottom: 2px solid #cacaca;
 }
+
+.Heading h2 {
+  margin: 5px;
+}

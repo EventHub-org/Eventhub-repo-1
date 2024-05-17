@@ -26,6 +26,8 @@
   border: 2px solid #ccc;
   border-radius: 15px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+
+  overflow: auto;
 }
 
 .SignUpForm {
@@ -57,13 +59,6 @@
 
 @media (width >= 1080px) and (width < 1280px) {
   .container {
-    overflow: auto;
-    width: 750px;
     height: 590px;
-  }
-
-  .Item {
-    size: 2px;
-    /* border: solid; */
   }
 }
