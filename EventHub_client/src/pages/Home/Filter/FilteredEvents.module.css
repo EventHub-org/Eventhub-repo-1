@@ -7,10 +7,10 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   width: 352px;
-  height: 553px;
+  height: 85vh;
   z-index: 990;
   left: 32px;
-  top: 12%;
+  top: 80px;
   position: absolute;
   border-radius: 30px;
   font-family: var(--secondary-font-family), sans-serif;
