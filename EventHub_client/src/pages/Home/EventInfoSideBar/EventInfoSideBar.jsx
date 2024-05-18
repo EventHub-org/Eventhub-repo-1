@@ -217,6 +217,7 @@ const EventInfoSideBar = () => {
       if (userState === ParticipantState.NONE) {
         await createParticipant(eventId);
         setUserState(ParticipantState.REQUESTED);
+        message.info("Request successful. Wait for approval");
       }
     } catch (error) {
       if (error.response) {
