@@ -199,11 +199,11 @@
 
 .CancelButton{
   color: var(--third-color);
-  background-color: var(--primary-2-popup-background);
+  background-color: #fff;
   border: 2px solid var(--third-color);
 }
 
 .CancelButton:hover{
-  background-color: var(--third-color);
-  color: var(--primary-2-popup-background);
+  color: var(--third-color);
+  background-color: #fff;
 }

@@ -27,14 +27,15 @@
 }
 
 .InnerContainer {
-    width: 68%;
-    height: 85%;
+    width: 60%;
+    height: 82%;
     margin: auto;
     background-color: var(--primary-popup-background); 
 
     display: flex;
     flex-direction: column;
     align-items: center; 
+    justify-items: center;
     border-radius: 8px;
 
     position: absolute;
