@@ -146,17 +146,12 @@
   font-size: 2vh;
 }
 
-.Select {
-  font-size: 2vh;
-  width: 100%;
-  border: 0.5px solid var(--third-color);
-  border-radius: 7px;
-}
-
 .Param {
   font-size: 2vh;
   width: 100%;
+  height: 4.2vh;
   border: 0.5px solid var(--third-color);
+  border-radius: 7px;
 }
 
 .CheckBox{

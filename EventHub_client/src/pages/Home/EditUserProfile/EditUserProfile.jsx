@@ -234,6 +234,14 @@ const EditUserProfile = () => {
                     onSelectLocation={handleCityUpdate}
                     initialValue={user.city}
                     cancelChanges={cancelAddress}
+                    style={{
+                      width: "100%",
+                      height: "4.2vh",
+                      border: "0.5px solid var(--third-color)",
+                      borderRadius: "7px",
+                      cursor: "pointer",
+                      fontSize: "2vh",
+                    }}
                   />
                 </div>
                 <div className={styles.InputContainer}>
@@ -242,6 +250,7 @@ const EditUserProfile = () => {
                     name="gender"
                     placeholder="Gender"
                     className={styles.Param}
+                    dropdownStyle={{ fontSize: "2vh" }} 
                     value={user.gender}
                     onChange={(value) => setUser({ ...user, gender: value })}
                   >
@@ -253,7 +262,14 @@ const EditUserProfile = () => {
                 <div className={styles.InputContainer}>
                   <p className={styles.Caption}>Birthday</p>
                   <DatePicker
-                    style={{ width: "100%", fontSize: "2vh", border: "0.5px solid var(--third-color)" }}
+                    style={{
+                      width: "100%",
+                      height: "4.2vh",
+                      border: "0.5px solid var(--third-color)",
+                      borderRadius: "7px",
+                      cursor: "pointer",
+                      fontSize: "2vh",
+                    }}
                     format={"YYYY-MM-DD"}
                     name="birth_date"
                     value={user.birth_date}
