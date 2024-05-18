@@ -16,7 +16,7 @@ import GetLocationByCoordinates from "../../../api/getLocationByCoordinates";
 import useAuth from "../../../hooks/useAuth";
 import useStore from '../../../hooks/useStore';
 import { message } from "antd";
-import {AimOutlined} from "@ant-design/icons";
+import { AimOutlined } from "@ant-design/icons";
 
 const containerStyle = {
   width: "100%",
@@ -39,12 +39,12 @@ const defaultOption = {
   maxZoom: 20,
   restriction: {
     latLngBounds: {
-      north: 85, 
+      north: 85,
       south: -80,
       west: -180,
-      east: 180, 
+      east: 180,
     },
-    strictBounds: false, 
+    strictBounds: false,
   },
 
 };
@@ -77,7 +77,7 @@ const Map = () => {
       mapRef.current.setZoom(17);
     }
   }, [location]);
-  
+
   useEffect(() => {
     const searchValue = searchParams.get("search");
 
@@ -123,8 +123,6 @@ const Map = () => {
     };
 
     fetchData();
-    // Запитати локацію користувача при вході
-    handleCenterMap()
   }, [searchParams]);
   const onMarkerClick = (event) => {
     navigate({
@@ -151,7 +149,10 @@ const Map = () => {
       console.log("Error fetching location data");
     }
   };
-  
+
+  useEffect(() => {
+    handleCenterMap()
+  }, [])
   const handleCenterMap = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -160,6 +161,7 @@ const Map = () => {
           mapRef.current.panTo({ lat: latitude, lng: longitude }); // Плавно центрує мапу
           mapRef.current.setZoom(17); // Змінює зум мапи
           setUserLocation({ lat: latitude, lng: longitude })
+          console.log(position)
         },
         (error) => {
           console.error("Error getting user location:", error);
@@ -186,7 +188,7 @@ const Map = () => {
         options={defaultOption}
         onClick={handleMapClick}
       >
-       {/* <MarkerClusterer>
+        {/* <MarkerClusterer>
   {(clusterer) =>
     events.map((event) => {
       console.log(clusterer); // Розмістіть console.log тут
@@ -209,7 +211,7 @@ const Map = () => {
   }
 </MarkerClusterer> */}
 
-{userLocation && (
+        {userLocation && (
           <Marker
             position={userLocation}
             icon={{
@@ -236,7 +238,7 @@ const Map = () => {
               />
             );
           })}
-          {selectedPlace && showMarker && (
+        {selectedPlace && showMarker && (
           <Marker
             position={{ lat: selectedPlace.lat, lng: selectedPlace.lng }}
             icon={{
@@ -261,10 +263,10 @@ const Map = () => {
               onClick={() => onMarkerClick(event)}
             />
           ))}
-          
+
       </GoogleMap>
       <div className={styles.centerButton}>
-        <RoundButton icon={<AimOutlined />} onClick={handleCenterMap}/>
+        <RoundButton icon={<AimOutlined />} onClick={handleCenterMap} />
       </div>
     </div>
   );
