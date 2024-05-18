@@ -141,12 +141,12 @@ main {
   }
 
   .requested-participant-container {
-    height: 53px;
+    height: 45px;
   }
 
   .requested-participant-photo {
-    width: 53px;
-    height: 53px;
+    width: 45px;
+    height: 45px;
   }
 
   .username {
