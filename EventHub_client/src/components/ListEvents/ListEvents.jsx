@@ -21,7 +21,7 @@ const SearchResults = ({ eventsData }) => {
     setLocation(event.latitude, event.longitude);
   };
 
-  const handleClick = (eventId) => {
+  const handleClick = (ownerId,eventId) => {
     const event = eventsData.find(event => event.id === eventId);
     handleLocationClick(event)
     navigate({
