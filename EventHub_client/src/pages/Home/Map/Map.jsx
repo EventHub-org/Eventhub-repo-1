@@ -161,7 +161,6 @@ const Map = () => {
           mapRef.current.panTo({ lat: latitude, lng: longitude }); // Плавно центрує мапу
           mapRef.current.setZoom(17); // Змінює зум мапи
           setUserLocation({ lat: latitude, lng: longitude })
-          console.log(position)
         },
         (error) => {
           console.error("Error getting user location:", error);
