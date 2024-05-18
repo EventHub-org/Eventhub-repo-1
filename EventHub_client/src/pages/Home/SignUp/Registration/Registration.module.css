@@ -30,11 +30,21 @@
   overflow: auto;
 }
 
+.oauthContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .SignUpForm {
   width: 600px;
   height: auto;
   display: flex;
   flex-direction: column;
+}
+
+.SignUpForm h1 {
+  margin: 0;
 }
 
 .Photo {

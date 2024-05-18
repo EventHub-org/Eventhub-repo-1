@@ -8,6 +8,7 @@ import CloseWindowButton from "../../../../components/Buttons/CloseWindowButton/
 import ProcessingEffect from "../../../../components/ProcessingEffect/ProcessingEffect";
 import useAuth from "../../../../hooks/useAuth";
 import AuthContext from "../../../../context/authProvider";
+import { GoogleLogin } from "@react-oauth/google";
 
 import { Button, Checkbox, Col, Form, Input, Row, Select, message } from "antd";
 
@@ -57,7 +58,24 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
   const [city, setCity] = useState("");
   const [email, setEmail] = useState("");
 
-  const { register } = useContext(AuthContext);
+  const { register, googleAuth } = useContext(AuthContext);
+
+  const successGoogleLogin = async (credentialResponse) => {
+    const googleToken = credentialResponse.credential;
+
+    const res = await googleAuth(googleToken);
+
+    const email = res?.data?.email;
+    const accessToken = res?.data?.accessToken;
+    setUserEmail(email);
+    if (!accessToken) {
+      setIsRegistered(false);
+    } else {
+      navigate("/");
+      window.location.reload();
+      message.success("Login successful!");
+    }
+  };
 
   const handleSubmit = async () => {
     const userData = {
@@ -326,6 +344,18 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
               </span>
             </Form.Item>
           </Form>
+          {/* <div className={styles.oauthContainer}>
+            <GoogleLogin
+              onSuccess={successGoogleLogin}
+              onError={() => {
+                console.log("Login Failed");
+              }}
+              useOneTap
+              ux_mode="popup"
+              shape="pill"
+              // login_uri="http://localhost:3000/login"
+            />
+          </div> */}
         </div>
       </div>
     </>
