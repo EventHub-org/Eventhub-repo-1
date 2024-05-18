@@ -155,6 +155,11 @@
     gap: 16px; /* Відступи між елементами */
     margin-bottom: 20px;
   }
+  @media (max-height: 650px) {
+    .row {
+      margin-bottom: 5px;
+    }
+  }
   .ParamContainer{
     width: 100%;
   }
