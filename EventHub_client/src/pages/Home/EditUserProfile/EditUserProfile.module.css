@@ -21,10 +21,10 @@
   height: 87%;
   margin: auto;
 
-  background-color: var(--primary-popup-background); 
+  background-color: var(--primary-popup-background);
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
   border-radius: 8px;
 
   position: absolute;
@@ -32,7 +32,6 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
 
 .Header {
   width: 100%;
@@ -154,7 +153,7 @@
   border-radius: 7px;
 }
 
-.CheckBox{
+.CheckBox {
   width: 35vh;
 }
 
@@ -184,26 +183,26 @@
   margin: 0 5px;
 }
 
-.CustomInput{
+.CustomInput {
   cursor: auto;
   color: inherit;
   height: 100%;
   font-size: 2vh !important;
 }
 
-.Button{
+.Button {
   font-size: 2.5vh;
   width: 20vh;
   height: 5vh;
 }
 
-.CancelButton{
+.CancelButton {
   color: var(--third-color);
   background-color: #fff;
   border: 2px solid var(--third-color);
 }
 
-.CancelButton:hover{
+.CancelButton:hover {
   color: var(--third-color);
   background-color: #fff;
 }
