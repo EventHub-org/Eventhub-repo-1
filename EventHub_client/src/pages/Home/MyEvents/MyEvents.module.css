@@ -10,7 +10,6 @@
   position: absolute;
   top: 80px;
   left: 32px;
-  width: 100%;
   height: 85vh;
   background-color: var(--secondary-popup-background);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -70,4 +69,16 @@
 
 .Heading h2 {
   margin: 5px;
+}
+
+@media (width >= 1080px) and (width < 1280px) {
+  .Heading {
+    font-size: var(--xxs-size);
+  }
+}
+
+@media (width >= 1280px) and (width < 1700px) {
+  .Heading {
+    font-size: var(--xs-size);
+  }
 }

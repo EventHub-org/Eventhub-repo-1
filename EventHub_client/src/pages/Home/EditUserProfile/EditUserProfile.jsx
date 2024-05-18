@@ -249,13 +249,19 @@ const EditUserProfile = () => {
                     name="gender"
                     placeholder="Gender"
                     className={styles.Param}
-                    dropdownStyle={{ fontSize: "2vh" }} 
+                    dropdownStyle={{ fontSize: "2vh" }}
                     value={user.gender}
                     onChange={(value) => setUser({ ...user, gender: value })}
                   >
-                    <Option style={{fontSize:"2vh"}} value="MALE">Male</Option>
-                    <Option style={{fontSize:"2vh"}} value="FEMALE">Female</Option>
-                    <Option style={{fontSize:"2vh"}} value="OTHER">Other</Option>
+                    <Option style={{ fontSize: "2vh" }} value="MALE">
+                      Male
+                    </Option>
+                    <Option style={{ fontSize: "2vh" }} value="FEMALE">
+                      Female
+                    </Option>
+                    <Option style={{ fontSize: "2vh" }} value="OTHER">
+                      Other
+                    </Option>
                   </Select>
                 </div>
                 <div className={styles.InputContainer}>
@@ -302,8 +308,16 @@ const EditUserProfile = () => {
               />
             </div>
             <div className={styles.Buttons}>
-              <PrimaryButton children={"Discrad"} onClick={handleCancel} className={`${styles.CancelButton} ${styles.Button}`}/>
-              <PrimaryButton children={"Apply"} onClick={applyChanges} className={styles.Button}/>
+              <PrimaryButton
+                children={"Discrad"}
+                onClick={handleCancel}
+                className={`${styles.CancelButton} ${styles.Button}`}
+              />
+              <PrimaryButton
+                children={"Apply"}
+                onClick={applyChanges}
+                className={styles.Button}
+              />
             </div>
           </form>
         </>

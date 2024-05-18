@@ -57,6 +57,10 @@
   width: 100%;
 }
 
+.Input {
+  height: 32px;
+}
+
 @media (width >= 1080px) and (width < 1280px) {
   .container {
     height: 590px;

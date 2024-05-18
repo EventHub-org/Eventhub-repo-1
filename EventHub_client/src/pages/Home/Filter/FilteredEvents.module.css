@@ -42,3 +42,15 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
+
+@media (width >= 1080px) and (width < 1280px) {
+  .Heading {
+    font-size: var(--xxs-size);
+  }
+}
+
+@media (width >= 1280px) and (width < 1700px) {
+  .Heading {
+    font-size: var(--xs-size);
+  }
+}

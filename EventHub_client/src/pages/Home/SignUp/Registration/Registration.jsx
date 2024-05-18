@@ -131,6 +131,7 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
                   ]}
                 >
                   <Input
+                    className={styles.Input}
                     placeholder="First name"
                     onChange={(e) => setFirstName(e.target.value)}
                   />
@@ -152,6 +153,7 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
                   ]}
                 >
                   <Input
+                    className={styles.Input}
                     placeholder="Last name"
                     onChange={(e) => setLastName(e.target.value)}
                   />
@@ -173,6 +175,7 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
                   hasFeedback
                 >
                   <Input.Password
+                    className={styles.Input}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </Form.Item>
@@ -221,6 +224,7 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
                   ]}
                 >
                   <Input
+                    className={styles.Input}
                     onChange={(e) => setNickname(e.target.value)}
                     placeholder="Your Nick Name"
                   />
@@ -284,6 +288,7 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
                   ]}
                 >
                   <Input
+                    className={styles.Input}
                     style={{
                       width: "100%",
                     }}
