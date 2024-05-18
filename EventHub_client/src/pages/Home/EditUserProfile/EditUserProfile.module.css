@@ -183,3 +183,27 @@
   font-size: 2vh;
   margin: 0 5px;
 }
+
+.CustomInput{
+  cursor: auto;
+  color: inherit;
+  height: 100%;
+  font-size: 2vh !important;
+}
+
+.Button{
+  font-size: 2.5vh;
+  width: 20vh;
+  height: 5vh;
+}
+
+.CancelButton{
+  color: var(--third-color);
+  background-color: var(--primary-2-popup-background);
+  border: 2px solid var(--third-color);
+}
+
+.CancelButton:hover{
+  background-color: var(--third-color);
+  color: var(--primary-2-popup-background);
+}

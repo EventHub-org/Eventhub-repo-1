@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input, Select, DatePicker, Checkbox, message } from "antd";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
-import CancelButton from "../../../components/Buttons/CancelButton/CancelButton";
-import ApplyChangesButton from "../../../components/Buttons/ApplyChangesButton/ApplyChangesButton";
+import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButton";
 import { CameraOutlined, DeleteOutlined } from "@ant-design/icons";
 import { sendDataWithoutPhotos } from "../../../api/updateUserInfo";
 import { deleteUserPhotos } from "../../../api/updateUserInfo";
@@ -254,9 +253,9 @@ const EditUserProfile = () => {
                     value={user.gender}
                     onChange={(value) => setUser({ ...user, gender: value })}
                   >
-                    <Option value="MALE">Male</Option>
-                    <Option value="FEMALE">Female</Option>
-                    <Option value="OTHER">Other</Option>
+                    <Option style={{fontSize:"2vh"}} value="MALE">Male</Option>
+                    <Option style={{fontSize:"2vh"}} value="FEMALE">Female</Option>
+                    <Option style={{fontSize:"2vh"}} value="OTHER">Other</Option>
                   </Select>
                 </div>
                 <div className={styles.InputContainer}>
@@ -303,8 +302,8 @@ const EditUserProfile = () => {
               />
             </div>
             <div className={styles.Buttons}>
-              <CancelButton onclick={handleCancel} />
-              <ApplyChangesButton onClick={applyChanges} />
+              <PrimaryButton children={"Discrad"} onClick={handleCancel} className={`${styles.CancelButton} ${styles.Button}`}/>
+              <PrimaryButton children={"Apply"} onClick={applyChanges} className={styles.Button}/>
             </div>
           </form>
         </>

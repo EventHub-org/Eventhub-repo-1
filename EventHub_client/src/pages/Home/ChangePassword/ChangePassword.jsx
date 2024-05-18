@@ -2,10 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useLogin from "../../../hooks/useLogin";
 import { Input, message } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
-import CancelButton from "../../../components/Buttons/CancelButton/CancelButton";
-import ApplyChangesButton from "../../../components/Buttons/ApplyChangesButton/ApplyChangesButton";
+import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButton";
 import { changePassword } from "../../../api/changePassword";
 import styles from "./ChangePassword.module.css";
 import ProcessingEffect from "../../../components/ProcessingEffect/ProcessingEffect";
@@ -113,8 +111,8 @@ const ChangePassword = () => {
               </div>
             </div>
             <div className={styles.Buttons}>
-              <CancelButton onclick={handleClose} />
-              <ApplyChangesButton onClick={handleApply} />
+              <PrimaryButton children={"Cancel"} onClick={handleClose} className={`${styles.CancelButton} ${styles.Button}`}/>
+              <PrimaryButton children={"Apply"} onClick={handleApply} className={styles.Button}/>
             </div>
           </div>
         </div>
