@@ -3,6 +3,8 @@ import { refreshToken } from "../jwt/refreshToken";
 import axios from "../api/axios";
 import { message } from "antd";
 
+import Cookies from "js-cookie";
+
 const LOGIN_URL = "/authentication/login";
 const REGISTER_URL = "/authentication/register";
 const LOGOUT_URL = "/authentication/logout";
@@ -45,6 +47,9 @@ export const AuthProvider = ({ children }) => {
     const accessToken = res?.data?.accessToken;
     const refToken = res?.data?.refreshToken;
     const expiryDate = res?.data?.expiryDate;
+
+    //Cookies.set("ref", refToken);
+    //Cookies.set("exp", expiryDate);
 
     localStorage.setItem("token", accessToken);
     localStorage.setItem("refreshToken", refToken);
@@ -141,8 +146,12 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const accessToken = localStorage.getItem("token");
+
     const token = localStorage.getItem("refreshToken");
+    //const token = Cookies.get("ref");
+
     const expDate = new Date(localStorage.getItem("expDate"));
+    //const expDate = new Date(Cookies.get("exp"));
 
     const intervalTime = expDate.getTime() - Date.now() - 20000;
 
