@@ -375,6 +375,19 @@ const CreateEvent = () => {
       setProcessing(false);
     }
   };
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") {
+      handleCloseButton();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <>
@@ -505,7 +518,7 @@ const CreateEvent = () => {
                       />
                     </div>
                     <div className={styles.ParamContainer}>
-                      <div className={styles.ParamLabel}>Participants</div>
+                      <div className={styles.ParamLabel}>Max participants</div>
                       <Input
                         placeholder="Participants"
                         className={styles.Param}

@@ -16,6 +16,8 @@ public interface UserService extends UserDetailsService {
 
     User readByIdEntity(UUID id);
 
+    UserResponseBriefInfo readByIdBriefInfo(UUID id);
+
     UserResponse readByUsername(String username);
 
     String getUsername(UUID id);
@@ -31,4 +33,7 @@ public interface UserService extends UserDetailsService {
 
     void deleteImage(UUID userId, Photo image);
     UserResponse changePassword(UUID userId, PasswordRequest passwordRequest);
+
+    UserResponse confirmUser(UUID id);
+    List<User> findApprovedUsersByEventId(UUID eventId);
 }

@@ -33,6 +33,8 @@ import { getUserParticipants } from "../../../api/getUserParticipants";
 import { leaveEvent } from "../../../api/leaveEvent";
 import useStore from '../../../hooks/useStore';
 
+import useLogin from "../../../hooks/useLogin";
+
 const EventInfoSideBar = () => {
   // States
   const { eventId } = useParams();
@@ -55,7 +57,7 @@ const EventInfoSideBar = () => {
 
   const [reloadList, setReloadList] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [joinedParticipants, setJoinedParticipants] = useState(null);
 
@@ -69,7 +71,8 @@ const EventInfoSideBar = () => {
   const [searchParams] = useSearchParams();
 
   // Auth
-  const { auth } = useAuth();
+  //const { auth } = useAuth();
+  const authenticated = useLogin();
 
   // Navigation
   const navigate = useNavigate();
@@ -88,7 +91,8 @@ const EventInfoSideBar = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (auth.token) {
+        setIsLoading(true);
+        if (authenticated) {
           const userState = await getParticipantState(eventId);
           setUserState(userState.state);
           setIsOwner(userState.owner);
@@ -104,7 +108,6 @@ const EventInfoSideBar = () => {
 
         const fullEventData = await getFullEventById(eventId);
         setEvent(fullEventData);
-        setIsLoading(false);
         setIsFull(
           fullEventData.max_participants === fullEventData.participant_count
         );
@@ -164,13 +167,15 @@ const EventInfoSideBar = () => {
           }
         }
         navigate("/");
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchData();
 
     return () => setIsShowMore(false);
-  }, [eventId, auth, userState, reloadList]);
+  }, [eventId, userState, reloadList]);
 
   useEffect(() => {
     if (
@@ -192,10 +197,6 @@ const EventInfoSideBar = () => {
     };
     resetSideBar();
   }, [eventId]);
-
-  useEffect(() => {
-    showAllParticipants && setIsLoading(true);
-  }, [showAllParticipants]);
 
   // Funcs
 
@@ -245,7 +246,7 @@ const EventInfoSideBar = () => {
     try {
       if (userState === ParticipantState.REQUESTED) {
         const participant = await getParticipantByUser(eventId);
-        await deleteParticipant(participant.id, eventId);
+        await leaveEvent(participant.id, eventId);
         setUserState(ParticipantState.NONE);
       }
     } catch (error) {
@@ -519,7 +520,6 @@ const EventInfoSideBar = () => {
 
       {showAllParticipants && !showRequests && joinedParticipants && owner && (
         <ParticipantsList
-          setIsLoading={setIsLoading}
           handleGoBackToSideBar={handleShowAllParticipants}
           handleCloseWindow={handleCloseWindow}
           handleShowRequests={handleShowRequests}

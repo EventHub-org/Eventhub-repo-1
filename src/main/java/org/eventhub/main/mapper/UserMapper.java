@@ -1,9 +1,6 @@
 package org.eventhub.main.mapper;
 
-import org.eventhub.main.dto.PhotoResponse;
-import org.eventhub.main.dto.UserRequestCreate;
-import org.eventhub.main.dto.UserRequestUpdate;
-import org.eventhub.main.dto.UserResponse;
+import org.eventhub.main.dto.*;
 import org.eventhub.main.exception.NullDtoReferenceException;
 import org.eventhub.main.exception.NullEntityReferenceException;
 import org.eventhub.main.model.Photo;
@@ -16,12 +13,14 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class UserMapper {
     private final PhotoMapper photoMapper;
     private final PhotoRepository photoRepository;
+
     @Autowired
     public UserMapper(PhotoMapper photoMapper, PhotoRepository photoRepository){
         this.photoMapper = photoMapper;
@@ -43,6 +42,7 @@ public class UserMapper {
                 .birthDate(user.getBirthDate())
                 .gender(user.getGender())
                 .showEmail(user.isShowEmail())
+                .provider(user.getProvider())
                 .photoResponses(user.getProfileImages()
                         .stream()
                         .map(photoMapper::entityToResponse)
@@ -53,6 +53,15 @@ public class UserMapper {
             response.getPhotoResponses().add(photoMapper.entityToResponse(photo));
         }
         return response;
+    }
+
+    public UserResponseBriefInfo entityToBriefResponse(User user){
+        return UserResponseBriefInfo.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .build();
     }
 
     public User createRequestToEntity(UserRequestCreate userRequest, User user) {
@@ -72,6 +81,9 @@ public class UserMapper {
         user.setCity(userRequest.getCity());
         user.setGender(userRequest.getGender());
         user.setShowEmail(false);
+        user.setProvider(userRequest.getProvider());
+
+        user.setVerified(userRequest.isVerified());
         return user;
     }
 
