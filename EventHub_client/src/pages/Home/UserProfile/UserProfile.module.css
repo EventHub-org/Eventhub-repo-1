@@ -1,152 +1,151 @@
 * {
-    box-sizing: border-box;
-    font-family: var(--primary-font-family);
-}   
+  box-sizing: border-box;
+  font-family: var(--primary-font-family);
+}
 
-.Loading{
-    flex: 3;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+.Loading {
+  flex: 3;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .OuterContainer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
 }
 
 .InnerContainer {
-    width: 60%;
-    height: 82%;
-    margin: auto;
-    background-color: var(--primary-popup-background); 
+  width: 60%;
+  height: 82%;
+  margin: auto;
+  background-color: var(--primary-popup-background);
 
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-    justify-items: center;
-    border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: center;
+  border-radius: 8px;
 
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.Title{
-    width: 95%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-
+.Title {
+  width: 95%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.Heading{
-    font-size: 3vh;
-    font-weight:500;
-    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
+.Heading {
+  font-size: 3vh;
+  font-weight: 500;
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
 }
 
 .MainInfo {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 }
 
 .AboutUser {
-    width: 65%;
-    margin-top: 3.5vh;
-    padding: 0;
+  width: 65%;
+  margin-top: 3.5vh;
+  padding: 0;
 }
 
 .Header {
-    width: 100%;
-    line-height: 2vh;
-    margin-bottom: 1vh;
+  width: 100%;
+  line-height: 2vh;
+  margin-bottom: 1vh;
 }
 
 .MainCaption {
-    font-size: 3vh;
-    font-weight: 650;
-    margin: 0;
-    padding: 0;
+  font-size: 3vh;
+  font-weight: 650;
+  margin: 0;
+  padding: 0;
 }
 
 .SecondaryCaption {
-    font-size: 2.5vh;
-    margin: 0;
-    margin-top: 0.5vh;
-    padding: 0;
+  font-size: 2.5vh;
+  margin: 0;
+  margin-top: 0.5vh;
+  padding: 0;
 }
 
 .Information {
-    margin: 0;
-    width: 100;
-    margin-top: 3.5vh;
-    margin-bottom: 3vh;
-    padding: 0;
-    line-height: 2vh;
+  margin: 0;
+  width: 100;
+  margin-top: 3.5vh;
+  margin-bottom: 3vh;
+  padding: 0;
+  line-height: 2vh;
 }
 
 .InformationText {
-    width: 95%;
-    color: var(--third-color);
-    font-size: 2.5vh;
-    border-bottom: 1.5px solid var(--third-color);
-    margin: 0;
-    margin-bottom: 2.5vh;
-    padding-bottom:0.25vh;
+  width: 95%;
+  color: var(--third-color);
+  font-size: 2.5vh;
+  border-bottom: 1.5px solid var(--third-color);
+  margin: 0;
+  margin-bottom: 2.5vh;
+  padding-bottom: 0.25vh;
 }
 
-.NoInfo{
-    margin: 1vh 0;
-    color: #AAA;
+.NoInfo {
+  margin: 1vh 0;
+  color: #aaa;
 }
 
 .InfoBox {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    margin: 0;
-    padding: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
 }
 
 .Caption {
-    font-size: 2vh;
-    font-weight: 600;
-    width: 22vh;
-    margin: 1.5vh 0;
+  font-size: 2vh;
+  font-weight: 600;
+  width: 22vh;
+  margin: 1.5vh 0;
 }
 
 .Info {
-    font-size: 2vh;
-    margin: 1.5vh 0;
+  font-size: 2vh;
+  margin: 1.5vh 0;
 }
 
 .DescriptionBox {
-    font-size: 2vh;
-    width: 95%;
-    height: 30%;
-    margin: 2vh;
-    margin-top: 0;
+  font-size: 2vh;
+  width: 95%;
+  height: 30%;
+  margin: 2vh;
+  margin-top: 0;
 }
 
 .DescriptionCaption {
-    color: var(--third-color);
-    font-size: 2.5vh;
-    width: 100%;
-    border-bottom: 1.5px solid var(--third-color);
-    margin-bottom: 1.5vh;
+  color: var(--third-color);
+  font-size: 2.5vh;
+  width: 100%;
+  border-bottom: 1.5px solid var(--third-color);
+  margin-bottom: 1.5vh;
 }

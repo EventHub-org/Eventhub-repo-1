@@ -31,6 +31,7 @@ import RequestsCount from "../../../components/RequestsCount/RequestsCount";
 import { message } from "antd";
 import { getUserParticipants } from "../../../api/getUserParticipants";
 import { leaveEvent } from "../../../api/leaveEvent";
+import useStore from '../../../hooks/useStore';
 
 import useLogin from "../../../hooks/useLogin";
 
@@ -56,13 +57,15 @@ const EventInfoSideBar = () => {
 
   const [reloadList, setReloadList] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [joinedParticipants, setJoinedParticipants] = useState(null);
 
   const [requests, setRequests] = useState(null);
 
   const [isFull, setIsFull] = useState(true);
+
+  const setLocation = useStore((state) => state.setLocation);
 
   // Params
   const [searchParams] = useSearchParams();
@@ -79,9 +82,16 @@ const EventInfoSideBar = () => {
   const showMoreBtn = useRef(null);
   const aboutText = useRef(null);
 
+  
+  const handleLocationClick = () => {
+    setLocation(event.latitude, event.longitude);
+  };
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         if (authenticated) {
           const userState = await getParticipantState(eventId);
           setUserState(userState.state);
@@ -98,7 +108,6 @@ const EventInfoSideBar = () => {
 
         const fullEventData = await getFullEventById(eventId);
         setEvent(fullEventData);
-        setIsLoading(false);
         setIsFull(
           fullEventData.max_participants === fullEventData.participant_count
         );
@@ -158,6 +167,8 @@ const EventInfoSideBar = () => {
           }
         }
         navigate("/");
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -186,10 +197,6 @@ const EventInfoSideBar = () => {
     };
     resetSideBar();
   }, [eventId]);
-
-  useEffect(() => {
-    showAllParticipants && setIsLoading(true);
-  }, [showAllParticipants]);
 
   // Funcs
 
@@ -358,8 +365,14 @@ const EventInfoSideBar = () => {
               </div>
 
               <div className={styles["vl"]}></div>
-              <div className={styles["location"]}>{event.location}</div>
-            </div>
+              <div
+                style={{cursor:"pointer"}}
+                className={styles["location"]}
+                onClick={handleLocationClick}
+
+              >
+                {event.location}
+              </div>            </div>
 
             {/* Participants */}
             <h3 className={styles["heading"]}>Participants</h3>
@@ -508,7 +521,6 @@ const EventInfoSideBar = () => {
 
       {showAllParticipants && !showRequests && joinedParticipants && owner && (
         <ParticipantsList
-          setIsLoading={setIsLoading}
           handleGoBackToSideBar={handleShowAllParticipants}
           handleCloseWindow={handleCloseWindow}
           handleShowRequests={handleShowRequests}

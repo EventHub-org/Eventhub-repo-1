@@ -365,11 +365,9 @@ const EditEvent = () => {
     } catch (error) {
       if (error.response.status === 403) {
         message.error(error.response.data);
-        navigate("/");
       } else {
         console.error("Error submitting event:", error);
         message.error(error.response.data);
-        navigate("/");
       }
     } finally {
       setSubmitChanges(false);
@@ -393,8 +391,8 @@ const EditEvent = () => {
   };
   const handleKeyDown = (event) => {
 
-    if (event.key === 'Escape') {
-      event.preventDefault(); 
+    if (event.key === "Escape") {
+      event.preventDefault();
       clearEventData();
     }
   };
@@ -529,7 +527,7 @@ const EditEvent = () => {
                 />
               </div>
               <div className={styles.ParamContainer}>
-                <div className={styles.ParamLabel}>Participants</div>
+                <div className={styles.ParamLabel}>Max participants</div>
                 <Input
                   placeholder="Participants"
                   className={styles.Param}
