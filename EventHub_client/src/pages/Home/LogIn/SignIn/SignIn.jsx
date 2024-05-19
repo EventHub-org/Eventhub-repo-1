@@ -160,11 +160,11 @@ const SignIn = ({ forgotPassword }) => {
             placeholder="Password"
           />
         </Form.Item>
-        <Form.Item>
+        <Form.Item className={styles.forgotPasswordContainer}>
           <div className={styles.RememberMe}>
-            <Form.Item name="remember" valuePropName="checked" noStyle>
+            {/* <Form.Item name="remember" valuePropName="checked" noStyle>
               <Checkbox>Remember me</Checkbox>
-            </Form.Item>
+            </Form.Item> */}
             <button className={styles.forgotPassword} onClick={forgotPassword}>
               Forgot password
             </button>

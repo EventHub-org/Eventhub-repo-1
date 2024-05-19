@@ -69,6 +69,10 @@
   display: flex;
   justify-content: center;
 }
+.forgotPasswordContainer {
+  display: flex;
+  justify-content: center;
+}
 
 .forgotPassword {
   color: #1677ff;
