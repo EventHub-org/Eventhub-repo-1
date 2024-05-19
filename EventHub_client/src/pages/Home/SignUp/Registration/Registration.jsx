@@ -344,7 +344,7 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
               </span>
             </Form.Item>
           </Form>
-          {/* <div className={styles.oauthContainer}>
+          <div className={styles.oauthContainer}>
             <GoogleLogin
               onSuccess={successGoogleLogin}
               onError={() => {
@@ -353,9 +353,8 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
               useOneTap
               ux_mode="popup"
               shape="pill"
-              // login_uri="http://localhost:3000/login"
             />
-          </div> */}
+          </div>
         </div>
       </div>
     </>

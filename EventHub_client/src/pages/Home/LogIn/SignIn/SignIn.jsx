@@ -165,10 +165,7 @@ const SignIn = ({ forgotPassword }) => {
             <Form.Item name="remember" valuePropName="checked" noStyle>
               <Checkbox>Remember me</Checkbox>
             </Form.Item>
-            <button
-              className={styles.forgotPassword}
-              onClick={forgotPassword}
-            >
+            <button className={styles.forgotPassword} onClick={forgotPassword}>
               Forgot password
             </button>
           </div>
@@ -195,7 +192,13 @@ const SignIn = ({ forgotPassword }) => {
             // login_uri="http://localhost:3000/login"
           />
         </div>
-        <p style={{ textAlign: "center", fontSize: "12px" }}>
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: "12px",
+            margin: "21px",
+          }}
+        >
           Don’t have an account in EventHub yet?{" "}
           <Link to="/register">Register!</Link>
         </p>
