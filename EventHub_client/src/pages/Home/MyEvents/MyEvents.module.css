@@ -73,7 +73,7 @@
 
 .InnerContainer {
   position: relative;
-  border: solid;
+  height: 100%;
 }
 
 .loading-circle {
