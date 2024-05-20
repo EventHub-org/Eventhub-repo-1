@@ -4,6 +4,7 @@ import SearchInput from "./SearchInput";
 import ListEvents from "../../../components/ListEvents/ListEvents";
 import { getEventsDataSearch } from "../../../api/getEventsData";
 import { useSearchParams } from "react-router-dom";
+import ProcessingEffect from "../../../components/ProcessingEffect/ProcessingEffect";
 
 const SearchEvents = () => {
   const [searchValue, setSearchValue] = useState(""); //змінна для поточного значення в полі вводу
@@ -11,12 +12,14 @@ const SearchEvents = () => {
   const [eventsData, setEventsData] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchedValue, setSearchedValue] = useState(""); //  змінна для збереження значення для якого відбувся пошук
+  const [loading, setLoading] = useState(false);
 
   const handleSearch = async (event) => {
     event.preventDefault();
     // Перевірка, чи не є searchValue порожнім рядком(враховуючи пробіли)
     if (searchValue.trim() !== "") {
       try {
+        setLoading(true);
         const data = await getEventsDataSearch(searchValue);
         setEventsData(data);
         setSearchParams({ search: searchValue });
@@ -24,6 +27,8 @@ const SearchEvents = () => {
         setSearchedValue(searchValue);
       } catch (error) {
         console.error("Error getting events data:", error);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -55,6 +60,7 @@ const SearchEvents = () => {
         showResults ? styles.active : styles.inactive
       }`}
     >
+      {loading && <ProcessingEffect />}
       <div className={styles.SearchInput}>
         <SearchInput
           searchedValue={searchedValue}
