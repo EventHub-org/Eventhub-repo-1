@@ -197,6 +197,7 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
                   hasFeedback
                 >
                   <Input.Password
+                    placeholder="Your password"
                     className={styles.Input}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -226,7 +227,7 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
                     }),
                   ]}
                 >
-                  <Input.Password />
+                  <Input.Password placeholder="Your password" />
                 </Form.Item>
               </Col>
             </Row>
@@ -311,6 +312,7 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
                 >
                   <Input
                     className={styles.Input}
+                    placeholder="Email"
                     style={{
                       width: "100%",
                     }}
