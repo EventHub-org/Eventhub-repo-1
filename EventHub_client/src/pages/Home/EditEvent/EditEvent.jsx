@@ -145,7 +145,7 @@ const EditEvent = () => {
   const [searchParams] = useSearchParams();
   const [submitChanges, setSubmitChanges] = useState(false);
 
-  const userId = getIdFromToken();
+  // const userId = getIdFromToken();
 
   const eventId = searchParams.get("eventId");
 
@@ -405,7 +405,7 @@ const EditEvent = () => {
     };
   }, []);
 
-  return eventId && userId ? (
+  return eventId ? (
     <div className={styles.backdrop}>
       {submitChanges && <ProcessingEffect />}
 
