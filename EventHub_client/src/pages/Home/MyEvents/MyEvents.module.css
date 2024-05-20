@@ -11,7 +11,7 @@
   top: 80px;
   left: 32px;
   height: 85vh;
-  background-color: var(--secondary-popup-background);
+  background-color: rgba(255, 255, 255, 0.85);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border: 1px solid #cacaca;
   border-radius: 25px;
