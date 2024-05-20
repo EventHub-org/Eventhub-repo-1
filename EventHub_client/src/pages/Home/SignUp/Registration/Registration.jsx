@@ -63,17 +63,21 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
   const successGoogleLogin = async (credentialResponse) => {
     const googleToken = credentialResponse.credential;
 
-    const res = await googleAuth(googleToken);
-
-    const email = res?.data?.email;
-    const accessToken = res?.data?.accessToken;
-    setUserEmail(email);
-    if (!accessToken) {
-      setIsRegistered(false);
-    } else {
-      navigate("/");
-      window.location.reload();
-      message.success("Login successful!");
+    try {
+      setProcessing(true);
+      const res = await googleAuth(googleToken);
+      const email = res?.data?.email;
+      const accessToken = res?.data?.accessToken;
+      setUserEmail(email);
+      if (!accessToken) {
+        setIsRegistered(false);
+      } else {
+        navigate("/");
+        window.location.reload();
+        message.success("Login successful!");
+      }
+    } finally {
+      setProcessing(false);
     }
   };
 
