@@ -5,6 +5,7 @@ import { Checkbox } from "antd";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import ListEvents from "../../../components/ListEvents/ListEvents";
 import { getCheckbuttonsEvents } from "../../../api/getCheckbuttonsEvents";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const MyEventsList = ({ handleButtonClose }) => {
   const [events, setEvents] = useState([]);
@@ -12,11 +13,13 @@ const MyEventsList = ({ handleButtonClose }) => {
   const [checkboxJoined, setCheckboxJoined] = useState(true);
   const [checkboxPending, setCheckboxPending] = useState(false);
   const [checkboxArchive, setCheckboxArchive] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams("");
 
   const sendCheckboxes = async () => {
     try {
+      setIsLoading(true);
       const data = await getCheckbuttonsEvents(
         checkboxMy,
         checkboxJoined,
@@ -33,6 +36,8 @@ const MyEventsList = ({ handleButtonClose }) => {
       });
     } catch (error) {
       console.error("Error getting events data:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -42,54 +47,63 @@ const MyEventsList = ({ handleButtonClose }) => {
 
   return (
     <div className={styles.BackgroungContainer}>
-      <div className={styles.Heading}>
-        <h2>Events</h2>
-        <CloseWindowButton
-          onClick={() => {
-            handleButtonClose();
-          }}
-        />
-      </div>
+      <div className={styles.InnerContainer}>
+        <div className={styles["loading-circle"]}>
+          {isLoading && (
+            <LoadingOutlined
+              style={{ fontSize: "72px", color: "#aaaaaa", fontWeigh: "1000" }}
+            />
+          )}
+        </div>
+        <div className={styles.Heading}>
+          <h2>Events</h2>
+          <CloseWindowButton
+            onClick={() => {
+              handleButtonClose();
+            }}
+          />
+        </div>
 
-      <div className={styles.CheckboxContainer}>
-        <label>
-          <div className={styles.Checkbox}>
-            <Checkbox
-              onChange={() => setCheckboxMy(!checkboxMy)}
-              checked={checkboxMy}
-            >
-              My Events
-            </Checkbox>
-          </div>
-          <div className={styles.Checkbox}>
-            <Checkbox
-              onChange={() => setCheckboxJoined(!checkboxJoined)}
-              checked={checkboxJoined}
-            >
-              Joined Events
-            </Checkbox>
-          </div>
-          <div className={styles.Checkbox}>
-            <Checkbox
-              onChange={() => setCheckboxPending(!checkboxPending)}
-              checked={checkboxPending}
-            >
-              Pending request
-            </Checkbox>
-          </div>
-          <div className={styles.Checkbox}>
-            <Checkbox
-              onChange={() => setCheckboxArchive(!checkboxArchive)}
-              checked={checkboxArchive}
-            >
-              Archive
-            </Checkbox>
-          </div>
-        </label>
-      </div>
+        <div className={styles.CheckboxContainer}>
+          <label>
+            <div className={styles.Checkbox}>
+              <Checkbox
+                onChange={() => setCheckboxMy(!checkboxMy)}
+                checked={checkboxMy}
+              >
+                My Events
+              </Checkbox>
+            </div>
+            <div className={styles.Checkbox}>
+              <Checkbox
+                onChange={() => setCheckboxJoined(!checkboxJoined)}
+                checked={checkboxJoined}
+              >
+                Joined Events
+              </Checkbox>
+            </div>
+            <div className={styles.Checkbox}>
+              <Checkbox
+                onChange={() => setCheckboxPending(!checkboxPending)}
+                checked={checkboxPending}
+              >
+                Pending request
+              </Checkbox>
+            </div>
+            <div className={styles.Checkbox}>
+              <Checkbox
+                onChange={() => setCheckboxArchive(!checkboxArchive)}
+                checked={checkboxArchive}
+              >
+                Archive
+              </Checkbox>
+            </div>
+          </label>
+        </div>
 
-      <div className={styles.EventResults}>
-        <ListEvents eventsData={events} searchParams={searchParams} />
+        <div className={styles.EventResults}>
+          <ListEvents eventsData={events} searchParams={searchParams} />
+        </div>
       </div>
     </div>
   );
