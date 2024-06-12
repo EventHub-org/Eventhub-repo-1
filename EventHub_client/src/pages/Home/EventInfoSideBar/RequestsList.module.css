@@ -18,20 +18,6 @@
   font-style: normal;
 }
 
-.no-requests-msg {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--third-color);
-  width: 15vw;
-  margin-top: 5vh;
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 /* List */
 
 @media (width >= 1080px) and (width < 1280px) {

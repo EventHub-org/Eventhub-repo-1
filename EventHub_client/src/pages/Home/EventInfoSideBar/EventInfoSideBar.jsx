@@ -21,7 +21,6 @@ import OwnerPhotoOverlay from "../../../components/OwnerPhotoOverlay/OwnerPhotoO
 import useAuth from "../../../hooks/useAuth";
 import { getParticipantState } from "../../../api/getParticipantState";
 import { getParticipantByUser } from "../../../api/getParticipantByUser";
-import { deleteParticipant } from "../../../api/deleteParticipant";
 import { createParticipant } from "../../../api/createParticipant";
 import { addParticipant } from "../../../api/addParticipant";
 import SpotsLeft from "../../../components/Spots/SpotsLeft";

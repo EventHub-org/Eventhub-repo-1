@@ -4,6 +4,7 @@ import OwnerPhotoOverlay from "../../../components/OwnerPhotoOverlay/OwnerPhotoO
 import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButton";
 import RequestsCount from "../../../components/RequestsCount/RequestsCount";
 import EventSideBarList from "./EventSideBarList";
+import EmptyListMessage from "./EmptyListMessage";
 
 const ParticipantsList = ({
   handleShowRequests,
@@ -18,6 +19,11 @@ const ParticipantsList = ({
     _event &&
     participants && (
       <div className={styles["participants-list-container"]}>
+        {participants.length === 0 && (
+          <EmptyListMessage
+            message={"Here will be shown participants for this event..."}
+          />
+        )}
         {owner &&
           participants.find(
             (participant) => participant.user_id === owner.id

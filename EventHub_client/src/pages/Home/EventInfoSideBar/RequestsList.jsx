@@ -1,13 +1,14 @@
 import styles from "./RequestsList.module.css";
 
 import EventSideBarList from "./EventSideBarList";
+import EmptyListMessage from "./EmptyListMessage";
 const RequestsList = ({ _event, requests, setReloadList }) => {
   return (
     <div className={styles["requests-list-container"]}>
       {requests.length === 0 && (
-        <div className={styles["no-requests-msg"]}>
-          Currently, there are no requests for this event..
-        </div>
+        <EmptyListMessage
+          message={"Currently, there are no requests for this event.."}
+        />
       )}
       <EventSideBarList
         isOwner={true}
