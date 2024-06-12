@@ -6,8 +6,16 @@ import CloseParticipantButton from "./CloseParticipantButton/CloseParticipantBut
 import { deleteParticipant } from "../../../api/deleteParticipant";
 
 import { message } from "antd";
+import AcceptParticipantButton from "./AcceptParticipantButton/AcceptParticipantButton";
+import { addParticipant } from "../../../api/addParticipant";
 
-const EventSideBarList = ({ isOwner, setReloadList, _event, users }) => {
+const EventSideBarList = ({
+  isOwner,
+  showApprove,
+  setReloadList,
+  _event,
+  users,
+}) => {
   // Params
   const { eventId } = useParams();
 
@@ -36,17 +44,48 @@ const EventSideBarList = ({ isOwner, setReloadList, _event, users }) => {
                     </div>
                   </div>
                   {isOwner && (
-                    <div className={styles["delete-user-container"]}>
-                      <CloseParticipantButton
-                        onClick={() => {
-                          deleteParticipant(user.id, eventId)
-                            .then(() => setReloadList((prev) => !prev))
-                            .catch((error) =>
-                              message.error("An error occured")
-                            );
-                        }}
-                      />
-                    </div>
+                    <>
+                      {showApprove && (
+                        <div
+                          className={styles["accept-requested-user-container"]}
+                        >
+                          <AcceptParticipantButton
+                            onClick={() => {
+                              addParticipant(_event.id, user.id)
+                                .then(() => {
+                                  setReloadList((prev) => !prev);
+                                })
+                                .catch((error) => {
+                                  if (error.response) {
+                                    const responseData = error.response.data;
+                                    if (
+                                      typeof responseData === "string" &&
+                                      responseData.includes("is full")
+                                    ) {
+                                      message.info("Event is full");
+                                    } else {
+                                      message.error("An error occurred");
+                                    }
+                                  } else {
+                                    message.error("An error occurred");
+                                  }
+                                });
+                            }}
+                          />
+                        </div>
+                      )}
+                      <div className={styles["delete-user-container"]}>
+                        <CloseParticipantButton
+                          onClick={() => {
+                            deleteParticipant(user.id, eventId)
+                              .then(() => setReloadList((prev) => !prev))
+                              .catch((error) =>
+                                message.error("An error occured")
+                              );
+                          }}
+                        />
+                      </div>
+                    </>
                   )}
                 </li>
               )

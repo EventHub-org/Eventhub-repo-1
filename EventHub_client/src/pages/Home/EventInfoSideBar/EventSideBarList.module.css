@@ -86,6 +86,13 @@
   height: 3vh;
 }
 
+.accept-requested-user-container {
+  position: absolute;
+  right: 13%;
+  width: 3vh;
+  height: 3vh;
+}
+
 @media (width >= 1080px) and (width < 1280px) {
   .users-list-container {
     font-size: var(--xxs-size);
