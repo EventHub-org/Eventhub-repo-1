@@ -4,8 +4,6 @@ import styles from "./EventInfoSideBar.module.css";
 
 import { IoIosMore } from "react-icons/io";
 
-import { LoadingOutlined } from "@ant-design/icons";
-
 import { getUserById } from "../../../api/getUserById";
 import { getFullEventById } from "../../../api/getFullEventById";
 
@@ -33,8 +31,9 @@ import useStore from "../../../hooks/useStore";
 
 import useLogin from "../../../hooks/useLogin";
 import GoBackButton from "../../../components/Buttons/GoBackButton/GoBackButton";
+import withLoading from "../../../utils/hoc/withLoading/withLoading";
 
-const EventInfoSideBar = () => {
+const EventInfoSideBar = ({ setIsLoading }) => {
   // States
   const { eventId } = useParams();
   const [isShowMore, setIsShowMore] = useState(false);
@@ -55,8 +54,6 @@ const EventInfoSideBar = () => {
   const [isOwner, setIsOwner] = useState(false);
 
   const [reloadList, setReloadList] = useState(false);
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const [joinedParticipants, setJoinedParticipants] = useState(null);
 
@@ -309,11 +306,11 @@ const EventInfoSideBar = () => {
     event && (
       <div className={styles["wrapper-container"]}>
         <div className={styles["loading-circle"]}>
-          {isLoading && (
+          {/* {isLoading && (
             <LoadingOutlined
               style={{ fontSize: "72px", color: "#aaaaaa", fontWeigh: "1000" }}
             />
-          )}
+          )} */}
         </div>
         <div className={styles["header"]}>
           {!showAllParticipants && !showRequests ? (
@@ -550,4 +547,4 @@ const EventInfoSideBar = () => {
   );
 };
 
-export default EventInfoSideBar;
+export default withLoading(EventInfoSideBar);

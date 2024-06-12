@@ -335,22 +335,6 @@ main {
   height: 100%;
 }
 
-/* Loading circle */
-
-.loading-circle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  /* width: 68%; */
-  /* height: 87.5%; */
-  border-radius: 8px;
-  /* background-color: rgba(0, 0, 0, 0.3); */
-  transform: translate(-50%, -50%);
-  z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 /* Scroll bar */
 
 ::-webkit-scrollbar {

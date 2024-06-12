@@ -1,6 +1,4 @@
-import {
-    LoadingOutlined,
-  } from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import styles from "./ProcessingEffect.module.css";
 
 const ProcessingEffect = () => {

@@ -74,7 +74,7 @@ const ChangePassword = () => {
               <p className={styles.Caption}>Change password</p>
               <CloseWindowButton onClick={handleClose} />
             </div>
-            <FaUnlock className={styles.Lock}/>
+            <FaUnlock className={styles.Lock} />
             <div className={styles.PasswordsContainer}>
               <div className={styles.Password}>
                 <p className={styles.PasswordCaption}>Old password</p>
@@ -111,8 +111,16 @@ const ChangePassword = () => {
               </div>
             </div>
             <div className={styles.Buttons}>
-              <PrimaryButton children={"Cancel"} onClick={handleClose} className={`${styles.CancelButton} ${styles.Button}`}/>
-              <PrimaryButton children={"Apply"} onClick={handleApply} className={styles.Button}/>
+              <PrimaryButton
+                children={"Cancel"}
+                onClick={handleClose}
+                className={`${styles.CancelButton} ${styles.Button}`}
+              />
+              <PrimaryButton
+                children={"Apply"}
+                onClick={handleApply}
+                className={styles.Button}
+              />
             </div>
           </div>
         </div>
