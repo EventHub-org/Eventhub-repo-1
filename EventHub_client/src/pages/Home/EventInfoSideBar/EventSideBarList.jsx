@@ -1,15 +1,10 @@
-import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import styles from "./ParticipantsList.module.css";
+import styles from "./EventSideBarList.module.css";
 
-import GoBackButton from "../../../components/Buttons/GoBackButton/GoBackButton";
-import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import CloseParticipantButton from "./CloseParticipantButton/CloseParticipantButton";
-import OwnerPhotoOverlay from "../../../components/OwnerPhotoOverlay/OwnerPhotoOverlay";
+
 import { deleteParticipant } from "../../../api/deleteParticipant";
-import SpotsLeft from "../../../components/Spots/SpotsLeft";
-import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButton";
-import RequestsCount from "../../../components/RequestsCount/RequestsCount";
+
 import { message } from "antd";
 
 const EventSideBarList = ({ isOwner, setReloadList, _event, users }) => {

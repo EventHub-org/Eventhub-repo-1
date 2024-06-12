@@ -261,6 +261,14 @@ main {
   height: 3.9vh;
 }
 
+.action-btns-container {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+
+  height: 3.9vh;
+}
+
 .action-btn {
   font-size: 23px;
   width: 5vw;

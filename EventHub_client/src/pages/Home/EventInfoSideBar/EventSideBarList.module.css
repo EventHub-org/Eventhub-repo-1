@@ -1,0 +1,133 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+/* Main container */
+
+.users-list-container {
+  width: 100%;
+  height: 100%;
+  z-index: 991;
+
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--primary-font-family), sans-serif;
+  font-style: normal;
+}
+
+/* Users list */
+
+.users-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  all: unset;
+}
+
+.user-container {
+  width: 100%;
+  height: 72px;
+  margin-bottom: 2%;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.user-photo {
+  width: 72px;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.user-info-container {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  margin-left: 3%;
+}
+
+.full-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5ch;
+  height: 30px;
+  margin: 0;
+}
+
+.full-name p {
+  margin-right: 5px;
+  margin: 0;
+  font-size: var(--sm-size);
+  color: var(--third-color);
+}
+
+.username {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: var(--md-size);
+  height: 30px;
+  margin: 0;
+}
+
+.delete-user-container {
+  position: absolute;
+  right: 1.5%;
+  width: 3vh;
+  height: 3vh;
+}
+
+@media (width >= 1080px) and (width < 1280px) {
+  .users-list-container {
+    font-size: var(--xxs-size);
+  }
+
+  .user-container {
+    height: 45px;
+  }
+
+  .user-photo {
+    width: 45px;
+    height: 45px;
+  }
+
+  .username {
+    font-size: var(--xxs-size);
+  }
+
+  .full-name p {
+    font-size: var(--xxs-size);
+  }
+}
+
+@media (width >= 1280px) and (width < 1700px) {
+  .users-list-container {
+    font-size: var(--xxs-size);
+  }
+
+  .user-container {
+    height: 53px;
+  }
+
+  .user-photo {
+    width: 53px;
+    height: 100%;
+  }
+
+  .username {
+    font-size: var(--xxs-size);
+  }
+
+  .full-name p {
+    font-size: var(--xxs-size);
+  }
+}

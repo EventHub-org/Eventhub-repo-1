@@ -7,103 +7,15 @@
 /* Main container */
 
 .participants-list-container {
-  background-color: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(5px);
   width: 100%;
   height: 100%;
   padding: 10px;
   z-index: 991;
-  position: absolute;
   overflow: auto;
   display: flex;
   flex-direction: column;
-  border-radius: 30px;
   font-family: var(--primary-font-family), sans-serif;
   font-style: normal;
-  box-shadow: 0px 0 4px 1px var(--third-color);
-}
-
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 5vh;
-}
-
-main {
-  padding: 20px;
-  overflow: auto;
-}
-
-/* Participants list */
-
-.participants-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  all: unset;
-  margin-top: 5%;
-}
-
-.participant-container {
-  width: 100%;
-  height: 72px;
-  margin-bottom: 2%;
-  display: flex;
-  align-items: center;
-  border-radius: 10px;
-  overflow: hidden;
-  position: relative;
-}
-
-.participant-photo {
-  width: 72px;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  cursor: pointer;
-}
-
-.participant-info-container {
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
-  margin-left: 3%;
-}
-
-.full-name {
-  display: flex;
-  align-items: center;
-  gap: 0.5ch;
-  height: 30px;
-  margin: 0;
-}
-
-.full-name p {
-  margin-right: 5px;
-  margin: 0;
-  font-size: var(--sm-size);
-  color: var(--third-color);
-}
-
-.username {
-  display: flex;
-  align-items: center;
-  font-weight: 500;
-  font-size: var(--md-size);
-  height: 30px;
-  margin: 0;
-}
-
-.lower-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-  height: 3.9vh;
 }
 
 .requests-btn {
@@ -113,7 +25,10 @@ main {
   font-size: var(--md-size);
   width: 6.5vw;
   height: 3.5vh;
-  position: relative;
+
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
 }
 
 .requests-count-container {
@@ -136,35 +51,7 @@ main {
   margin-right: auto;
 }
 
-.delete-participant-container {
-  position: absolute;
-  right: 1.5%;
-  width: 3vh;
-  height: 3vh;
-}
-
 @media (width >= 1080px) and (width < 1280px) {
-  .participants-list-container {
-    font-size: var(--xxs-size);
-  }
-
-  .participant-container {
-    height: 45px;
-  }
-
-  .participant-photo {
-    width: 45px;
-    height: 45px;
-  }
-
-  .username {
-    font-size: var(--xxs-size);
-  }
-
-  .full-name p {
-    font-size: var(--xxs-size);
-  }
-
   .requests-btn {
     font-size: var(--xxs-size);
     /* width: 6.5vw;
@@ -174,33 +61,11 @@ main {
 }
 
 @media (width >= 1280px) and (width < 1700px) {
-  .participants-list-container {
-    font-size: var(--xxs-size);
-    padding: 8px;
-  }
-
   main {
     padding: 10px;
   }
 
-  .participant-container {
-    height: 53px;
-  }
-
-  .participant-photo {
-    width: 53px;
-    height: 100%;
-  }
-
   .requests-btn {
-    font-size: var(--xxs-size);
-  }
-
-  .username {
-    font-size: var(--xxs-size);
-  }
-
-  .full-name p {
     font-size: var(--xxs-size);
   }
 }
