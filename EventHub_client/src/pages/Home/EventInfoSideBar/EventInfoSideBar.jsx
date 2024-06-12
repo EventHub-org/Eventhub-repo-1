@@ -18,7 +18,6 @@ import ParticipantState from "../../../utils/ParticipantState";
 import ParticipantInfoPopUp from "../../../components/PopUp/ParticipantInfoPopUp";
 import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButton";
 import OwnerPhotoOverlay from "../../../components/OwnerPhotoOverlay/OwnerPhotoOverlay";
-import useAuth from "../../../hooks/useAuth";
 import { getParticipantState } from "../../../api/getParticipantState";
 import { getParticipantByUser } from "../../../api/getParticipantByUser";
 import { createParticipant } from "../../../api/createParticipant";
@@ -307,28 +306,24 @@ const EventInfoSideBar = () => {
   };
 
   return (
-    <div
-      className={`${styles["wrapper-container"]} ${
-        isLoading ? styles.active : styles.inactive
-      }`}
-    >
-      <div className={styles["loading-circle"]}>
-        {isLoading && (
-          <LoadingOutlined
-            style={{ fontSize: "72px", color: "#aaaaaa", fontWeigh: "1000" }}
-          />
-        )}
-      </div>
-      {event && (
-        <div className={styles["side-bar-container"]} ref={sideBar}>
-          <div className={styles["header"]}>
-            {!showAllParticipants && !showRequests ? (
-              <h2 className={styles["event-title"]}>{event.title}</h2>
-            ) : (
-              <GoBackButton onClick={handleShowAllParticipants} />
-            )}
-            <CloseWindowButton onClick={handleCloseWindow} />
-          </div>
+    event && (
+      <div className={styles["wrapper-container"]}>
+        <div className={styles["loading-circle"]}>
+          {isLoading && (
+            <LoadingOutlined
+              style={{ fontSize: "72px", color: "#aaaaaa", fontWeigh: "1000" }}
+            />
+          )}
+        </div>
+        <div className={styles["header"]}>
+          {!showAllParticipants && !showRequests ? (
+            <h2 className={styles["event-title"]}>{event.title}</h2>
+          ) : (
+            <GoBackButton onClick={handleShowAllParticipants} />
+          )}
+          <CloseWindowButton onClick={handleCloseWindow} />
+        </div>
+        <div className={styles["inner-container"]}>
           {!showAllParticipants && !showRequests && (
             <main>
               {/* Photo */}
@@ -544,14 +539,14 @@ const EventInfoSideBar = () => {
               setReloadList={setReloadList}
             />
           )}
-
-          {/* Lower section */}
-          <div className={styles["lower-container"]}>
-            <SpotsLeft event={event} />
-          </div>
         </div>
-      )}
-    </div>
+
+        {/* Lower section */}
+        <div className={styles["lower-container"]}>
+          <SpotsLeft event={event} />
+        </div>
+      </div>
+    )
   );
 };
 

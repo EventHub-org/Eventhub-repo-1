@@ -18,7 +18,7 @@ const ParticipantsList = ({
   return (
     _event &&
     participants && (
-      <div className={styles["participants-list-container"]}>
+      <div>
         {participants.length === 0 && (
           <EmptyListMessage
             message={"Here will be shown participants for this event..."}

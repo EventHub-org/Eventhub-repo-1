@@ -1,10 +1,10 @@
-import styles from "./RequestsList.module.css";
+// import styles from "./RequestsList.module.css";
 
 import EventSideBarList from "./EventSideBarList";
 import EmptyListMessage from "./EmptyListMessage";
 const RequestsList = ({ _event, requests, setReloadList }) => {
   return (
-    <div className={styles["requests-list-container"]}>
+    <div>
       {requests.length === 0 && (
         <EmptyListMessage
           message={"Currently, there are no requests for this event.."}

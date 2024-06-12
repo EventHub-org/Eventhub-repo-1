@@ -4,31 +4,8 @@
   box-sizing: border-box;
 }
 
-/* Main container */
-
-.requests-list-container {
-  width: 100%;
-  height: 100%;
-  padding: 10px;
-  z-index: 992;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  font-family: var(--primary-font-family), sans-serif;
-  font-style: normal;
-}
-
-/* List */
-
 @media (width >= 1080px) and (width < 1280px) {
-  .requests-list-container {
-    font-size: var(--xxs-size);
-  }
 }
 
 @media (width >= 1280px) and (width < 1700px) {
-  .requests-list-container {
-    font-size: var(--xxs-size);
-    padding: 8px;
-  }
 }
