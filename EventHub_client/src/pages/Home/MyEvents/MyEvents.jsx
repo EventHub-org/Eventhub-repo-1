@@ -9,6 +9,7 @@ import useLogin from "../../../hooks/useLogin";
 
 const MyEvents = () => {
   const [searchParams, setSearchParams] = useSearchParams("");
+
   const navigate = useNavigate();
   //const { auth, setAuth } = useAuth();
   const authenticated = useLogin();

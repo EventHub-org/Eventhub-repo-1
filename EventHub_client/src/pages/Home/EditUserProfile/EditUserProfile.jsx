@@ -310,7 +310,7 @@ const EditUserProfile = () => {
             </div>
             <div className={styles.Buttons}>
               <PrimaryButton
-                children={"Discrad"}
+                children={"Discard"}
                 onClick={handleCancel}
                 className={`${styles.CancelButton} ${styles.Button}`}
               />

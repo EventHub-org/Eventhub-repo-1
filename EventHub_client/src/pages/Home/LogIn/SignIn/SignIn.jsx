@@ -10,6 +10,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { checkEmail } from "../../SignUp/Registration/validation";
 import AuthContext from "../../../../context/authProvider";
 import EmailVerification from "../../SignUp/EmailVerification/EmailVerification";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const SignIn = ({ forgotPassword }) => {
   const { login, googleAuth } = useContext(AuthContext);
@@ -18,27 +19,33 @@ const SignIn = ({ forgotPassword }) => {
   const [password, setPassword] = useState("");
   const [navigate, setNavigate] = useState(false);
   const [isVerified, setIsVerified] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const navigateToHome = useNavigate();
 
   const successGoogleLogin = async (credentialResponse) => {
     const googleToken = credentialResponse.credential;
 
-    const res = await googleAuth(googleToken);
-
-    const email = res?.data?.email;
-    const accessToken = res?.data?.accessToken;
-    setEmail(email);
-    if (!accessToken) {
-      setIsVerified(false);
-    } else {
-      navigateToHome("/");
-      window.location.reload();
-      message.success("Login successful!");
+    try {
+      setIsLoading(true);
+      const res = await googleAuth(googleToken);
+      const email = res?.data?.email;
+      const accessToken = res?.data?.accessToken;
+      setEmail(email);
+      if (!accessToken) {
+        setIsVerified(false);
+      } else {
+        navigateToHome("/");
+        window.location.reload();
+        message.success("Login successful!");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const onFinish = async () => {
     try {
+      setIsLoading(true);
       await login(email, password);
 
       message.success("Login successful!");
@@ -95,6 +102,8 @@ const SignIn = ({ forgotPassword }) => {
             break;
         }
       }
+    } finally {
+      setIsLoading(false);
     }
   };
   const handleKeyDown = (event) => {
@@ -114,95 +123,107 @@ const SignIn = ({ forgotPassword }) => {
 
   return isVerified ? (
     <div className={styles.container}>
-      <div className={styles.Buttons}>
-        <CloseWindowButton onClick={() => navigateToHome("/")} />
+      <div className={styles["loading-circle"]}>
+        {isLoading && (
+          <LoadingOutlined
+            style={{ fontSize: "72px", color: "#aaaaaa", fontWeigh: "1000" }}
+          />
+        )}
       </div>
-      <Form
-        name="normal_login"
-        className="login-form"
-        initialValues={{
-          remember: true,
-        }}
-        onFinish={onFinish}
-      >
-        <h1>Login</h1>
-        <Form.Item
-          name="email"
-          rules={[
-            {
-              required: true,
-              validator: checkEmail,
-              message: "Please input your email!",
-            },
-          ]}
+      <div className={styles.InnerContainer}>
+        <div className={styles.Buttons}>
+          <CloseWindowButton onClick={() => navigateToHome("/")} />
+        </div>
+        <Form
+          name="normal_login"
+          className="login-form"
+          initialValues={{
+            remember: true,
+          }}
+          onFinish={onFinish}
         >
-          <Input
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            className={styles.input}
-          />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: "Please input your Password!",
-            },
-          ]}
-        >
-          <Input.Password
-            className={styles.input}
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            onChange={(e) => setPassword(e.target.value)}
-            type="password"
-            placeholder="Password"
-          />
-        </Form.Item>
-        <Form.Item className={styles.forgotPasswordContainer}>
-          <div className={styles.RememberMe}>
-            {/* <Form.Item name="remember" valuePropName="checked" noStyle>
+          <h1>Login</h1>
+          <Form.Item
+            name="email"
+            rules={[
+              {
+                required: true,
+                validator: checkEmail,
+                message: "Please input your email!",
+              },
+            ]}
+          >
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              className={styles.input}
+            />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Password!",
+              },
+            ]}
+          >
+            <Input.Password
+              className={styles.input}
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              onChange={(e) => setPassword(e.target.value)}
+              type="password"
+              placeholder="Password"
+            />
+          </Form.Item>
+          <Form.Item className={styles.forgotPasswordContainer}>
+            <div className={styles.RememberMe}>
+              {/* <Form.Item name="remember" valuePropName="checked" noStyle>
               <Checkbox>Remember me</Checkbox>
             </Form.Item> */}
-            <button className={styles.forgotPassword} onClick={forgotPassword}>
-              Forgot password
-            </button>
+              <button
+                className={styles.forgotPassword}
+                onClick={forgotPassword}
+              >
+                Forgot password
+              </button>
+            </div>
+          </Form.Item>
+          <Form.Item style={{ marginBottom: "0px" }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className={styles.loginButton}
+            >
+              Login
+            </Button>
+          </Form.Item>
+          <p style={{ textAlign: "center" }}>Or</p>
+          <div className={styles.oauthContainer}>
+            <GoogleLogin
+              onSuccess={successGoogleLogin}
+              onError={() => {
+                console.log("Login Failed");
+              }}
+              useOneTap
+              ux_mode="popup"
+              shape="pill"
+              // login_uri="http://localhost:3000/login"
+            />
           </div>
-        </Form.Item>
-        <Form.Item style={{ marginBottom: "0px" }}>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className={styles.loginButton}
-          >
-            Login
-          </Button>
-        </Form.Item>
-        <p style={{ textAlign: "center" }}>Or</p>
-        <div className={styles.oauthContainer}>
-          <GoogleLogin
-            onSuccess={successGoogleLogin}
-            onError={() => {
-              console.log("Login Failed");
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: "12px",
+              margin: "21px",
             }}
-            useOneTap
-            ux_mode="popup"
-            shape="pill"
-            // login_uri="http://localhost:3000/login"
-          />
-        </div>
-        <p
-          style={{
-            textAlign: "center",
-            fontSize: "12px",
-            margin: "21px",
-          }}
-        >
-          Don’t have an account in EventHub yet?{" "}
-          <Link to="/register">Register!</Link>
-        </p>
-      </Form>
+          >
+            Don’t have an account in EventHub yet?{" "}
+            <Link to="/register">Register!</Link>
+          </p>
+        </Form>
+      </div>
     </div>
   ) : (
     <EmailVerification email={email} />

@@ -31,7 +31,7 @@ import RequestsCount from "../../../components/RequestsCount/RequestsCount";
 import { message } from "antd";
 import { getUserParticipants } from "../../../api/getUserParticipants";
 import { leaveEvent } from "../../../api/leaveEvent";
-import useStore from '../../../hooks/useStore';
+import useStore from "../../../hooks/useStore";
 
 import useLogin from "../../../hooks/useLogin";
 
@@ -82,11 +82,9 @@ const EventInfoSideBar = () => {
   const showMoreBtn = useRef(null);
   const aboutText = useRef(null);
 
-  
   const handleLocationClick = () => {
     setLocation(event.latitude, event.longitude);
   };
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -309,7 +307,11 @@ const EventInfoSideBar = () => {
   };
 
   return (
-    <div className={styles["wrapper-container"]}>
+    <div
+      className={`${styles["wrapper-container"]} ${
+        isLoading ? styles.active : styles.inactive
+      }`}
+    >
       <div className={styles["loading-circle"]}>
         {isLoading && (
           <LoadingOutlined
@@ -363,16 +365,15 @@ const EventInfoSideBar = () => {
                   </div>
                 </div>
               </div>
-
               <div className={styles["vl"]}></div>
               <div
-                style={{cursor:"pointer"}}
+                style={{ cursor: "pointer" }}
                 className={styles["location"]}
                 onClick={handleLocationClick}
-
               >
                 {event.location}
-              </div>            </div>
+              </div>{" "}
+            </div>
 
             {/* Participants */}
             <h3 className={styles["heading"]}>Participants</h3>

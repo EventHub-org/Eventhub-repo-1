@@ -87,11 +87,11 @@ export const AuthProvider = ({ children }) => {
     const res = await axios.post("/authentication/forgot-password", data, {
       headers: { "Content-Type": "application/json" },
     });
-  
+
     const accessToken = res?.data?.accessToken;
     const refToken = res?.data?.refreshToken;
     const expiryDate = res?.data?.expiryDate;
-  
+
     localStorage.setItem("token", accessToken);
     localStorage.setItem("refreshToken", refToken);
     localStorage.setItem("expDate", expiryDate);
@@ -119,7 +119,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("expDate");
 
-      message.info("You are loged out");
+      message.info("You are logged out");
       setAuth({});
 
       return response.data;
@@ -181,7 +181,7 @@ export const AuthProvider = ({ children }) => {
           localStorage.removeItem("refreshToken");
           localStorage.removeItem("token");
           localStorage.removeItem("expDate");
-          message.error("You are loged out");
+          message.error("You are logged out");
           setAuth({});
         }
       }, intervalTime);

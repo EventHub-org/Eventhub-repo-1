@@ -11,6 +11,7 @@ import org.eventhub.main.mapper.RegisterMapper;
 import org.eventhub.main.model.ConfirmationToken;
 import org.eventhub.main.model.PasswordResetToken;
 import org.eventhub.main.model.User;
+import org.eventhub.main.repository.RefreshTokenRepository;
 import org.eventhub.main.repository.UserRepository;
 import org.eventhub.main.service.*;
 
@@ -53,6 +54,7 @@ public class AuthenticationService {
     private final ThreadPoolTaskScheduler scheduler;
 
     private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     private final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
@@ -177,7 +179,20 @@ public class AuthenticationService {
 
         var accessToken = jwtService.generateToken(extraClaims, user);
 
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
+        var refresh = refreshTokenRepository.findRefreshTokenByUserId(user.getId());
+
+        RefreshToken refreshToken;
+
+        if (refresh != null) {
+            if (refresh.getExpiryDate().compareTo(Date.from(Instant.now())) < 0){
+                refreshTokenService.deleteTokenByUserId(user.getId());
+                refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
+            } else {
+                refreshToken = refresh;
+            }
+        } else{
+            refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
+        }
 
         return JwtResponse.builder()
                 .accessToken(accessToken)
@@ -206,7 +221,22 @@ public class AuthenticationService {
                 extraClaims.put("id", user.getId());
 
                 String accessToken = jwtService.generateToken(extraClaims, user);
-                RefreshToken refreshToken = refreshTokenService.createRefreshToken(email);
+
+                var refresh = refreshTokenRepository.findRefreshTokenByUserId(user.getId());
+
+                RefreshToken refreshToken;
+
+                if (refresh != null) {
+                    if (refresh.getExpiryDate().compareTo(Date.from(Instant.now())) < 0){
+                        refreshTokenService.deleteTokenByUserId(user.getId());
+                        refreshToken = refreshTokenService.createRefreshToken(email);
+                    } else {
+                        refreshToken = refresh;
+                    }
+                } else{
+                    refreshToken = refreshTokenService.createRefreshToken(email);
+                }
+                
                 return GoogleJwtResponse.builder()
                         .email(email)
                         .accessToken(accessToken)
