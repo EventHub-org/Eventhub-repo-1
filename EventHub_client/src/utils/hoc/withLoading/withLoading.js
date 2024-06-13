@@ -9,13 +9,17 @@ const withLoading = (WrappedComponent) => {
 
     return (
       <div>
-        <div className={styles["loading-circle"]}>
-          {isLoading && (
+        {isLoading && (
+          <div className={styles["loading-circle"]}>
             <LoadingOutlined
-              style={{ fontSize: "72px", color: "#aaaaaa", fontWeigh: "1000" }}
+              style={{
+                fontSize: "72px",
+                color: "#fff",
+                fontWeigh: "1000",
+              }}
             />
-          )}
-        </div>
+          </div>
+        )}
         <WrappedComponent {...props} setIsLoading={setIsLoading} />
       </div>
     );

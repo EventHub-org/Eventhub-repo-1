@@ -1,33 +1,25 @@
 import { useOutlet } from "react-router-dom";
-import AuthContext from "../../context/authProvider";
-import { Link, Outlet, useParams, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Map } from "./Map/Map";
 import useAuth from "../../hooks/useAuth";
-import { Button } from "antd";
 import styles from "./Home.module.css";
 import { useJsApiLoader } from "@react-google-maps/api";
 import MenuButton from "./ProfileORlogin/ProfileButton";
 import LoginRegisterButton from "./ProfileORlogin/LoginRegisterButton";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 
 import SearchEvents from "./Search/Search";
 import CreateEvent from "./CreateEvent/CreateEvent";
 import EventFilter from "./Filter/Filter";
-import ProcessingEffect from "../../components/ProcessingEffect/ProcessingEffect";
 import MyEvents from "./MyEvents/MyEvents";
-import EventInfoSideBar from "./EventInfoSideBar/EventInfoSideBar";
-import { useNavigate } from "react-router-dom";
-
-import useLogin from "../../hooks/useLogin";
+import withLoading from "../../utils/hoc/withLoading/withLoading";
 
 const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
-
 const libraries = ["places"];
-const Home = () => {
+const Home = ({ setIsLoading }) => {
   //const authenticated = useLogin();
   const { auth, setAuth } = useAuth();
-  const location = useLocation();
 
   const outlet = useOutlet();
 
@@ -37,11 +29,18 @@ const Home = () => {
     libraries,
   });
 
+  useEffect(() => {
+    setIsLoading(true);
+    if (isLoaded) {
+      setIsLoading(false);
+    }
+  }, [isLoaded]);
+
   return (
     <div className={styles.Home}>
-      {isLoaded ? (
+      {isLoaded && (
         <>
-          <Map  />
+          <Map />
 
           {auth.token ? <MenuButton /> : <LoginRegisterButton />}
 
@@ -52,11 +51,9 @@ const Home = () => {
 
           {outlet}
         </>
-      ) : (
-        <ProcessingEffect />
       )}
     </div>
   );
 };
 
-export { Home };
+export default withLoading(Home);

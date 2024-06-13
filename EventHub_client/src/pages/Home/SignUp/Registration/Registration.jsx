@@ -5,7 +5,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { PlacesAutocomplete } from "../../../../components/PlaceAutocomplete/PlaceAutocomplete";
 import { checkEmail, checkName, checkPassword } from "./validation";
 import CloseWindowButton from "../../../../components/Buttons/CloseWindowButton/CloseWindowButton";
-import ProcessingEffect from "../../../../components/ProcessingEffect/ProcessingEffect";
 import useAuth from "../../../../hooks/useAuth";
 import AuthContext from "../../../../context/authProvider";
 import { GoogleLogin } from "@react-oauth/google";

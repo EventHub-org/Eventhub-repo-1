@@ -11,15 +11,12 @@ import { getUserInfo } from "../../../api/getUserInfo";
 import { PlacesAutocomplete } from "../../../components/PlaceAutocomplete/PlaceAutocomplete";
 import dayjs from "dayjs";
 import styles from "./EditUserProfile.module.css";
-import ProcessingEffect from "../../../components/ProcessingEffect/ProcessingEffect";
+import withLoading from "../../../utils/hoc/withLoading/withLoading";
 
-const EditUserProfile = () => {
+const EditUserProfile = ({ setIsLoading }) => {
   const { TextArea } = Input;
   const { Option } = Select;
   const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(false);
-  const [submitChanges, setSubmitChanges] = useState(false);
 
   const [user, setUser] = useState(null);
   const [cancelAddress, setCancelAddress] = useState(false);
@@ -32,6 +29,7 @@ const EditUserProfile = () => {
 
   const fetchUser = async () => {
     try {
+      setIsLoading(true);
       const response = await getUserInfo();
 
       setUser({
@@ -56,10 +54,10 @@ const EditUserProfile = () => {
           .concat(new Array(4 - userPhotos.length).fill(null))
       );
       setPhotoIndex(userPhotos.length);
-
-      setLoading(true);
     } catch (error) {
       navigate("/login");
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -115,7 +113,7 @@ const EditUserProfile = () => {
     event.preventDefault();
 
     try {
-      setSubmitChanges(true);
+      setIsLoading(true);
       await sendDataWithoutPhotos({
         ...user,
         birth_date: user.birth_date && user.birth_date.add(1, "day"),
@@ -129,7 +127,7 @@ const EditUserProfile = () => {
       message.error(error.response.data);
       console.error(error);
     } finally {
-      setSubmitChanges(false);
+      setIsLoading(false);
     }
   };
 
@@ -146,12 +144,9 @@ const EditUserProfile = () => {
     navigate(-1);
   };
   return (
-    <div className={styles.OuterContainer}>
-      {!loading ? (
-        <ProcessingEffect />
-      ) : (
+    user && (
+      <div className={styles.OuterContainer}>
         <>
-          {submitChanges && <ProcessingEffect />}
           <form className={styles.InnerContainer}>
             <div className={styles.Header}>
               <p className={styles.Heading}>Edit account information</p>
@@ -322,9 +317,9 @@ const EditUserProfile = () => {
             </div>
           </form>
         </>
-      )}
-    </div>
+      </div>
+    )
   );
 };
 
-export default EditUserProfile;
+export default withLoading(EditUserProfile);
