@@ -3,8 +3,8 @@ import { LoadingOutlined } from "@ant-design/icons";
 
 import styles from "./withLoading.module.css";
 
-const withLoading = (WrappedComponent) => {
-  return (props) => {
+function withLoading(WrappedComponent) {
+  function WithLoading(props) {
     const [isLoading, setIsLoading] = useState(false);
 
     return (
@@ -23,7 +23,13 @@ const withLoading = (WrappedComponent) => {
         <WrappedComponent {...props} setIsLoading={setIsLoading} />
       </div>
     );
-  };
-};
+  }
+
+  const wrappedComponentName =
+    WrappedComponent.displayName || WrappedComponent.name || "Component";
+
+  WithLoading.displayName = `withLoading(${wrappedComponentName})`;
+  return WithLoading;
+}
 
 export default withLoading;
