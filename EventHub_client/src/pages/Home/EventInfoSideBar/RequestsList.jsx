@@ -11,8 +11,8 @@ const RequestsList = ({ _event, requests, setReloadList }) => {
         />
       )}
       <EventSideBarList
-        isOwner={true}
-        showApprove={true}
+        isOwner
+        showApprove
         setReloadList={setReloadList}
         _event={_event}
         users={requests}
