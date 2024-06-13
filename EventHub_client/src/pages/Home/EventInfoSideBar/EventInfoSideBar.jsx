@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import styles from "./EventInfoSideBar.module.css";
 
+import { getFormattedDate, getFormattedTime } from "../../../utils/formatting";
+
 import { IoIosMore } from "react-icons/io";
 
 import { getUserById } from "../../../api/getUserById";
@@ -74,7 +76,6 @@ const EventInfoSideBar = ({ setIsLoading }) => {
   const navigate = useNavigate();
 
   // Refs
-  const sideBar = useRef(null);
   const showMoreBtn = useRef(null);
   const aboutText = useRef(null);
 
@@ -288,30 +289,10 @@ const EventInfoSideBar = ({ setIsLoading }) => {
     }
   };
 
-  const getFormattedDate = (dateTimeString) => {
-    const date = new Date(dateTimeString);
-    const month = date.toLocaleString("eng", { month: "short" });
-    const day = date.getDate();
-    return `${month} ${day}`;
-  };
-
-  const getFormattedTime = (dateTimeString) => {
-    const date = new Date(dateTimeString);
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    return `${hours}:${minutes}`;
-  };
-
   return (
     event && (
       <div className={styles["wrapper-container"]}>
-        <div className={styles["loading-circle"]}>
-          {/* {isLoading && (
-            <LoadingOutlined
-              style={{ fontSize: "72px", color: "#aaaaaa", fontWeigh: "1000" }}
-            />
-          )} */}
-        </div>
+        <div className={styles["loading-circle"]}></div>
         <div className={styles["header"]}>
           {!showAllParticipants && !showRequests ? (
             <h2 className={styles["event-title"]}>{event.title}</h2>

@@ -1,12 +1,11 @@
 import { useOutlet } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import { Map } from "./Map/Map";
 import useAuth from "../../hooks/useAuth";
 import styles from "./Home.module.css";
 import { useJsApiLoader } from "@react-google-maps/api";
 import MenuButton from "./ProfileORlogin/ProfileButton";
 import LoginRegisterButton from "./ProfileORlogin/LoginRegisterButton";
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import SearchEvents from "./Search/Search";
 import CreateEvent from "./CreateEvent/CreateEvent";
