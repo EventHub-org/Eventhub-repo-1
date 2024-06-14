@@ -1,7 +1,7 @@
 .spots {
+  color: var(--third-color);
   font-family: var(--primary-font-family), sans-serif;
   font-style: normal;
-  color: var(--third-color);
   font-size: 20px;
 }
 

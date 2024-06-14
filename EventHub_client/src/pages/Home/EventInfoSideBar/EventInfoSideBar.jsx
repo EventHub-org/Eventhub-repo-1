@@ -61,8 +61,6 @@ const EventInfoSideBar = ({ setIsLoading }) => {
 
   const [requests, setRequests] = useState(null);
 
-  const [isFull, setIsFull] = useState(true);
-
   const setLocation = useStore((state) => state.setLocation);
 
   // Params
@@ -80,7 +78,9 @@ const EventInfoSideBar = ({ setIsLoading }) => {
   const aboutText = useRef(null);
 
   const handleLocationClick = () => {
-    setLocation(event.latitude, event.longitude);
+    if (event) {
+      setLocation(event.latitude, event.longitude);
+    }
   };
 
   useEffect(() => {
@@ -103,9 +103,6 @@ const EventInfoSideBar = ({ setIsLoading }) => {
 
         const fullEventData = await getFullEventById(eventId);
         setEvent(fullEventData);
-        setIsFull(
-          fullEventData.max_participants === fullEventData.participant_count
-        );
 
         const joinedParticipants = await getUserParticipants(eventId);
         setJoinedParticipants(joinedParticipants);
@@ -344,12 +341,10 @@ const EventInfoSideBar = ({ setIsLoading }) => {
                   </div>
                 </div>
                 <div className={styles["vl"]}></div>
-                <div
-                  style={{ cursor: "pointer" }}
-                  className={styles["location"]}
-                  onClick={handleLocationClick}
-                >
-                  {event.location}
+                <div className={styles["location"]}>
+                  <button onClick={handleLocationClick}>
+                    {event.location}
+                  </button>
                 </div>{" "}
               </div>
 

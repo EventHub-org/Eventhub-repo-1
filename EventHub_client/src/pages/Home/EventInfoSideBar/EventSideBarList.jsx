@@ -34,7 +34,7 @@ const EventSideBarList = ({
                     onClick={() => navigate(`/profile/${user.username}`)}
                     className={styles["user-photo"]}
                     src={user.participant_photo.photo_url}
-                    alt="User user img"
+                    alt="User"
                   />
                   <div className={styles["user-info-container"]}>
                     <p className={styles["username"]}>{`@${user.username}`}</p>

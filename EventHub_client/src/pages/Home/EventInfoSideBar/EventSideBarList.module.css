@@ -7,90 +7,89 @@
 /* Main container */
 
 .users-list-container {
-  width: 100%;
-  height: 100%;
-  z-index: 991;
-
-  overflow: auto;
   display: flex;
   flex-direction: column;
   font-family: var(--primary-font-family), sans-serif;
   font-style: normal;
+  height: 100%;
+  overflow: auto;
+  width: 100%;
+  z-index: 991;
 }
 
 /* Users list */
 
-.users-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  all: unset;
+.accept-requested-user-container {
+  height: 3vh;
+  position: absolute;
+  right: 13%;
+  width: 3vh;
 }
 
-.user-container {
-  width: 100%;
-  height: 72px;
-  margin-bottom: 2%;
-  display: flex;
-  align-items: center;
-  border-radius: 10px;
-  overflow: hidden;
-  position: relative;
-}
-
-.user-photo {
-  width: 72px;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  cursor: pointer;
-}
-
-.user-info-container {
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
-  margin-left: 3%;
+.delete-user-container {
+  height: 3vh;
+  position: absolute;
+  right: 1.5%;
+  width: 3vh;
 }
 
 .full-name {
-  display: flex;
   align-items: center;
+  display: flex;
   gap: 0.5ch;
   height: 30px;
   margin: 0;
 }
 
 .full-name p {
-  margin-right: 5px;
-  margin: 0;
-  font-size: var(--sm-size);
   color: var(--third-color);
+  font-size: var(--sm-size);
+  margin: 0;
+  margin-right: 5px;
+}
+
+.user-container {
+  align-items: center;
+  border-radius: 10px;
+  display: flex;
+  height: 72px;
+  margin-bottom: 2%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.user-info-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  margin-left: 3%;
+  position: relative;
+}
+
+.user-photo {
+  border-radius: 50%;
+  cursor: pointer;
+  height: 100%;
+  object-fit: cover;
+  width: 72px;
+}
+
+.users-container {
+  align-items: center;
+  all: unset;
+  display: flex;
+  flex-direction: column;
 }
 
 .username {
-  display: flex;
   align-items: center;
-  font-weight: 500;
+  display: flex;
   font-size: var(--md-size);
+  font-weight: 500;
   height: 30px;
   margin: 0;
-}
-
-.delete-user-container {
-  position: absolute;
-  right: 1.5%;
-  width: 3vh;
-  height: 3vh;
-}
-
-.accept-requested-user-container {
-  position: absolute;
-  right: 13%;
-  width: 3vh;
-  height: 3vh;
 }
 
 @media (width >= 1080px) and (width < 1280px) {
@@ -126,8 +125,8 @@
   }
 
   .user-photo {
-    width: 53px;
     height: 100%;
+    width: 53px;
   }
 
   .username {
