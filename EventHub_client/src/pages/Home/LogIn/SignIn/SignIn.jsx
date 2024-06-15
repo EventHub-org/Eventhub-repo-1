@@ -19,7 +19,6 @@ const SignIn = ({ forgotPassword, setIsLoading }) => {
   const [password, setPassword] = useState("");
   const [navigate, setNavigate] = useState(false);
   const [isVerified, setIsVerified] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const navigateToHome = useNavigate();
 
   const successGoogleLogin = async (credentialResponse) => {

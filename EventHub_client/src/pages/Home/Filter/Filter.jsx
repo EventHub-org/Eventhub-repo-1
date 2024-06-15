@@ -96,7 +96,6 @@ const EventFilter = ({ setIsLoading }) => {
 
   return (
     <div>
-      {loading && <ProcessingEffect />}
       <Dropdown
         overlay={
           <Menu className={styles.filterContainer}>

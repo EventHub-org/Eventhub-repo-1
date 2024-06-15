@@ -14,7 +14,6 @@ const MyEventsList = ({ handleButtonClose, setIsLoading }) => {
   const [checkboxJoined, setCheckboxJoined] = useState(true);
   const [checkboxPending, setCheckboxPending] = useState(false);
   const [checkboxArchive, setCheckboxArchive] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams("");
 

@@ -12,7 +12,6 @@ const SearchEvents = ({ setIsLoading }) => {
   const [eventsData, setEventsData] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchedValue, setSearchedValue] = useState(""); //  змінна для збереження значення для якого відбувся пошук
-  const [loading, setLoading] = useState(false);
 
   const handleSearch = async (event) => {
     event.preventDefault();
@@ -60,7 +59,6 @@ const SearchEvents = ({ setIsLoading }) => {
         showResults ? styles.active : styles.inactive
       }`}
     >
-      {loading && <ProcessingEffect />}
       <div className={styles.SearchInput}>
         <SearchInput
           searchedValue={searchedValue}
