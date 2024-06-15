@@ -14,6 +14,7 @@ const MyEventsList = ({ handleButtonClose, setIsLoading }) => {
   const [checkboxJoined, setCheckboxJoined] = useState(true);
   const [checkboxPending, setCheckboxPending] = useState(false);
   const [checkboxArchive, setCheckboxArchive] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams("");
 
@@ -48,7 +49,6 @@ const MyEventsList = ({ handleButtonClose, setIsLoading }) => {
   return (
     <div className={styles.BackgroungContainer}>
       <div className={styles.InnerContainer}>
-        <div className={styles["loading-circle"]}></div>
         <div className={styles.Heading}>
           <h2>Events</h2>
           <CloseWindowButton

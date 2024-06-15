@@ -19,6 +19,7 @@ const SignIn = ({ forgotPassword, setIsLoading }) => {
   const [password, setPassword] = useState("");
   const [navigate, setNavigate] = useState(false);
   const [isVerified, setIsVerified] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const navigateToHome = useNavigate();
 
   const successGoogleLogin = async (credentialResponse) => {
@@ -122,7 +123,6 @@ const SignIn = ({ forgotPassword, setIsLoading }) => {
 
   return isVerified ? (
     <div className={styles.container}>
-      <div className={styles["loading-circle"]}></div>
       <div className={styles.InnerContainer}>
         <div className={styles.Buttons}>
           <CloseWindowButton onClick={() => navigateToHome("/")} />

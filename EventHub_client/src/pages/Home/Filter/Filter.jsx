@@ -23,6 +23,8 @@ const EventFilter = ({ setIsLoading }) => {
   const [location, setLocation] = useState();
   const [dateRange, setDateRange] = useState([null, null]);
 
+  const [loading, setLoading] = useState(false);
+
   const [categoryOptions, setCategoryOptions] = useState([]);
   useEffect(() => {
     async function fetchCategories() {
@@ -94,6 +96,7 @@ const EventFilter = ({ setIsLoading }) => {
 
   return (
     <div>
+      {loading && <ProcessingEffect />}
       <Dropdown
         overlay={
           <Menu className={styles.filterContainer}>
