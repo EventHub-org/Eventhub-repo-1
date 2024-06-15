@@ -56,8 +56,8 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = true)
     private String password;
 
-    @Size(max = 255,
-            message = "Description length cannot be greater than 255 symbols")
+    @Size(max = 655,
+            message = "Description length cannot be greater than 655 symbols")
     @Column(name = "description", nullable = true)
     private String description;
 

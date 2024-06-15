@@ -28,8 +28,8 @@ public class UserRequestUpdate {
     @Size(min = 3, max = 20, message = "Username must be between 3 to 20 characters")
     private String username;
 
-    @Size(max = 255,
-            message = "Description length cannot be greater than 255 symbols")
+    @Size(max = 655,
+            message = "Description length cannot be greater than 655 symbols")
     private String description;
 
     private String city;

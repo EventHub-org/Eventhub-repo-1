@@ -49,8 +49,8 @@ public class Event {
     private LocalDateTime expireAt;
 
     @NotBlank(message = "Description is mandatory")
-    @Size(max = 255,
-            message = "Description length cannot be greater than 255 symbols")
+    @Size(max = 1000,
+            message = "Description length cannot be greater than 1000 symbols")
     @Column(name = "description")
     private String description;
 
