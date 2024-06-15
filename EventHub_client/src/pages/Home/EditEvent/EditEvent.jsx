@@ -311,8 +311,8 @@ const EditEvent = () => {
     if (!description || description.trim() === "") {
       message.error("Event description cannot be empty");
       return false;
-    } else if (description.length > 255) {
-      message.error("Event description cannot exceed 255 characters");
+    } else if (description.length > 1000) {
+      message.error("Event description cannot exceed 1000 characters");
       return false;
     }
 
@@ -390,7 +390,6 @@ const EditEvent = () => {
     }
   };
   const handleKeyDown = (event) => {
-
     if (event.key === "Escape") {
       event.preventDefault();
       clearEventData();
