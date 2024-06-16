@@ -11,19 +11,19 @@ import java.util.UUID;
 public class EventSpecification {
     private EventSpecification(){}
     public static Specification<Event> findUserEvents(UUID userId){
+        return (root, query, builder) -> builder.equal(root.get("owner"), userId);
+    }
+    public static Specification<Event> findJoinedEvents(UUID userId){
         return (root, query, builder) -> {
             Join<Event, Participant> participantJoin = root.join("participants");
             Join<Participant, User> userJoin = root.join("users");
 
             return builder.and(
-              builder.equal(userJoin.get("id"), userId),
-              builder.isTrue(participantJoin.get("isApproved"))
+                    builder.equal(userJoin.get("id"), userId),
+                    builder.isTrue(participantJoin.get("isApproved"))
             );
 
         };
-    }
-    public static Specification<Event> findJoinedEvents(UUID uuid){
-        return null;
     }
 
     public static Specification<Event> findPendingEvents(UUID uuid){
