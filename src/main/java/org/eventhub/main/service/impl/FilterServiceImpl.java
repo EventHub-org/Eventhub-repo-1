@@ -8,12 +8,14 @@ import org.eventhub.main.model.Event;
 import org.eventhub.main.repository.FilterRepository;
 import org.eventhub.main.service.EventService;
 import org.eventhub.main.service.FilterService;
+import org.eventhub.main.specification.EventSpecification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 
 @Slf4j
 @Service
@@ -64,29 +66,18 @@ public class FilterServiceImpl implements FilterService {
     }
 
     @Override
-    public Set<EventSearchResponse> filterCheckboxEvents(CheckboxRequest checkboxRequest) {
-
-        Set<Event> results = new HashSet<>();
-
-        log.info(String.valueOf(checkboxRequest));
-        if (checkboxRequest.isMyEvents()) {
-            results.addAll(filterRepository.findMyEvents(checkboxRequest.getUserId()));
+    public List<EventSearchResponse> filterCheckboxEvents(CheckboxRequest checkboxRequest) {
+        if (!checkboxRequest.isMyEvents() &&
+                !checkboxRequest.isJoinedEvents() &&
+                !checkboxRequest.isPendingEvents() &&
+                !checkboxRequest.isArchiveEvents()) {
+            return Collections.emptyList();
         }
 
-        if (checkboxRequest.isJoinedEvents()) {
-            results.addAll(filterRepository.findJoinedEvents(checkboxRequest.getUserId()));
-        }
-
-        if (checkboxRequest.isPendingEvents()) {
-            results.addAll(filterRepository.findPendingEvents(checkboxRequest.getUserId()));
-        }
-
-        if (checkboxRequest.isArchiveEvents()) {
-            results.addAll(filterRepository.findArchiveEvents(checkboxRequest.getUserId(), LocalDateTime.now()));
-        }
-
-        return results.stream().map(eventMapper::entityToSearchResponse)
-                .collect(Collectors.toSet());
+        return this.filterRepository.findAll(EventSpecification.checkBoxFilter(checkboxRequest))
+                                    .stream()
+                                    .map(eventMapper::entityToSearchResponse)
+                                    .collect(Collectors.toList());
     }
 
     @Override

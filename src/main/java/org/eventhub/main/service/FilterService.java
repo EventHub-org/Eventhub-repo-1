@@ -13,7 +13,6 @@ import java.util.UUID;
 
 public interface FilterService {
     List<EventSearchResponse> filterEvents(EventFilterRequest filterRequest);
-    Set<EventSearchResponse> filterCheckboxEvents(CheckboxRequest checkboxRequest);
-
+    List<EventSearchResponse> filterCheckboxEvents(CheckboxRequest checkboxRequest);
     List<EventResponseXY> allLiveAndUpcomingEvents();
 }

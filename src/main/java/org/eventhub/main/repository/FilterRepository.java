@@ -2,6 +2,7 @@ package org.eventhub.main.repository;
 
 import org.eventhub.main.model.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public interface FilterRepository extends JpaRepository<Event, UUID> {
+public interface FilterRepository extends JpaRepository<Event, UUID>, JpaSpecificationExecutor<Event> {
     @Query("SELECT e FROM Event e WHERE e.owner.id = :userId")
     List<Event> findMyEvents(@Param("userId") UUID userId);
 

@@ -23,13 +23,11 @@ import java.util.Set;
 public class FilterController {
     private final FilterService filterService;
     private final JwtService jwtService;
-    private final AuthenticationService authenticationService;
 
     @Autowired
-    public FilterController(FilterService filterService, JwtService jwtService, AuthenticationService authenticationService){
+    public FilterController(FilterService filterService, JwtService jwtService){
         this.filterService = filterService;
         this.jwtService = jwtService;
-        this.authenticationService = authenticationService;
     }
 
     @PostMapping("/events/filter")
@@ -38,13 +36,16 @@ public class FilterController {
         return new ResponseEntity<>(filterService.filterEvents(request), HttpStatus.OK);
     }
 
-    @PostMapping("/events/checkbox-filter")
-    public ResponseEntity<Set<EventSearchResponse>> checkboxFilter(@RequestBody CheckboxRequest request,
-                                                                   @RequestHeader("Authorization") String token) {
+    @GetMapping("/events/checkbox-filter")
+    public ResponseEntity<List<EventSearchResponse>> checkboxFilter(@RequestParam(value = "my_events") boolean myEvents,
+                                                                    @RequestParam("joined_events") boolean joinedEvents,
+                                                                    @RequestParam("pending_event") boolean pendingEvents,
+                                                                    @RequestParam("archive_events") boolean archiveEvents,
+                                                                    @RequestHeader("Authorization") String token) {
 //        if(jwtService.isExpired(token)){
 //            authenticationService.refreshToken(refreshToken);
 //        }
-        request.setUserId(jwtService.getId(token));
+        CheckboxRequest request = new CheckboxRequest(jwtService.getId(token), myEvents, joinedEvents, pendingEvents, archiveEvents);
         log.info("**/get filtered events with checkbox");
         return new ResponseEntity<>(filterService.filterCheckboxEvents(request), HttpStatus.OK);
     }

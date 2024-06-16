@@ -1,6 +1,7 @@
 package org.eventhub.main.specification;
 
 import jakarta.persistence.criteria.Join;
+import org.eventhub.main.dto.CheckboxRequest;
 import org.eventhub.main.model.Event;
 import org.eventhub.main.model.Participant;
 import org.eventhub.main.model.User;
@@ -11,13 +12,25 @@ import java.util.UUID;
 
 public class EventSpecification {
     private EventSpecification(){}
-    public static Specification<Event> findUserEvents(UUID userId){
-        return (root, query, builder) -> builder.equal(root.get("owner"), userId);
+
+    public static Specification<Event> checkBoxFilter(CheckboxRequest checkboxRequest){
+        UUID userId = checkboxRequest.getUserId();
+
+        return Specification.where(checkboxRequest.isMyEvents()?findUserEvents(userId):null)
+                .or(checkboxRequest.isJoinedEvents()?findJoinedEvents(userId):null)
+                .or(checkboxRequest.isPendingEvents()?findPendingEvents(userId):null)
+                .or(checkboxRequest.isArchiveEvents()?findArchiveEvents(userId):null);
     }
-    public static Specification<Event> findJoinedEvents(UUID userId){
+    private static Specification<Event> findUserEvents(UUID userId){
+        return (root, query, builder) -> {
+            Join<Event, User> ownerJoin = root.join("owner");
+            return builder.equal(ownerJoin.get("id"), userId);
+        };
+    }
+    private static Specification<Event> findJoinedEvents(UUID userId){
         return (root, query, builder) -> {
             Join<Event, Participant> participantJoin = root.join("participants");
-            Join<Participant, User> userJoin = root.join("users");
+            Join<Participant, User> userJoin = participantJoin.join("user");
 
             return builder.and(
                     builder.equal(userJoin.get("id"), userId),
@@ -27,10 +40,10 @@ public class EventSpecification {
         };
     }
 
-    public static Specification<Event> findPendingEvents(UUID userId){
+    private static Specification<Event> findPendingEvents(UUID userId){
         return (root, query, builder) -> {
             Join<Event, Participant> participantJoin = root.join("participants");
-            Join<Participant, User> userJoin = root.join("users");
+            Join<Participant, User> userJoin = participantJoin.join("user");
 
             return builder.and(
                     builder.equal(userJoin.get("id"), userId),
@@ -40,11 +53,16 @@ public class EventSpecification {
         };
     }
 
-    public static Specification<Event> findArchiveEvents(UUID userId){
+    private static Specification<Event> findArchiveEvents(UUID userId){
         LocalDateTime currentTime = LocalDateTime.now();
-        return (root, query,builder)-> builder.and(
-                builder.equal(root.get("owner"), userId),
-                builder.lessThanOrEqualTo(root.get("expireAt"), currentTime)
-        );
+
+        return (root, query,builder)-> {
+            Join<Event, User> ownerJoin = root.join("owner");
+
+            return builder.and(
+                    builder.equal(ownerJoin.get("id"), userId),
+                    builder.lessThanOrEqualTo(root.get("expireAt"), currentTime)
+            );
+        };
     }
 }
