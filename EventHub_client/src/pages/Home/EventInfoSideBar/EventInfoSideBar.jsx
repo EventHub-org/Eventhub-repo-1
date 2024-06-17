@@ -289,7 +289,6 @@ const EventInfoSideBar = ({ setIsLoading }) => {
   return (
     event && (
       <div className={styles["wrapper-container"]}>
-        <div className={styles["loading-circle"]}></div>
         <div className={styles["header"]}>
           {!showAllParticipants && !showRequests ? (
             <h2 className={styles["event-title"]}>{event.title}</h2>
