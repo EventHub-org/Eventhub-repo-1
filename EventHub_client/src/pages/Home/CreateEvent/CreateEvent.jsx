@@ -24,7 +24,7 @@ import { sendDataWithoutPhotos } from "../../../api/sendEventData";
 import { sendPhotosToServer } from "../../../api/sendEventData";
 import getIdFromToken from "../../../jwt/getIdFromToken";
 
-import ProcessingEffect from "../../../components/ProcessingEffect/ProcessingEffect";
+import withLoading from "../../../utils/hoc/withLoading/withLoading";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -142,7 +142,7 @@ const PlacesAutocomplete = ({ onSelectLocation }) => {
   );
 };
 
-const CreateEvent = () => {
+const CreateEvent = ({ setIsLoading }) => {
   const [photos, setPhotos] = useState(new Array(6).fill(null));
   const [addedPhotos, setAddedPhotos] = useState(0);
   const [hoveredPhotoIndex, setHoveredPhotoIndex] = useState(-1);
@@ -163,7 +163,6 @@ const CreateEvent = () => {
 
   const [formData, setFormData] = useState(new Array(6).fill(null));
 
-  const [processing, setProcessing] = useState(false);
   useEffect(() => {
     // Отримання категорії з серверу під час завантаження компонента
     const fetchCategories = async () => {
@@ -318,7 +317,7 @@ const CreateEvent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setProcessing(true);
+      setIsLoading(true);
 
       if (!validateFields()) {
         return;
@@ -372,7 +371,7 @@ const CreateEvent = () => {
       console.error("Error submitting event:", error);
       message.error("Failed to create event. Please try again later.");
     } finally {
-      setProcessing(false);
+      setIsLoading(false);
     }
   };
   const handleKeyDown = (event) => {
@@ -393,7 +392,6 @@ const CreateEvent = () => {
     <>
       {isCreateEvent && (
         <>
-          {processing && <ProcessingEffect />}
           <div className={styles.backdrop}>
             <div className={styles.wrapper}>
               <div className={styles.mainContainer}>
@@ -590,4 +588,4 @@ const CreateEvent = () => {
   );
 };
 
-export default CreateEvent;
+export default withLoading(CreateEvent);

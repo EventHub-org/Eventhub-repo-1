@@ -1,0 +1,139 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+/* Main container */
+
+.users-list-container {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--primary-font-family), sans-serif;
+  font-style: normal;
+  height: 100%;
+  overflow: auto;
+  width: 100%;
+  z-index: 991;
+}
+
+/* Users list */
+
+.accept-requested-user-container {
+  height: 3vh;
+  position: absolute;
+  right: 13%;
+  width: 3vh;
+}
+
+.delete-user-container {
+  height: 3vh;
+  position: absolute;
+  right: 1.5%;
+  width: 3vh;
+}
+
+.full-name {
+  align-items: center;
+  display: flex;
+  gap: 0.5ch;
+  height: 30px;
+  margin: 0;
+}
+
+.full-name p {
+  color: var(--third-color);
+  font-size: var(--sm-size);
+  margin: 0;
+  margin-right: 5px;
+}
+
+.user-container {
+  align-items: center;
+  border-radius: 10px;
+  display: flex;
+  height: 72px;
+  margin-bottom: 2%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.user-info-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  margin-left: 3%;
+  position: relative;
+}
+
+.user-photo {
+  border-radius: 50%;
+  cursor: pointer;
+  height: 100%;
+  object-fit: cover;
+  width: 72px;
+}
+
+.users-container {
+  align-items: center;
+  all: unset;
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  align-items: center;
+  display: flex;
+  font-size: var(--md-size);
+  font-weight: 500;
+  height: 30px;
+  margin: 0;
+}
+
+@media (width >= 1080px) and (width < 1280px) {
+  .users-list-container {
+    font-size: var(--xxs-size);
+  }
+
+  .user-container {
+    height: 45px;
+  }
+
+  .user-photo {
+    width: 45px;
+    height: 45px;
+  }
+
+  .username {
+    font-size: var(--xxs-size);
+  }
+
+  .full-name p {
+    font-size: var(--xxs-size);
+  }
+}
+
+@media (width >= 1280px) and (width < 1700px) {
+  .users-list-container {
+    font-size: var(--xxs-size);
+  }
+
+  .user-container {
+    height: 53px;
+  }
+
+  .user-photo {
+    height: 100%;
+    width: 53px;
+  }
+
+  .username {
+    font-size: var(--xxs-size);
+  }
+
+  .full-name p {
+    font-size: var(--xxs-size);
+  }
+}

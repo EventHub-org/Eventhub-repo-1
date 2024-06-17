@@ -24,7 +24,7 @@ import {
   deleteEvent,
   deleteEventPhotos,
 } from "../../../api/editEventData";
-import ProcessingEffect from "../../../components/ProcessingEffect/ProcessingEffect";
+import withLoading from "../../../utils/hoc/withLoading/withLoading";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -119,7 +119,7 @@ const PlacesAutocomplete = ({ onSelectLocation, defaultAddress }) => {
   );
 };
 
-const EditEvent = () => {
+const EditEvent = ({ setIsLoading }) => {
   const [eventExistingPhotos, setEventExistingPhotos] = useState(null);
   const [photos, setPhotos] = useState(new Array(6).fill(null));
   const [photosToDelete, setPhotosToDelete] = useState([]);
@@ -143,7 +143,6 @@ const EditEvent = () => {
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [submitChanges, setSubmitChanges] = useState(false);
 
   // const userId = getIdFromToken();
 
@@ -334,7 +333,7 @@ const EditEvent = () => {
     if (!validateFields()) {
       return;
     }
-    setSubmitChanges(true);
+    setIsLoading(true);
     try {
       const startAt = formatDate(dateRange[0]);
       const expireAt = formatDate(dateRange[1]);
@@ -370,7 +369,7 @@ const EditEvent = () => {
         message.error(error.response.data);
       }
     } finally {
-      setSubmitChanges(false);
+      setIsLoading(false);
     }
   };
   const handleDelete = async () => {
@@ -406,8 +405,6 @@ const EditEvent = () => {
 
   return eventId ? (
     <div className={styles.backdrop}>
-      {submitChanges && <ProcessingEffect />}
-
       <div className={styles.wrapper}>
         <div className={styles.mainContainer}>
           <div className={styles.editEventHeader}>
@@ -586,4 +583,4 @@ const EditEvent = () => {
   );
 };
 
-export default EditEvent;
+export default withLoading(EditEvent);

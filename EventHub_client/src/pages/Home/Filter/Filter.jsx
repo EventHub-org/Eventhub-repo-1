@@ -9,10 +9,10 @@ import FilteredEvents from "./FilteredEvents";
 import { getCategories } from "../../../api/getCategories";
 import { getFilteredEvents } from "../../../api/getFilteredEvents";
 import "../../../App.css";
-import ProcessingEffect from "../../../components/ProcessingEffect/ProcessingEffect";
+import withLoading from "../../../utils/hoc/withLoading/withLoading";
 const { Option } = Select;
 
-const EventFilter = () => {
+const EventFilter = ({ setIsLoading }) => {
   const [searchParams, setSearchParams] = useSearchParams("");
   const [isOpen, setIsOpen] = useState(false);
   const [eventsData, setEventsData] = useState(null);
@@ -45,13 +45,13 @@ const EventFilter = () => {
 
   const fetchData = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       const events = await getFilteredEvents();
       setEventsData(events);
     } catch (error) {
       console.log("Error fetching filtered events", error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -96,7 +96,6 @@ const EventFilter = () => {
 
   return (
     <div>
-      {loading && <ProcessingEffect />}
       <Dropdown
         overlay={
           <Menu className={styles.filterContainer}>
@@ -165,4 +164,4 @@ const EventFilter = () => {
   );
 };
 
-export default EventFilter;
+export default withLoading(EventFilter);

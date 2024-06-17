@@ -6,14 +6,14 @@ import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/Clo
 import ListEvents from "../../../components/ListEvents/ListEvents";
 import { getCheckbuttonsEvents } from "../../../api/getCheckbuttonsEvents";
 import { LoadingOutlined } from "@ant-design/icons";
+import withLoading from "../../../utils/hoc/withLoading/withLoading";
 
-const MyEventsList = ({ handleButtonClose }) => {
+const MyEventsList = ({ handleButtonClose, setIsLoading }) => {
   const [events, setEvents] = useState([]);
   const [checkboxMy, setCheckboxMy] = useState(true);
   const [checkboxJoined, setCheckboxJoined] = useState(true);
   const [checkboxPending, setCheckboxPending] = useState(false);
   const [checkboxArchive, setCheckboxArchive] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams("");
 
@@ -48,13 +48,6 @@ const MyEventsList = ({ handleButtonClose }) => {
   return (
     <div className={styles.BackgroungContainer}>
       <div className={styles.InnerContainer}>
-        <div className={styles["loading-circle"]}>
-          {isLoading && (
-            <LoadingOutlined
-              style={{ fontSize: "72px", color: "#aaaaaa", fontWeigh: "1000" }}
-            />
-          )}
-        </div>
         <div className={styles.Heading}>
           <h2>Events</h2>
           <CloseWindowButton
@@ -109,4 +102,4 @@ const MyEventsList = ({ handleButtonClose }) => {
   );
 };
 
-export default MyEventsList;
+export default withLoading(MyEventsList);

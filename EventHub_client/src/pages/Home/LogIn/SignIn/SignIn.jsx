@@ -10,16 +10,15 @@ import { GoogleLogin } from "@react-oauth/google";
 import { checkEmail } from "../../SignUp/Registration/validation";
 import AuthContext from "../../../../context/authProvider";
 import EmailVerification from "../../SignUp/EmailVerification/EmailVerification";
-import { LoadingOutlined } from "@ant-design/icons";
+import withLoading from "../../../../utils/hoc/withLoading/withLoading";
 
-const SignIn = ({ forgotPassword }) => {
+const SignIn = ({ forgotPassword, setIsLoading }) => {
   const { login, googleAuth } = useContext(AuthContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [navigate, setNavigate] = useState(false);
   const [isVerified, setIsVerified] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const navigateToHome = useNavigate();
 
   const successGoogleLogin = async (credentialResponse) => {
@@ -123,13 +122,6 @@ const SignIn = ({ forgotPassword }) => {
 
   return isVerified ? (
     <div className={styles.container}>
-      <div className={styles["loading-circle"]}>
-        {isLoading && (
-          <LoadingOutlined
-            style={{ fontSize: "72px", color: "#aaaaaa", fontWeigh: "1000" }}
-          />
-        )}
-      </div>
       <div className={styles.InnerContainer}>
         <div className={styles.Buttons}>
           <CloseWindowButton onClick={() => navigateToHome("/")} />
@@ -229,4 +221,4 @@ const SignIn = ({ forgotPassword }) => {
     <EmailVerification email={email} />
   );
 };
-export default SignIn;
+export default withLoading(SignIn);

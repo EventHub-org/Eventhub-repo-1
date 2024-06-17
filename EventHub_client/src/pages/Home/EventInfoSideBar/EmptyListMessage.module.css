@@ -1,0 +1,13 @@
+.message {
+  align-items: center;
+  color: var(--third-color);
+  display: flex;
+  justify-content: center;
+  left: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5vh;
+  position: absolute;
+  right: 0;
+  width: 15vw;
+}

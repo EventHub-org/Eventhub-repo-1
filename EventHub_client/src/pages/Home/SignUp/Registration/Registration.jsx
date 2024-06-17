@@ -5,10 +5,10 @@ import { useNavigate, Link } from "react-router-dom";
 import { PlacesAutocomplete } from "../../../../components/PlaceAutocomplete/PlaceAutocomplete";
 import { checkEmail, checkName, checkPassword } from "./validation";
 import CloseWindowButton from "../../../../components/Buttons/CloseWindowButton/CloseWindowButton";
-import ProcessingEffect from "../../../../components/ProcessingEffect/ProcessingEffect";
 import useAuth from "../../../../hooks/useAuth";
 import AuthContext from "../../../../context/authProvider";
 import { GoogleLogin } from "@react-oauth/google";
+import withLoading from "../../../../utils/hoc/withLoading/withLoading";
 
 import { Button, Checkbox, Col, Form, Input, Row, Select, message } from "antd";
 
@@ -45,9 +45,8 @@ const tailFormItemLayout = {
   },
 };
 
-const Registration = ({ setUserEmail, setIsRegistered }) => {
+const Registration = ({ setUserEmail, setIsRegistered, setIsLoading }) => {
   const [form] = Form.useForm();
-  const [processing, setProcessing] = useState(false);
   const navigate = useNavigate();
 
   const [first_name, setFirstName] = useState("");
@@ -64,7 +63,7 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
     const googleToken = credentialResponse.credential;
 
     try {
-      setProcessing(true);
+      setIsLoading(true);
       const res = await googleAuth(googleToken);
       const email = res?.data?.email;
       const accessToken = res?.data?.accessToken;
@@ -77,7 +76,7 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
         message.success("Login successful!");
       }
     } finally {
-      setProcessing(false);
+      setIsLoading(false);
     }
   };
 
@@ -94,7 +93,7 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
       is_verified: false,
     };
     try {
-      setProcessing(true);
+      setIsLoading(true);
       await register(userData);
 
       setIsRegistered(true);
@@ -107,13 +106,12 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
         message.error(err.response.data);
       }
     } finally {
-      setProcessing(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <>
-      {processing && <ProcessingEffect />}
       <div className={styles.outerContainer}>
         <div className={styles.container}>
           <div className={styles.Buttons}>
@@ -367,4 +365,4 @@ const Registration = ({ setUserEmail, setIsRegistered }) => {
   );
 };
 
-export default Registration;
+export default withLoading(Registration);

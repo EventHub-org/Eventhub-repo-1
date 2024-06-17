@@ -34,7 +34,7 @@ const ImageSlider = ({ images }) => {
             key={image.id}
             src={image.photo_url}
             style={{ translate: `${-100 * imageIndex}%` }}
-            alt="Event img"
+            alt="Event"
           />
         ))}
       </div>

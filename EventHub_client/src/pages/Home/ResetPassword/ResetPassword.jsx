@@ -4,11 +4,11 @@ import { Input, message } from "antd";
 import { FaUnlock } from "react-icons/fa";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButton";
-import ProcessingEffect from "../../../components/ProcessingEffect/ProcessingEffect";
 import AuthContext from "../../../context/authProvider";
 import styles from "./ResetPassword.module.css";
+import withLoading from "../../../utils/hoc/withLoading/withLoading";
 
-const ResetPassword = () => {
+const ResetPassword = ({ setIsLoading }) => {
   const navigate = useNavigate();
   const { token } = useParams();
   const { confirmResetPassword } = useContext(AuthContext);
@@ -16,10 +16,8 @@ const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
-  const [isProcessed, setIsProcessed] = useState(false);
-
   const handleSubmit = async () => {
-    if(newPassword === "" || confirmNewPassword === ""){
+    if (newPassword === "" || confirmNewPassword === "") {
       message.error("Password cannot be empty!");
       return;
     }
@@ -33,7 +31,7 @@ const ResetPassword = () => {
       return;
     }
     try {
-      setIsProcessed(true);
+      setIsLoading(true);
       await confirmResetPassword({
         token: token,
         new_password: newPassword,
@@ -48,12 +46,11 @@ const ResetPassword = () => {
         message.error("Error!");
       }
     } finally {
-      setIsProcessed(false);
+      setIsLoading(false);
     }
   };
   return (
     <>
-      {isProcessed && <ProcessingEffect />}
       <div className={styles.OuterContainer}>
         <div className={styles.InnerContainer}>
           <div className={styles.Buttons}>
@@ -114,4 +111,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default withLoading(ResetPassword);

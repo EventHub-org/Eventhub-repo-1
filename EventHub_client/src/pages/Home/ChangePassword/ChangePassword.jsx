@@ -6,10 +6,10 @@ import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/Clo
 import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButton";
 import { changePassword } from "../../../api/changePassword";
 import styles from "./ChangePassword.module.css";
-import ProcessingEffect from "../../../components/ProcessingEffect/ProcessingEffect";
 import { FaUnlock } from "react-icons/fa";
+import withLoading from "../../../utils/hoc/withLoading/withLoading";
 
-const ChangePassword = () => {
+const ChangePassword = ({ setIsLoading }) => {
   //const { auth, setAuth } = useAuth();
   const authenticated = useLogin();
   const navigate = useNavigate();
@@ -19,7 +19,6 @@ const ChangePassword = () => {
     confirmNewPassword: "",
   });
   const [show, setShow] = useState(true);
-  const [submitChanges, setSubmitChanges] = useState(false);
 
   useEffect(() => {
     if (!authenticated) {
@@ -43,7 +42,7 @@ const ChangePassword = () => {
   };
   const handleApply = async () => {
     try {
-      setSubmitChanges(true);
+      setIsLoading(true);
       confirmPassword();
       await changePassword(passwords);
       message.success("Password successfully updated");
@@ -55,7 +54,7 @@ const ChangePassword = () => {
         message.error("Password change failed: " + error.message); // Fallback message if response data is not available
       }
     } finally {
-      setSubmitChanges(false);
+      setIsLoading(false);
       navigate(-1);
     }
   };
@@ -67,14 +66,13 @@ const ChangePassword = () => {
   return (
     show && (
       <>
-        {submitChanges && <ProcessingEffect />}
         <div className={styles.OuterContainer}>
           <div className={styles.InnerContainer}>
             <div className={styles.Buttons}>
               <p className={styles.Caption}>Change password</p>
               <CloseWindowButton onClick={handleClose} />
             </div>
-            <FaUnlock className={styles.Lock}/>
+            <FaUnlock className={styles.Lock} />
             <div className={styles.PasswordsContainer}>
               <div className={styles.Password}>
                 <p className={styles.PasswordCaption}>Old password</p>
@@ -111,8 +109,16 @@ const ChangePassword = () => {
               </div>
             </div>
             <div className={styles.Buttons}>
-              <PrimaryButton children={"Cancel"} onClick={handleClose} className={`${styles.CancelButton} ${styles.Button}`}/>
-              <PrimaryButton children={"Apply"} onClick={handleApply} className={styles.Button}/>
+              <PrimaryButton
+                children={"Cancel"}
+                onClick={handleClose}
+                className={`${styles.CancelButton} ${styles.Button}`}
+              />
+              <PrimaryButton
+                children={"Apply"}
+                onClick={handleApply}
+                className={styles.Button}
+              />
             </div>
           </div>
         </div>
@@ -121,4 +127,4 @@ const ChangePassword = () => {
   );
 };
 
-export default ChangePassword;
+export default withLoading(ChangePassword);

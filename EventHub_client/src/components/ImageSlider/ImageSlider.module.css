@@ -5,59 +5,59 @@
 }
 
 .image-slider {
-  width: 100%;
   height: 100%;
   position: relative;
+  width: 100%;
 }
 
 .image-slider-img {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
   display: block;
   flex-grow: 0;
   flex-shrink: 0;
+  height: 100%;
+  object-fit: cover;
   transition: translate 0.3s ease-in-out;
+  width: 100%;
 }
 
 .images-container {
   display: flex;
+  height: 100%;
   overflow: hidden;
   width: 100%;
-  height: 100%;
 }
 
 .arrow-container {
-  width: 100%;
-  position: absolute;
-  top: 0;
+  align-items: center;
   bottom: 0;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
 
 .arrow {
   all: unset;
+  align-items: center;
   color: #fff;
+  cursor: pointer;
+  display: flex;
   font-size: 1.1rem;
   height: 100%;
-  width: 7%;
-  display: flex;
   justify-content: center;
-  align-items: center;
-  cursor: pointer;
   position: relative;
+  width: 7%;
 }
 
 .arrow::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   backdrop-filter: blur(3px);
+  bottom: 0;
+  content: "";
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
   transition: backdrop-filter 0.4s ease;
 }
 

@@ -7,15 +7,14 @@ import PrimaryButton from "../../../../components/Buttons/PrimaryButton/PrimaryB
 import CloseWindowButton from "../../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import GoBackButtn from "../../../../components/Buttons/GoBackButton/GoBackButton";
 import { resetPassword } from "../../../../api/resetPassword";
-import ProcessingEffect from "../../../../components/ProcessingEffect/ProcessingEffect";
 import styles from "./ForgotPassword.module.css";
+import withLoading from "../../../../utils/hoc/withLoading/withLoading";
 
-const ForgotPassword = ({ logIn }) => {
+const ForgotPassword = ({ logIn, setIsLoading }) => {
   const [email, setEmail] = useState("");
   const [showButton, setShowButton] = useState(false);
   const navigate = useNavigate();
 
-  const [isProcessed, setIsProcessed] = useState(false);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const handleEmailChange = (e) => {
@@ -27,7 +26,7 @@ const ForgotPassword = ({ logIn }) => {
   const handleResetPassword = async () => {
     if (showButton) {
       try {
-        setIsProcessed(true);
+        setIsLoading(true);
         await resetPassword(email);
         message.success("Email has been sent!");
       } catch (error) {
@@ -37,14 +36,13 @@ const ForgotPassword = ({ logIn }) => {
           message.error("Error!");
         }
       } finally {
-        setIsProcessed(false);
+        setIsLoading(false);
       }
     }
   };
 
   return (
     <>
-      {isProcessed && <ProcessingEffect />}
       <div className={styles.Container}>
         <div className={styles.Close}>
           <GoBackButtn onClick={logIn} />
@@ -80,4 +78,4 @@ const ForgotPassword = ({ logIn }) => {
   );
 };
 
-export default ForgotPassword;
+export default withLoading(ForgotPassword);
