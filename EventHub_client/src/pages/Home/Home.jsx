@@ -7,7 +7,7 @@ import MenuButton from "./ProfileORlogin/ProfileButton";
 import LoginRegisterButton from "./ProfileORlogin/LoginRegisterButton";
 import React, { useEffect } from "react";
 
-import SearchEvents from "./Search/Search";
+import Search from "./Search/Search";
 import CreateEvent from "./CreateEvent/CreateEvent";
 import EventFilter from "./Filter/Filter";
 import MyEvents from "./MyEvents/MyEvents";
@@ -43,7 +43,7 @@ const Home = ({ setIsLoading }) => {
 
           {auth.token ? <MenuButton /> : <LoginRegisterButton />}
 
-          <SearchEvents />
+          <Search />
           <CreateEvent />
           <EventFilter />
           <MyEvents />

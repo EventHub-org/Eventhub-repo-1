@@ -6,7 +6,7 @@ import { getEventsDataSearch } from "../../../api/getEventsData";
 import { useSearchParams } from "react-router-dom";
 import withLoading from "../../../utils/hoc/withLoading/withLoading";
 
-const SearchEvents = ({ setIsLoading }) => {
+const Search = ({ setIsLoading }) => {
   const [searchValue, setSearchValue] = useState(""); //змінна для поточного значення в полі вводу
   const [showResults, setShowResults] = useState(false);
   const [eventsData, setEventsData] = useState([]);
@@ -54,12 +54,8 @@ const SearchEvents = ({ setIsLoading }) => {
   }, [showResults, searchParams]);
 
   return (
-    <div
-      className={`${styles.SearchContainer} ${
-        showResults ? styles.active : styles.inactive
-      }`}
-    >
-      <div className={styles.SearchInput}>
+    <div className={styles["search-container"]}>
+      <div className={styles["search-input"]}>
         <SearchInput
           searchedValue={searchedValue}
           searchValue={searchValue}
@@ -70,19 +66,19 @@ const SearchEvents = ({ setIsLoading }) => {
         />
       </div>
 
-      {showResults && searchedValue ? (
-        <div className={styles.ResultsContainer}>
+      {showResults && searchedValue && (
+        <div className={styles["results-container"]}>
           {eventsData.length === 0 ? (
-            <p className={styles.NoResultsText}>
+            <p className={styles["no-results-text"]}>
               No results found for "{searchedValue}"
             </p>
           ) : (
             <ListEvents eventsData={eventsData} />
           )}
         </div>
-      ) : null}
+      )}
     </div>
   );
 };
 
-export default withLoading(SearchEvents);
+export default withLoading(Search);

@@ -1,53 +1,45 @@
 @import "../../../App.css";
 
-.SearchContainer {
+.no-results-text {
+  /* No results found. */
+  color: var(--text-secondary-color);
+  font-family: var(--primary-font-family);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
   position: absolute;
-  top: 20px;
-  left: 32px;
+  text-align: center;
+  top: 48px;
   width: 352px;
-  transition: top 0.3s ease;
+}
+
+.results-container {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 0 0 25px 25px;
+  box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
-}
-
-.SearchContainer.active {
-  height: calc(100vh - 42px);
-}
-
-.SearchContainer.inactive {
-  height: 48px;
-}
-
-.SearchInput {
-  width: 100%;
-  height: 48px;
-  position: absolute;
-  z-index: 1;
-  box-sizing: border-box;
-}
-
-.ResultsContainer {
+  height: 85vh;
+  padding: 8px 8px 16px 8px;
   position: absolute;
   top: 49px;
   width: 100%;
-  height: 85vh;
-  background-color: rgba(255, 255, 255, 0.85);
-  box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(10px);
-  border-radius: 0 0 25px 25px;
-  padding: 8px 8px 16px 8px;
-  box-sizing: border-box;
 }
-.NoResultsText {
-  /* No results found. */
 
+.search-container {
+  box-sizing: border-box;
+  left: 32px;
   position: absolute;
+  top: 20px;
+  transition: top 0.3s ease;
   width: 352px;
-  top: 48px;
-  font-family: var(--primary-font-family);
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
-  text-align: center;
-  color: var(--text-secondary-color);
+}
+
+.search-input {
+  box-sizing: border-box;
+  height: 48px;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
 }
