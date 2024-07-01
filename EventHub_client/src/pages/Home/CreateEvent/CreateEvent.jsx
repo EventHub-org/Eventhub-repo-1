@@ -323,10 +323,8 @@ const CreateEvent = ({ setIsLoading }) => {
         return;
       }
 
-      console.log(dateRange);
       const startAt = formatDate(dateRange[0]);
       const expireAt = formatDate(dateRange[1]);
-      console.log("Категорії", selectedCategories);
 
       const user_id = getIdFromToken();
       const eventData = {
