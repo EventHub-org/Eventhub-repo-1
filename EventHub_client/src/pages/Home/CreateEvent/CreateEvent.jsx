@@ -22,7 +22,6 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 import { sendDataWithoutPhotos } from "../../../api/sendEventData";
 import { sendPhotosToServer } from "../../../api/sendEventData";
-import getIdFromToken from "../../../jwt/getIdFromToken";
 
 import withLoading from "../../../utils/hoc/withLoading/withLoading";
 
@@ -326,7 +325,7 @@ const CreateEvent = ({ setIsLoading }) => {
       const startAt = formatDate(dateRange[0]);
       const expireAt = formatDate(dateRange[1]);
 
-      const user_id = getIdFromToken();
+      // const user_id = getIdFromToken();
       const eventData = {
         title: title,
         max_participants: participants,
@@ -341,13 +340,11 @@ const CreateEvent = ({ setIsLoading }) => {
           name: category,
         })),
         current_count: 0,
-        owner_id: user_id,
       };
-      const textDataResponse = await sendDataWithoutPhotos(eventData, user_id);
+      const textDataResponse = await sendDataWithoutPhotos(eventData);
 
       const eventId = textDataResponse.id;
-      const photoDataResponse = await sendPhotosToServer(formData, eventId);
-      // console.log("Photo response data: ",photoDataResponse)
+      await sendPhotosToServer(formData, eventId);
 
       setsearchParams({});
 
