@@ -14,7 +14,6 @@ export const getCheckbuttonsEvents = async (
     const response = await axios.post(
       DATA_URL,
       {
-        user_id: null,
         is_my_events,
         is_joined_events,
         is_pending_events,
