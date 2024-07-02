@@ -414,12 +414,6 @@ const EventInfoSideBar = ({ setIsLoading }) => {
                       />
                     </button>
                   </div>
-
-                  {/* <AnimatePresence>
-                    {hoveredParticipant && (
-                      <ParticipantInfoPopUp participant={hoveredParticipant} />
-                    )}
-                  </AnimatePresence> */}
                 </div>
               </div>
 
