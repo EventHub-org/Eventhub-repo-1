@@ -30,6 +30,8 @@ public class FilterServiceImpl implements FilterService {
     public List<EventSearchResponse> filterEvents(EventFilterRequest filterRequest) {
 
         Stream<Event> stream = this.eventService.getAllEntities().stream();
+        stream = stream.filter(event -> event.getExpireAt().isAfter(LocalDateTime.now()));
+
         if (!filterRequest.getLocation().isBlank()) {
             stream = stream.filter(event -> event.getLocation().contains(filterRequest.getLocation()));
         }

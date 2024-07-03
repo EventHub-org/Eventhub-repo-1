@@ -1,6 +1,7 @@
 package org.eventhub.main.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.eventhub.main.config.JwtService;
 import org.eventhub.main.dto.*;
 import org.eventhub.main.event.EmailEventPublisher;
 import org.eventhub.main.exception.ResponseStatusException;
@@ -28,22 +29,26 @@ public class EventController {
     private final EventService eventService;
     private final EmailEventPublisher emailEventPublisher;
     private final ParticipantService participantService;
+    private final JwtService jwtService;
 
     @Autowired
-    public EventController(UserService userService,EventService eventService, ParticipantService participantService, EmailEventPublisher emailEventPublisher){
+    public EventController(UserService userService, EventService eventService, ParticipantService participantService, EmailEventPublisher emailEventPublisher, JwtService jwtService){
         this.userService = userService;
         this.eventService = eventService;
         this.participantService = participantService;
         this.emailEventPublisher = emailEventPublisher;
+        this.jwtService = jwtService;
     }
 
-    @PostMapping("/{user_id}/events")
+    @PostMapping("/events")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<EventFullInfoResponse> create(@RequestHeader(name="Authorization") String token, @PathVariable("user_id") UUID userId, @Validated @RequestBody EventRequest request,
+    public ResponseEntity<EventFullInfoResponse> create(@RequestHeader(name="Authorization") String token, @Validated @RequestBody EventRequest request,
                                                         BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new ResponseStatusException("Invalid Input");
         }
+        UUID userId = jwtService.getId(token);
+        request.setOwnerId(userId);
         EventFullInfoResponse response = eventService.create(request);
 
         if(request.isWithOwner()) {

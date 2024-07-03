@@ -5,7 +5,6 @@ import { Checkbox } from "antd";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import ListEvents from "../../../components/ListEvents/ListEvents";
 import { getCheckbuttonsEvents } from "../../../api/getCheckbuttonsEvents";
-import { LoadingOutlined } from "@ant-design/icons";
 import withLoading from "../../../utils/hoc/withLoading/withLoading";
 
 const MyEventsList = ({ handleButtonClose, setIsLoading }) => {

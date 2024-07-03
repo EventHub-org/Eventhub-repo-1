@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { CalendarOutlined } from "@ant-design/icons";
 import { RoundButton } from "../../../components/Buttons/RoundButton/roundButton";
 import styles from "./MyEvents.module.css";
-import EventList from "./MyEventsList";
+import MyEventsList from "./MyEventsList";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import useLogin from "../../../hooks/useLogin";
@@ -30,7 +30,7 @@ const MyEvents = () => {
         <RoundButton onClick={handleButtonClose} icon={<CalendarOutlined />} />
       </div>
       {searchParams.get("my_events") && (
-        <EventList handleButtonClose={handleButtonClose} />
+        <MyEventsList handleButtonClose={handleButtonClose} />
       )}
     </div>
   );

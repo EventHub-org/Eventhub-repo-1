@@ -34,6 +34,7 @@ import useStore from "../../../hooks/useStore";
 import useLogin from "../../../hooks/useLogin";
 import GoBackButton from "../../../components/Buttons/GoBackButton/GoBackButton";
 import withLoading from "../../../utils/hoc/withLoading/withLoading";
+import { AnimatePresence } from "framer-motion";
 
 const EventInfoSideBar = ({ setIsLoading }) => {
   // States
@@ -46,6 +47,8 @@ const EventInfoSideBar = ({ setIsLoading }) => {
   const [owner, setOwner] = useState(null);
 
   const [hoveredParticipant, setHoveredParticipant] = useState(null);
+
+  const [timeoutId, setTimeoutId] = useState(null);
 
   const [showAllParticipants, setShowAllParticipants] = useState(false);
 
@@ -286,6 +289,27 @@ const EventInfoSideBar = ({ setIsLoading }) => {
     }
   };
 
+  const handleParticipantMouseEnter = (participantId) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      setTimeoutId(null);
+    }
+    getUserById(participantId)
+      .then((data) => {
+        setHoveredParticipant(data);
+      })
+      .catch((error) => {
+        message.error("An error occurred");
+      });
+  };
+
+  const handleParticipantMouseLeave = () => {
+    const id = setTimeout(() => {
+      setHoveredParticipant(null);
+    }, 600);
+    setTimeoutId(id);
+  };
+
   return (
     event && (
       <div className={styles["wrapper-container"]}>
@@ -350,28 +374,28 @@ const EventInfoSideBar = ({ setIsLoading }) => {
               {/* Participants */}
               <h3 className={styles["heading"]}>Participants</h3>
               <div className={styles["participant-container"]}>
-                <div
-                  className={styles["participants-photos"]}
-                  onMouseLeave={() => setHoveredParticipant(null)}
-                >
+                <div className={styles["participants-photos"]}>
                   {participantsToShow.map((participant) => (
                     <div
                       className={styles["item"]}
                       key={participant.id}
-                      onMouseEnter={() => {
-                        getUserById(participant.user_id)
-                          .then((data) => {
-                            setHoveredParticipant(data);
-                          })
-                          .catch((error) => {
-                            message.error("An error occurerd");
-                          });
-                      }}
+                      onMouseEnter={() =>
+                        handleParticipantMouseEnter(participant.user_id)
+                      }
+                      onMouseLeave={handleParticipantMouseLeave}
                     >
+                      <AnimatePresence>
+                        {hoveredParticipant &&
+                          hoveredParticipant.id === participant.user_id && (
+                            <ParticipantInfoPopUp
+                              participant={hoveredParticipant}
+                            />
+                          )}
+                      </AnimatePresence>
                       <img
                         className={styles["participant-img"]}
                         src={participant.participant_photo.photo_url}
-                        alt="Participant Img"
+                        alt="Participant"
                       />
                     </div>
                   ))}
@@ -390,10 +414,6 @@ const EventInfoSideBar = ({ setIsLoading }) => {
                       />
                     </button>
                   </div>
-
-                  {hoveredParticipant && (
-                    <ParticipantInfoPopUp participant={hoveredParticipant} />
-                  )}
                 </div>
               </div>
 

@@ -4,6 +4,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { getUserInfo } from "../../api/getUserInfo";
 import { useLocation } from "react-router-dom";
 import styles from "./ProfileInfo.module.css";
+import useAuth from "../../hooks/useAuth";
 
 const ProfileInfo = ({ onProfileClick }) => {
   const [user, setUser] = useState({
@@ -13,6 +14,7 @@ const ProfileInfo = ({ onProfileClick }) => {
   });
 
   const location = useLocation();
+  const { auth } = useAuth();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -30,7 +32,7 @@ const ProfileInfo = ({ onProfileClick }) => {
     };
 
     fetchUser();
-  }, [location.pathname]);
+  }, [location.pathname, auth]);
 
   return (
     <div className={styles.profileInfoContainer}>

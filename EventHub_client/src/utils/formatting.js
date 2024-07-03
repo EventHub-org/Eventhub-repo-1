@@ -12,4 +12,12 @@ const getFormattedTime = (dateTimeString) => {
   return `${hours}:${minutes}`;
 };
 
-export { getFormattedDate, getFormattedTime };
+const getFormattedDate2 = (dateString) => {
+  const date = new Date(dateString);
+
+  const offset = date.getTimezoneOffset();
+  date.setHours(date.getHours() - offset / 60);
+  return date.toISOString();
+};
+
+export { getFormattedDate, getFormattedTime, getFormattedDate2 };

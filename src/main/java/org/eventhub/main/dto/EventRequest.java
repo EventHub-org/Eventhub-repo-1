@@ -7,6 +7,7 @@ import jakarta.persistence.Column;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -57,7 +58,7 @@ public class EventRequest {
     @Size(min = 1, message = "Please choose at least one category!")
     private List<CategoryRequest> categoryRequests;
 
-    @NotNull
+    @Nullable
     private UUID ownerId;
 
 

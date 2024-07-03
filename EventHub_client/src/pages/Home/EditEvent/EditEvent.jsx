@@ -5,7 +5,6 @@ import usePlacesAutocomplete, {
   getLatLng,
 } from "use-places-autocomplete";
 import dayjs from "dayjs";
-import getIdFromToken from "../../../jwt/getIdFromToken";
 import styles from "./EditEvent.module.css";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import { Input, Select, DatePicker, AutoComplete, message } from "antd";
@@ -25,6 +24,7 @@ import {
   deleteEventPhotos,
 } from "../../../api/editEventData";
 import withLoading from "../../../utils/hoc/withLoading/withLoading";
+import { getFormattedDate2 } from "../../../utils/formatting";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -276,14 +276,6 @@ const EditEvent = ({ setIsLoading }) => {
     setLongitude(value.lng);
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-
-    const offset = date.getTimezoneOffset();
-    date.setHours(date.getHours() - offset / 60);
-    return date.toISOString();
-  };
-
   const validateFields = () => {
     if (title.length < 5 || title.length > 20) {
       message.error("Event name must be between 5 and 20 characters");
@@ -335,8 +327,8 @@ const EditEvent = ({ setIsLoading }) => {
     }
     setIsLoading(true);
     try {
-      const startAt = formatDate(dateRange[0]);
-      const expireAt = formatDate(dateRange[1]);
+      const startAt = getFormattedDate2(dateRange[0]);
+      const expireAt = getFormattedDate2(dateRange[1]);
 
       const eventData = {
         title: title,

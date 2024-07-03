@@ -1,6 +1,6 @@
 import axios from "./axios";
 
-export const sendDataWithoutPhotos = async (eventData, owner_id) => {
+export const sendDataWithoutPhotos = async (eventData) => {
   const accessToken = localStorage.getItem("token");
   const authAxios = axios.create({
     headers: {
@@ -11,10 +11,7 @@ export const sendDataWithoutPhotos = async (eventData, owner_id) => {
     },
   });
   try {
-    const response = await authAxios.post(
-      `/users/${owner_id}/events`,
-      eventData
-    );
+    const response = await authAxios.post(`/users/events`, eventData);
     return response.data;
   } catch (error) {
     console.error("Error sending data without photos to server:", error);

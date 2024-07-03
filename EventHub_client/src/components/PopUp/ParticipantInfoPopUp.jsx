@@ -1,6 +1,5 @@
 import styles from "./ParticipantInfoPopUp.module.css";
 
-import { MdOutlineEmail } from "react-icons/md";
 import { SlLocationPin } from "react-icons/sl";
 import { CiCalendar } from "react-icons/ci";
 import PrimaryButton from "../Buttons/PrimaryButton/PrimaryButton";
@@ -26,6 +25,9 @@ const ParticipantInfoPopUp = ({ participant, onMouseEnter, onMouseLeave }) => {
       }}
       transition={{
         duration: 0.5,
+      }}
+      exit={{
+        opacity: 0,
       }}
     >
       <div className={styles["header-container"]}>

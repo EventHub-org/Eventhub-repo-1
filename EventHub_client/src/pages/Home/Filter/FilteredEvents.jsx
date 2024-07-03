@@ -1,7 +1,4 @@
 import styles from "./FilteredEvents.module.css";
-import { useState, useEffect, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
-import { getFilteredEvents } from "../../../api/getFilteredEvents";
 import ListEvents from "../../../components/ListEvents/ListEvents";
 import EmptyFilteredEvents from "./EmptyFilteredEvents.jsx";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
