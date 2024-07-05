@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 import styles from "./EventInfoSideBar.module.css";
 
@@ -35,6 +35,7 @@ import useLogin from "../../../hooks/useLogin";
 import GoBackButton from "../../../components/Buttons/GoBackButton/GoBackButton";
 import withLoading from "../../../utils/hoc/withLoading/withLoading";
 import { AnimatePresence } from "framer-motion";
+import AuthContext from "../../../context/authProvider";
 
 const EventInfoSideBar = ({ setIsLoading }) => {
   // States
@@ -71,7 +72,7 @@ const EventInfoSideBar = ({ setIsLoading }) => {
 
   // Auth
   //const { auth } = useAuth();
-  const authenticated = useLogin();
+  const { accessToken } = useContext(AuthContext);
 
   // Navigation
   const navigate = useNavigate();
@@ -90,7 +91,7 @@ const EventInfoSideBar = ({ setIsLoading }) => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        if (authenticated) {
+        if (accessToken) {
           const userState = await getParticipantState(eventId);
           setUserState(userState.state);
           setIsOwner(userState.owner);

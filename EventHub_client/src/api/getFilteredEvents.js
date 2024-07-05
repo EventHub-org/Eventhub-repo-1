@@ -27,19 +27,8 @@ export const getFilteredEvents = async () => {
     parsed.expire_at = new Date(parsed.expire_at);
   }
 
-  const accessToken = localStorage.getItem("token");
-
-  const authAxios = axios.create({
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "content-type",
-      "Access-Control-Allow-Credentials": "true",
-      ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-    },
-  });
-
   try {
-    const response = await authAxios.post(FILTER_URL, parsed);
+    const response = await axios.post(FILTER_URL, parsed);
     return response.data;
   } catch (error) {
     console.log("Error getting filtred events", error);

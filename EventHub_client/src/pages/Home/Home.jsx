@@ -1,24 +1,23 @@
 import { useOutlet } from "react-router-dom";
 import { Map } from "./Map/Map";
-import useAuth from "../../hooks/useAuth";
 import styles from "./Home.module.css";
 import { useJsApiLoader } from "@react-google-maps/api";
 import MenuButton from "./ProfileORlogin/ProfileButton";
 import LoginRegisterButton from "./ProfileORlogin/LoginRegisterButton";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 
 import Search from "./Search/Search";
 import CreateEvent from "./CreateEvent/CreateEvent";
 import EventFilter from "./Filter/Filter";
 import MyEvents from "./MyEvents/MyEvents";
 import withLoading from "../../utils/hoc/withLoading/withLoading";
+import AuthContext from "../../context/authProvider";
 
 const MAP_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 const libraries = ["places"];
 const Home = ({ setIsLoading }) => {
-  //const authenticated = useLogin();
-  const { auth, setAuth } = useAuth();
+  const { accessToken } = useContext(AuthContext);
 
   const outlet = useOutlet();
 
@@ -41,7 +40,7 @@ const Home = ({ setIsLoading }) => {
         <>
           <Map />
 
-          {auth.token ? <MenuButton /> : <LoginRegisterButton />}
+          {accessToken ? <MenuButton /> : <LoginRegisterButton />}
 
           <Search />
           <CreateEvent />

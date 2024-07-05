@@ -1,4 +1,10 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  useContext,
+} from "react";
 import queryString from "query-string";
 import { getEventsData } from "../../../api/getEventsLocation";
 import { GoogleMap, Marker, MarkerClusterer } from "@react-google-maps/api";
@@ -13,10 +19,10 @@ import { light } from "./Theme";
 import { useNavigate } from "react-router-dom";
 import { getFilteredEvents } from "../../../api/getFilteredEvents";
 import GetLocationByCoordinates from "../../../api/getLocationByCoordinates";
-import useAuth from "../../../hooks/useAuth";
-import useStore from '../../../hooks/useStore';
+import useStore from "../../../hooks/useStore";
 import { message } from "antd";
 import { AimOutlined } from "@ant-design/icons";
+import AuthContext from "../../../context/authProvider";
 
 const containerStyle = {
   width: "100%",
@@ -46,21 +52,19 @@ const defaultOption = {
     },
     strictBounds: false,
   },
-
 };
 const defaultCenter = {
   lat: 49.83826,
   lng: 24.02324,
 };
 const Map = () => {
-
   const [events, setEvents] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [showMarker, setShowMarker] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const mapRef = useRef(undefined);
-  const { auth } = useAuth();
+  const { accessToken } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useStore((state) => state.location);
   const onLoad = useCallback(function callback(map) {
@@ -86,7 +90,6 @@ const Map = () => {
         try {
           const data = await getEventsDataSearch(searchValue);
           setEvents(data);
-
         } catch (error) {
           console.error("Error getting events data:", error);
         }
@@ -132,7 +135,7 @@ const Map = () => {
   };
 
   const handleMapClick = async (event) => {
-    if (!auth.token) {
+    if (!accessToken) {
       message.info("You need to login to create an event");
       return;
     }
@@ -151,8 +154,8 @@ const Map = () => {
   };
 
   useEffect(() => {
-    handleCenterMap()
-  }, [])
+    handleCenterMap();
+  }, []);
   const handleCenterMap = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -160,7 +163,7 @@ const Map = () => {
           const { latitude, longitude } = position.coords;
           mapRef.current.panTo({ lat: latitude, lng: longitude }); // Плавно центрує мапу
           mapRef.current.setZoom(17); // Змінює зум мапи
-          setUserLocation({ lat: latitude, lng: longitude })
+          setUserLocation({ lat: latitude, lng: longitude });
         },
         (error) => {
           console.error("Error getting user location:", error);
@@ -262,7 +265,6 @@ const Map = () => {
               onClick={() => onMarkerClick(event)}
             />
           ))}
-
       </GoogleMap>
       <div className={styles.centerButton}>
         <RoundButton icon={<AimOutlined />} onClick={handleCenterMap} />
@@ -270,6 +272,5 @@ const Map = () => {
     </div>
   );
 };
-
 
 export { Map };

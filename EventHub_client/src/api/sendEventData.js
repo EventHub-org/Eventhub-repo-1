@@ -1,17 +1,8 @@
 import axios from "./axios";
 
 export const sendDataWithoutPhotos = async (eventData) => {
-  const accessToken = localStorage.getItem("token");
-  const authAxios = axios.create({
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "content-type",
-      "Access-Control-Allow-Credentials": "true",
-    },
-  });
   try {
-    const response = await authAxios.post(`/users/events`, eventData);
+    const response = await axios.post(`/users/events`, eventData);
     return response.data;
   } catch (error) {
     console.error("Error sending data without photos to server:", error);
@@ -37,17 +28,10 @@ const appendFormData = (formDataArray) => {
 };
 export const sendPhotosToServer = async (formData, event_id) => {
   const mergedPhotos = appendFormData(formData);
-  const accessToken = localStorage.getItem("token");
-  const authAxios = axios.create({
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Credentials": "true",
-    },
-  });
+
   try {
     if (isFormDataEmpty(mergedPhotos)) return;
-    const response = await authAxios.post(
+    const response = await axios.post(
       `/events/${event_id}/photos/upload`,
       mergedPhotos
     );

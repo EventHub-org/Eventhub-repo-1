@@ -1,21 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { CalendarOutlined } from "@ant-design/icons";
 import { RoundButton } from "../../../components/Buttons/RoundButton/roundButton";
 import styles from "./MyEvents.module.css";
 import MyEventsList from "./MyEventsList";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import useAuth from "../../../hooks/useAuth";
-import useLogin from "../../../hooks/useLogin";
+import AuthContext from "../../../context/authProvider";
 
 const MyEvents = () => {
   const [searchParams, setSearchParams] = useSearchParams("");
 
   const navigate = useNavigate();
-  //const { auth, setAuth } = useAuth();
-  const authenticated = useLogin();
+  const { accessToken } = useContext(AuthContext);
 
   const handleButtonClose = async () => {
-    if (!authenticated) {
+    if (!accessToken) {
       navigate("/login");
     } else if (searchParams.get("my_events")) {
       setSearchParams("");

@@ -1,34 +1,102 @@
-import React, { createContext, useState, useEffect } from "react";
-import { refreshToken } from "../jwt/refreshToken";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useLayoutEffect,
+} from "react";
 import axios from "../api/axios";
 import { message } from "antd";
 
-import Cookies from "js-cookie";
+import { refreshToken } from "../jwt/refreshToken";
 
 const LOGIN_URL = "/authentication/login";
 const REGISTER_URL = "/authentication/register";
 const LOGOUT_URL = "/authentication/logout";
 const GOOGLE_AUTH_URL = "/authentication/google";
 
+axios.defaults.withCredentials = true;
+
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState({});
+  const [accessToken, setAccessToken] = useState();
 
   useEffect(() => {
-    const savedToken = localStorage.getItem("token");
-
-    if (savedToken) {
-      setAuth({ token: savedToken });
-    }
-    const tokenChangeHandler = (event) => {
-      if (event.key === "token") {
-        setAuth((prevAuth) => ({ ...prevAuth, token: event.newValue }));
+    const fetchMe = async () => {
+      console.log(`fetch me`);
+      try {
+        const response = await refreshToken();
+        console.log(`response: ${response}`);
+        setAccessToken(response);
+        console.log(`access token: ${response}`);
+      } catch {
+        setAccessToken(null);
       }
     };
-    window.addEventListener("storage", tokenChangeHandler);
+    fetchMe();
+  }, []);
+
+  useLayoutEffect(() => {
+    const authInterceptor = axios.interceptors.request.use((config) => {
+      console.log("Inside request interceptor");
+      console.log(`access token: ${accessToken}`);
+      config.headers.Authorization =
+        !config._retry && accessToken
+          ? `Bearer ${accessToken}`
+          : config.headers.Authorization;
+
+      console.log(`config headers after request: ${config.headers}`);
+      return config;
+    });
+
     return () => {
-      window.removeEventListener("storage", tokenChangeHandler);
+      axios.interceptors.request.eject(authInterceptor);
+    };
+  }, [accessToken]);
+
+  useLayoutEffect(() => {
+    const refreshInterceptor = axios.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const originlRequest = error.config;
+
+        if (
+          error.response.status === 403 &&
+          error.response.data === "Bad JWT token"
+        ) {
+          try {
+            console.log("Inside try block");
+            console.error(error);
+            console.log(`Error headers: ${error.headers}`);
+            // remove from header bad token
+            //...
+            console.log(`Original request before: ${originlRequest}`);
+
+            setAccessToken(null);
+
+            const token = await refreshToken();
+            console.log(`Response after try block: ${token}`);
+            setAccessToken(token);
+
+            originlRequest.headers.Authorization = `Bearer ${token}`;
+            originlRequest._retry = true;
+
+            console.log(`Original request after: ${originlRequest}`);
+
+            return axios(originlRequest);
+          } catch (err) {
+            console.log("Inside catch block");
+            console.error(err);
+            message.info("Session time end");
+            setAccessToken(null);
+          }
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.response.eject(refreshInterceptor);
     };
   }, []);
 
@@ -44,20 +112,9 @@ export const AuthProvider = ({ children }) => {
       }
     );
 
-    const accessToken = res?.data?.accessToken;
-    const refToken = res?.data?.refreshToken;
-    const expiryDate = res?.data?.expiryDate;
-
-    //Cookies.set("ref", refToken);
-    //Cookies.set("exp", expiryDate);
-
-    localStorage.setItem("token", accessToken);
-    localStorage.setItem("refreshToken", refToken);
-    localStorage.setItem("expDate", expiryDate);
-
-    axios.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${res.data["token"]}`;
+    const token = res?.data;
+    console.log(`access token from login:`);
+    setAccessToken(token);
   };
 
   const register = async (userData) => {
@@ -74,13 +131,9 @@ export const AuthProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-    const accessToken = res?.data?.accessToken;
-    const refToken = res?.data?.refreshToken;
-    const expiryDate = res?.data?.expiryDate;
+    const token = res?.data;
 
-    localStorage.setItem("token", accessToken);
-    localStorage.setItem("refreshToken", refToken);
-    localStorage.setItem("expDate", expiryDate);
+    setAccessToken(token);
   };
 
   const confirmResetPassword = async (data) => {
@@ -88,39 +141,26 @@ export const AuthProvider = ({ children }) => {
       headers: { "Content-Type": "application/json" },
     });
 
-    const accessToken = res?.data?.accessToken;
-    const refToken = res?.data?.refreshToken;
-    const expiryDate = res?.data?.expiryDate;
+    const token = res?.data;
 
-    localStorage.setItem("token", accessToken);
-    localStorage.setItem("refreshToken", refToken);
-    localStorage.setItem("expDate", expiryDate);
-    axios.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${res.data["token"]}`;
+    setAccessToken(token);
   };
 
   const logout = async () => {
-    const accessToken = localStorage.getItem("token");
-
     try {
       const response = await axios.post(
         LOGOUT_URL,
         {},
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
         }
       );
 
-      localStorage.removeItem("token");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("expDate");
+      setAccessToken(null);
 
       message.info("You are logged out");
-      setAuth({});
 
       return response.data;
     } catch (error) {
@@ -140,14 +180,10 @@ export const AuthProvider = ({ children }) => {
         }
       );
 
-      const accessToken = res?.data?.accessToken;
-      const refToken = res?.data?.refreshToken;
-      const expiryDate = res?.data?.expiryDate;
+      const token = res?.data?.accessToken;
 
-      if (accessToken && refToken && expiryDate) {
-        localStorage.setItem("token", accessToken);
-        localStorage.setItem("refreshToken", refToken);
-        localStorage.setItem("expDate", expiryDate);
+      if (token) {
+        setAccessToken(token);
       }
 
       return res;
@@ -161,40 +197,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem("token");
-
-    const token = localStorage.getItem("refreshToken");
-    //const token = Cookies.get("ref");
-
-    const expDate = new Date(localStorage.getItem("expDate"));
-    //const expDate = new Date(Cookies.get("exp"));
-
-    const intervalTime = expDate.getTime() - Date.now() - 20000;
-
-    if (accessToken) {
-      const interval = setInterval(async () => {
-        try {
-          console.log("refresh");
-          await refreshToken(token);
-        } catch (error) {
-          localStorage.removeItem("refreshToken");
-          localStorage.removeItem("token");
-          localStorage.removeItem("expDate");
-          message.error("You are logged out");
-          setAuth({});
-        }
-      }, intervalTime);
-
-      return () => clearInterval(interval);
-    }
-  }, [auth]);
-
   return (
     <AuthContext.Provider
       value={{
-        auth,
-        setAuth,
+        // auth,
+        // setAuth,
+        accessToken,
         login,
         confirmEmail,
         logout,

@@ -1,17 +1,7 @@
 import axios from "./axios";
 
 export const editDataWithoutPhotos = async (eventData, event_id) => {
-  const accessToken = localStorage.getItem("token");
-  const authAxios = axios.create({
-    headers: {
-      ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "content-type",
-      "Access-Control-Allow-Credentials": "true",
-    },
-  });
-
-  const response = await authAxios.put(`/users/events/${event_id}`, eventData);
+  const response = await axios.put(`/users/events/${event_id}`, eventData);
   return response.data;
 };
 
@@ -33,16 +23,9 @@ const appendFormData = (formDataArray) => {
 
 export const editEventPhotos = async (formData, event_id) => {
   const mergedPhotos = appendFormData(formData);
-  const accessToken = localStorage.getItem("token");
-  const authAxios = axios.create({
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Credentials": "true",
-    },
-  });
+
   if (isFormDataEmpty(mergedPhotos)) return;
-  const response = await authAxios.post(
+  const response = await axios.post(
     `/events/${event_id}/photos/upload`,
     mergedPhotos
   );
@@ -51,32 +34,12 @@ export const editEventPhotos = async (formData, event_id) => {
 };
 
 export const deleteEvent = async (event_id) => {
-  const accessToken = localStorage.getItem("token");
-  const authAxios = axios.create({
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "content-type",
-      "Access-Control-Allow-Credentials": "true",
-    },
-  });
-
-  const response = await authAxios.delete(`/users/events/${event_id}`);
+  const response = await axios.delete(`/users/events/${event_id}`);
   return response.data;
 };
 
 export const deleteEventPhotos = async (event_id, photos) => {
-  const accessToken = localStorage.getItem("token");
-  const authAxios = axios.create({
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "content-type",
-      "Access-Control-Allow-Credentials": "true",
-    },
-  });
-
   for (let photo_id of photos) {
-    await authAxios.delete(`/events/${event_id}/photos/${photo_id}`);
+    await axios.delete(`/events/${event_id}/photos/${photo_id}`);
   }
 };

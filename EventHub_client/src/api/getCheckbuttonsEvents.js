@@ -8,8 +8,6 @@ export const getCheckbuttonsEvents = async (
 ) => {
   const DATA_URL = "/events/checkbox-filter";
 
-  const accessToken = localStorage.getItem("token");
-
   try {
     const response = await axios.post(
       DATA_URL,
@@ -21,7 +19,6 @@ export const getCheckbuttonsEvents = async (
       },
       {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
       }

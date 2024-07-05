@@ -1,11 +1,9 @@
 import styles from "./Registration.module.css";
 import React, { useState, useContext } from "react";
-import axios from "../../../../api/axios";
 import { useNavigate, Link } from "react-router-dom";
 import { PlacesAutocomplete } from "../../../../components/PlaceAutocomplete/PlaceAutocomplete";
-import { checkEmail, checkName, checkPassword } from "./validation";
+import { checkEmail, checkName } from "./validation";
 import CloseWindowButton from "../../../../components/Buttons/CloseWindowButton/CloseWindowButton";
-import useAuth from "../../../../hooks/useAuth";
 import AuthContext from "../../../../context/authProvider";
 import { GoogleLogin } from "@react-oauth/google";
 import withLoading from "../../../../utils/hoc/withLoading/withLoading";
@@ -72,7 +70,6 @@ const Registration = ({ setUserEmail, setIsRegistered, setIsLoading }) => {
         setIsRegistered(false);
       } else {
         navigate("/");
-        window.location.reload();
         message.success("Login successful!");
       }
     } finally {

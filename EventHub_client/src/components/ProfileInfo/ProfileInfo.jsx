@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { getUserInfo } from "../../api/getUserInfo";
 import { useLocation } from "react-router-dom";
 import styles from "./ProfileInfo.module.css";
-import useAuth from "../../hooks/useAuth";
+import AuthContext from "../../context/authProvider";
 
 const ProfileInfo = ({ onProfileClick }) => {
   const [user, setUser] = useState({
@@ -14,7 +14,7 @@ const ProfileInfo = ({ onProfileClick }) => {
   });
 
   const location = useLocation();
-  const { auth } = useAuth();
+  const { accessToken } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -32,7 +32,7 @@ const ProfileInfo = ({ onProfileClick }) => {
     };
 
     fetchUser();
-  }, [location.pathname, auth]);
+  }, [location.pathname, accessToken]);
 
   return (
     <div className={styles.profileInfoContainer}>

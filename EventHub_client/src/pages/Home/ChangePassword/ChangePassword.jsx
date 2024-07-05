@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import useLogin from "../../../hooks/useLogin";
 import { Input, message } from "antd";
 import CloseWindowButton from "../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import PrimaryButton from "../../../components/Buttons/PrimaryButton/PrimaryButton";
@@ -8,10 +7,10 @@ import { changePassword } from "../../../api/changePassword";
 import styles from "./ChangePassword.module.css";
 import { FaUnlock } from "react-icons/fa";
 import withLoading from "../../../utils/hoc/withLoading/withLoading";
+import AuthContext from "../../../context/authProvider";
 
 const ChangePassword = ({ setIsLoading }) => {
-  //const { auth, setAuth } = useAuth();
-  const authenticated = useLogin();
+  const { accessToken } = useContext(AuthContext);
   const navigate = useNavigate();
   const [passwords, setPasswords] = useState({
     old_password: "",
@@ -21,7 +20,7 @@ const ChangePassword = ({ setIsLoading }) => {
   const [show, setShow] = useState(true);
 
   useEffect(() => {
-    if (!authenticated) {
+    if (!accessToken) {
       navigate("/login");
     }
     setShow(true);
