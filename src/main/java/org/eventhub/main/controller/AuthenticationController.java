@@ -130,7 +130,6 @@ public class AuthenticationController {
         // Get cookies from the request
         Cookie[] cookies = request.getCookies();
 
-
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("refreshToken".equals(cookie.getName())) {
@@ -141,20 +140,14 @@ public class AuthenticationController {
 
         if (refreshToken == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No refresh token");
-//            throw new AccessIsDeniedException("No refresh token. Unauthorized.");
         }
-
         JwtResponse jwtResponse;
         try {
              jwtResponse = authService.refreshToken(refreshToken);
         }
         catch (NotValidRefreshTokenException ex) {
-            Cookie refreshTokenCookie = new Cookie("refreshToken", "");
-            refreshTokenCookie.setPath("/");
-            refreshTokenCookie.setMaxAge(0);
-            response.addCookie(refreshTokenCookie);
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+            removeRefreshTokenCookies(response);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
         }
 
 
@@ -162,18 +155,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<OperationResponse> logout(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<OperationResponse> logout(@RequestHeader("Authorization") String token, HttpServletResponse response) {
         authService.logout(token);
+        removeRefreshTokenCookies(response);
         return new ResponseEntity<>(new OperationResponse("Refresh token deleted successfully"), HttpStatus.OK);
     }
-
-//    @GetMapping("/me")
-//    public ResponseEntity<String> me() {
-//
-//
-//        log.info("**/check email to reset password = " + email);
-//        return new ResponseEntity<>(email, HttpStatus.OK);
-//    }
 
     private void setRefreshTokenCookies(JwtResponse jwtResponse, HttpServletResponse response) {
         Cookie refreshTokenCookie = new Cookie("refreshToken", jwtResponse.getRefreshToken());
@@ -187,5 +173,13 @@ public class AuthenticationController {
 
         log.info("Added cookie, val: " + jwtResponse.getRefreshToken());
 
+    }
+    private void removeRefreshTokenCookies(HttpServletResponse response) {
+        Cookie refreshTokenCookie = new Cookie("refreshToken", "");
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(0);
+        response.addCookie(refreshTokenCookie);
+
+        log.info("Refresh token cookies removed");
     }
 }

@@ -37,11 +37,6 @@ public class GlobalExceptionHandler {
         log.error("Entity not found exception: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
-//    @ExceptionHandler
-//    public ResponseEntity<?> handleNotValidRefreshTokenException(NotValidRefreshTokenException ex) {
-//        log.error("Not valid refresh token exception: {}", ex.getMessage());
-//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
-//    }
 
     @ExceptionHandler
     public ResponseEntity<?> handleResponseStatusException(ResponseStatusException ex) {
@@ -54,12 +49,6 @@ public class GlobalExceptionHandler {
         log.error("Access is denied exception: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
-
-//    @ExceptionHandler
-//    public ResponseEntity<?> jwtExpiredException(ExpiredJwtException ex) {
-//        log.error("JWT expired exception: {}", ex.getMessage());
-//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
-//    }
 
     @ExceptionHandler
     public ResponseEntity<?> handlePasswordException(PasswordException ex) {

@@ -23,7 +23,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchMe = async () => {
-      console.log(`fetch me`);
       try {
         const response = await refreshToken();
         setAccessToken(response);
@@ -36,7 +35,6 @@ export const AuthProvider = ({ children }) => {
 
   useLayoutEffect(() => {
     const authInterceptor = axios.interceptors.request.use((config) => {
-      console.log("Inside request interceptor");
       config.headers.Authorization =
         !config._retry && accessToken
           ? `Bearer ${accessToken}`
@@ -58,11 +56,9 @@ export const AuthProvider = ({ children }) => {
 
         if (
           error.response.status === 403 &&
-          error.response.data === "Bad JWT token"
+          error.response.data === "Not valid JWT"
         ) {
           try {
-            console.log("Inside response try block");
-
             const token = await refreshToken();
 
             setAccessToken(token);
@@ -72,7 +68,6 @@ export const AuthProvider = ({ children }) => {
 
             return axios(originlRequest);
           } catch (err) {
-            console.log("Inside response catch block");
             setAccessToken(null);
           }
         }

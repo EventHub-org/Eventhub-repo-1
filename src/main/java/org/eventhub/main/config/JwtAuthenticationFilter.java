@@ -1,6 +1,7 @@
 package org.eventhub.main.config;
 
 import groovy.util.logging.Slf4j;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -47,13 +48,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String userEmail;
         try {
-//            String requestPath = request.getRequestURI();
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-
                 filterChain.doFilter(request, response);
-
-
-
                 return;
             }
             jwt = authHeader.substring(7);
@@ -74,11 +70,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         }
-        catch (Exception e) {
-            log.error("Spring Security Filter Chain Exception:", e);
+        catch (ExpiredJwtException ex) {
+            log.error("Not valid JWT in request");
 
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("Bad JWT token");
+            response.getWriter().write("Not valid JWT");
         }
 
     }

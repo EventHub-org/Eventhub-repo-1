@@ -42,7 +42,6 @@ const MenuButton = () => {
 
   const handleMenuClick = async (e) => {
     if (e.key === "profile") {
-      console.log("Profile clicked");
     } else if (e.key === "logout") {
       await logout();
     }
