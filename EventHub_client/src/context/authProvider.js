@@ -26,9 +26,7 @@ export const AuthProvider = ({ children }) => {
       console.log(`fetch me`);
       try {
         const response = await refreshToken();
-        console.log(`response: ${response}`);
         setAccessToken(response);
-        console.log(`access token: ${response}`);
       } catch {
         setAccessToken(null);
       }
@@ -39,13 +37,11 @@ export const AuthProvider = ({ children }) => {
   useLayoutEffect(() => {
     const authInterceptor = axios.interceptors.request.use((config) => {
       console.log("Inside request interceptor");
-      console.log(`access token: ${accessToken}`);
       config.headers.Authorization =
         !config._retry && accessToken
           ? `Bearer ${accessToken}`
           : config.headers.Authorization;
 
-      console.log(`config headers after request: ${config.headers}`);
       return config;
     });
 
@@ -65,29 +61,18 @@ export const AuthProvider = ({ children }) => {
           error.response.data === "Bad JWT token"
         ) {
           try {
-            console.log("Inside try block");
-            console.error(error);
-            console.log(`Error headers: ${error.headers}`);
-            // remove from header bad token
-            //...
-            console.log(`Original request before: ${originlRequest}`);
-
-            setAccessToken(null);
+            console.log("Inside response try block");
 
             const token = await refreshToken();
-            console.log(`Response after try block: ${token}`);
+
             setAccessToken(token);
 
             originlRequest.headers.Authorization = `Bearer ${token}`;
             originlRequest._retry = true;
 
-            console.log(`Original request after: ${originlRequest}`);
-
             return axios(originlRequest);
           } catch (err) {
-            console.log("Inside catch block");
-            console.error(err);
-            message.info("Session time end");
+            console.log("Inside response catch block");
             setAccessToken(null);
           }
         }
@@ -113,7 +98,6 @@ export const AuthProvider = ({ children }) => {
     );
 
     const token = res?.data;
-    console.log(`access token from login:`);
     setAccessToken(token);
   };
 
@@ -200,8 +184,6 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
-        // auth,
-        // setAuth,
         accessToken,
         login,
         confirmEmail,

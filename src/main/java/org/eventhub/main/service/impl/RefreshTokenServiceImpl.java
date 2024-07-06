@@ -31,7 +31,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(user)
                 .token(UUID.randomUUID().toString())
-                .expiryDate(new Date(System.currentTimeMillis() + 1000 * 20 * 1))
+                .expiryDate(new Date(System.currentTimeMillis() + 1000 * 30 * 1))
                 .build();
         return refreshTokenRepository.save(refreshToken);
     }
@@ -45,7 +45,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     public RefreshToken verifyExpiration(RefreshToken token) {
         if(token.getExpiryDate().compareTo(Date.from(Instant.now())) < 0) {
             refreshTokenRepository.delete(token);
-            throw new NotValidRefreshTokenException(token.getToken() + " Refresh token was expired . Please make a sign in request");
+            throw new NotValidRefreshTokenException("Refresh token was expired . Please make a sign in request");
         }
         return token;   
     }
