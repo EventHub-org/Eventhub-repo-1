@@ -141,6 +141,7 @@ public class AuthenticationController {
         if (refreshToken == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No refresh token");
         }
+
         JwtResponse jwtResponse;
         try {
              jwtResponse = authService.refreshToken(refreshToken);

@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.eventhub.main.dto.AuthenticationResponce;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,10 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "iPKnNcxX01Ri/mf4dCFbMGX9rIMiYUL38jrne4m2+MM82wVqUzU7sTDDG43i6CUtChYxk/nyko7sWpcgoF1rZFnQvCbxXrmt9bVWgwkeMz8JnVDbHfNwEnPlqIwG59jCiEAEwUQZlTd7ZJg+VkSdZE/21b0cc1YNoEzeWMBdWvZtb5GQoeaAJ1u7bJ+AB6y0JZQLy0Jw1Pqvh1R/cNA17M+4IjDY/3xofCaTEaCIGaBP2pmpavRfUTfSDqHcSEdP9lshpeLfTTT5zQOrKYJUKM1hBIufEVIBvHO/pb1GRrCWcfkXY5KMhIxPkwP0XMA12V/9wbcGl+EyC63brrrKlq8Yatmhcw4r69nu5tgiZok=";
+    private final JWTConfigProperties jwtConfigProperties;
+    public JwtService(JWTConfigProperties jwtConfigProperties) {
+        this.jwtConfigProperties = jwtConfigProperties;
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -46,7 +50,8 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10))
+//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 10 * 1))
                 .signWith(getSingInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -78,7 +83,7 @@ public class JwtService {
     }
 
     private Key getSingInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtConfigProperties.secretKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

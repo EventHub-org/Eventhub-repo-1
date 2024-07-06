@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
 
             return axios(originlRequest);
           } catch (err) {
-            setAccessToken(null);
+            logout();
           }
         }
         return Promise.reject(error);
@@ -126,6 +126,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
+    setAccessToken(null);
+
     try {
       const response = await axios.post(
         LOGOUT_URL,
@@ -136,8 +138,6 @@ export const AuthProvider = ({ children }) => {
           },
         }
       );
-
-      setAccessToken(null);
 
       message.info("You are logged out");
 
