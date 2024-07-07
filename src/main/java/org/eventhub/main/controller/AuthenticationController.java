@@ -106,11 +106,28 @@ public class AuthenticationController {
 
         return ResponseEntity.ok(jwtResponse.getAccessToken());
     }
-    @PostMapping("/google")
-    public ResponseEntity<GoogleJwtResponse> googleAuthentication(@RequestBody GoogleOauthRequest request, HttpServletResponse response) throws GeneralSecurityException, IOException {
-        log.info("Authorizing with google");
+    @PostMapping("/google-login")
+    public ResponseEntity<GoogleJwtResponse> googleLogin(@RequestBody GoogleOauthRequest request, HttpServletResponse response) throws GeneralSecurityException, IOException {
+        log.info("Logging in with google..");
 
         GoogleJwtResponse jwtResponse = authService.googleLogin(request);
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", jwtResponse.getRefreshToken());
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(false); // Set to true in production
+        refreshTokenCookie.setPath("/"); // Define the path where the cookie is accessible
+        refreshTokenCookie.setMaxAge((int) jwtResponse.getExpiryDate().toInstant().getEpochSecond());
+
+        // Add the cookie to the response
+        response.addCookie(refreshTokenCookie);
+
+        return ResponseEntity.ok(jwtResponse);
+    }
+    @PostMapping("/google-register")
+    public ResponseEntity<GoogleJwtResponse> googleRegister(@RequestBody GoogleRegisterRequest request, HttpServletResponse response) throws GeneralSecurityException, IOException {
+        log.info("Registering user with google..");
+
+        GoogleJwtResponse jwtResponse = authService.googleRegister(request);
 
         Cookie refreshTokenCookie = new Cookie("refreshToken", jwtResponse.getRefreshToken());
         refreshTokenCookie.setHttpOnly(true);

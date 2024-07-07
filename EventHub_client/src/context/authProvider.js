@@ -12,7 +12,8 @@ import { refreshToken } from "../jwt/refreshToken";
 const LOGIN_URL = "/authentication/login";
 const REGISTER_URL = "/authentication/register";
 const LOGOUT_URL = "/authentication/logout";
-const GOOGLE_AUTH_URL = "/authentication/google";
+const GOOGLE_LOGIN_URL = "/authentication/google-login";
+const GOOGLE_REGISTER_URL = "/authentication/google-register";
 
 axios.defaults.withCredentials = true;
 
@@ -147,10 +148,39 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const googleAuth = async (googleToken) => {
+  // const googleAuth = async (googleToken) => {
+  //   try {
+  //     const res = await axios.post(
+  //       GOOGLE_AUTH_URL,
+  //       { google_token: googleToken },
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     const token = res?.data?.accessToken;
+
+  //     if (token) {
+  //       setAccessToken(token);
+  //     }
+
+  //     return res;
+  //   } catch (err) {
+  //     if (!err.response) {
+  //       // Помилка з'єднання з сервером
+  //       message.error("No server response");
+  //     } else {
+  //       message.error(err.response.data);
+  //     }
+  //   }
+  // };
+
+  const googleLogin = async (googleToken) => {
     try {
       const res = await axios.post(
-        GOOGLE_AUTH_URL,
+        GOOGLE_LOGIN_URL,
         { google_token: googleToken },
         {
           headers: {
@@ -161,11 +191,32 @@ export const AuthProvider = ({ children }) => {
 
       const token = res?.data?.accessToken;
 
-      if (token) {
-        setAccessToken(token);
+      setAccessToken(token);
+    } catch (err) {
+      if (!err.response) {
+        // Помилка з'єднання з сервером
+        message.error("No server response");
+      } else {
+        message.error(err.response.data);
       }
+    }
+  };
 
-      return res;
+  const googleRegister = async (googleToken, username) => {
+    try {
+      const res = await axios.post(
+        GOOGLE_REGISTER_URL,
+        { google_token: googleToken, username: username },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const token = res?.data?.accessToken;
+
+      setAccessToken(token);
     } catch (err) {
       if (!err.response) {
         // Помилка з'єднання з сервером
@@ -184,7 +235,8 @@ export const AuthProvider = ({ children }) => {
         confirmEmail,
         logout,
         register,
-        googleAuth,
+        googleLogin,
+        googleRegister,
         confirmResetPassword,
       }}
     >

@@ -1,62 +1,27 @@
 import React, { useState, useEffect, useContext } from "react";
-import styles from "./SignIn.module.css";
-import { Link, Navigate, useSearchParams } from "react-router-dom";
+import styles from "./GoogleSignUp.module.css";
+import { Navigate, useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message } from "antd";
 import CloseWindowButton from "../../../../components/Buttons/CloseWindowButton/CloseWindowButton";
-import { GoogleLogin } from "@react-oauth/google";
 import { checkEmail } from "../../SignUp/Registration/validation";
 import AuthContext from "../../../../context/authProvider";
-import EmailVerification from "../../SignUp/EmailVerification/EmailVerification";
 import withLoading from "../../../../utils/hoc/withLoading/withLoading";
-import { getIsUserRegistered } from "../../../../api/getIsUserRegistered";
 
 const SignIn = ({ forgotPassword, setIsLoading }) => {
-  const { login, googleLogin } = useContext(AuthContext);
+  const { googleRegister } = useContext(AuthContext);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const [navigate, setNavigate] = useState(false);
   const [isVerified, setIsVerified] = useState(true);
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigateTo = useNavigate();
-
-  const successGoogleLogin = async (credentialResponse) => {
-    const googleToken = credentialResponse.credential;
-
-    try {
-      setIsLoading(true);
-      const isUserRegistered = await getIsUserRegistered(googleToken);
-      if (isUserRegistered) {
-        await googleLogin(googleToken);
-        navigateTo("/");
-        message.success("Login successful!");
-      } else {
-        navigateTo({
-          pathname: `/google-register`,
-          search: `?googleToken=${googleToken}`,
-        });
-      }
-
-      // const res = await googleAuth(googleToken);
-      // const email = res?.data?.email;
-      // const accessToken = res?.data?.accessToken;
-      // setEmail(email);
-      // if (!accessToken) {
-      //   setIsVerified(false);
-      // } else {
-      //   navigateTo("/");
-      //   message.success("Login successful!");
-      // }
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const onFinish = async () => {
     try {
       setIsLoading(true);
-      await login(email, password);
+      await googleRegister(searchParams.get("googleToken"), username);
 
       message.success("Login successful!");
       navigateTo("/");
@@ -130,7 +95,7 @@ const SignIn = ({ forgotPassword, setIsLoading }) => {
     return <Navigate to="/" />;
   }
 
-  return isVerified ? (
+  return (
     <div className={styles.container}>
       <div className={styles.InnerContainer}>
         <div className={styles.Buttons}>
@@ -150,85 +115,31 @@ const SignIn = ({ forgotPassword, setIsLoading }) => {
             rules={[
               {
                 required: true,
-                validator: checkEmail,
-                message: "Please input your email!",
+                // validator: checkEmail,
+                message: "Please input your username",
               },
             ]}
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Username"
               className={styles.input}
             />
           </Form.Item>
-          <Form.Item
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: "Please input your Password!",
-              },
-            ]}
-          >
-            <Input.Password
-              className={styles.input}
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              placeholder="Password"
-            />
-          </Form.Item>
-          <Form.Item className={styles.forgotPasswordContainer}>
-            <div className={styles.RememberMe}>
-              {/* <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item> */}
-              <button
-                className={styles.forgotPassword}
-                onClick={forgotPassword}
-              >
-                Forgot password
-              </button>
-            </div>
-          </Form.Item>
+
           <Form.Item style={{ marginBottom: "0px" }}>
             <Button
               type="primary"
               htmlType="submit"
               className={styles.loginButton}
             >
-              Login
+              Continue
             </Button>
           </Form.Item>
-          <p style={{ textAlign: "center" }}>Or</p>
-          <div className={styles.oauthContainer}>
-            <GoogleLogin
-              onSuccess={successGoogleLogin}
-              onError={() => {
-                console.log("Login Failed");
-              }}
-              useOneTap
-              ux_mode="popup"
-              shape="pill"
-              // login_uri="http://localhost:3000/login"
-            />
-          </div>
-          <p
-            style={{
-              textAlign: "center",
-              fontSize: "12px",
-              margin: "21px",
-            }}
-          >
-            Don’t have an account in EventHub yet?{" "}
-            <Link to="/register">Register!</Link>
-          </p>
         </Form>
       </div>
     </div>
-  ) : (
-    <EmailVerification email={email} />
   );
 };
 export default withLoading(SignIn);

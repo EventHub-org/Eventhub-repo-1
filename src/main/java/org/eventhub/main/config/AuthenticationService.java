@@ -4,10 +4,7 @@ import com.google.api.client.http.HttpTransport;
 import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.eventhub.main.dto.*;
-import org.eventhub.main.exception.AccessIsDeniedException;
-import org.eventhub.main.exception.NotValidRefreshTokenException;
-import org.eventhub.main.exception.PasswordException;
-import org.eventhub.main.exception.ResponseStatusException;
+import org.eventhub.main.exception.*;
 import org.eventhub.main.mapper.RegisterMapper;
 import org.eventhub.main.model.ConfirmationToken;
 import org.eventhub.main.model.PasswordResetToken;
@@ -202,7 +199,9 @@ public class AuthenticationService {
                 .build();
     }
     public GoogleJwtResponse googleLogin(GoogleOauthRequest request) throws GeneralSecurityException, IOException {
-        GoogleIdToken idToken = getGoogleIdToken(request);
+        logger.info("google token: " + request.getGoogleToken());
+        GoogleIdToken idToken = getGoogleIdToken(request.getGoogleToken());
+        logger.info("google id token: " + idToken);
         if (idToken != null) {
             Payload payload = idToken.getPayload();
             String email = payload.getEmail();
@@ -228,7 +227,7 @@ public class AuthenticationService {
                 } else{
                     refreshToken = refreshTokenService.createRefreshToken(email);
                 }
-                
+
                 return GoogleJwtResponse.builder()
                         .email(email)
                         .accessToken(accessToken)
@@ -236,13 +235,24 @@ public class AuthenticationService {
                         .expiryDate(jwtService.expDate(accessToken))
                         .build();
             }
+            throw new NullEntityReferenceException("User is null");
+        }
+        throw new AccessIsDeniedException("Invalid id token");
+    }
+    public GoogleJwtResponse googleRegister(GoogleRegisterRequest request) throws GeneralSecurityException, IOException {
+        logger.info("token google: " + request.getGoogleToken());
+        logger.info("username google: " + request.getUsername());
+        GoogleIdToken idToken = getGoogleIdToken(request.getGoogleToken());
+        if (idToken != null) {
+            Payload payload = idToken.getPayload();
+            String email = payload.getEmail();
 
             boolean emailVerified = payload.getEmailVerified();
-            RegisterRequest registerRequest = registerMapper.googlePayloadToRegisterRequest(payload);
+            RegisterRequest registerRequest = registerMapper.googlePayloadToRegisterRequest(payload, request.getUsername());
             UserRequestCreate userRequest = registerMapper.requestToEntity(registerRequest, new UserRequestCreate());
 
             if (emailVerified) {
-                logger.info("Registering verified(email) user");
+                logger.info("Registering verified(email) google user");
 
                 userService.create(userRequest);
                 User userToCreate = userRepository.findByEmail(email);
@@ -264,16 +274,12 @@ public class AuthenticationService {
             return GoogleJwtResponse.builder()
                     .email(email)
                     .build();
-
-
-        } else {
-            throw new AccessIsDeniedException("Invalid ID token.");
         }
+        throw new AccessIsDeniedException("Invalid id token");
     }
 
     public boolean isUserRegistered(String googleToken) throws GeneralSecurityException, IOException {
-        GoogleOauthRequest request = new GoogleOauthRequest(googleToken);
-        GoogleIdToken idToken = getGoogleIdToken(request);
+        GoogleIdToken idToken = getGoogleIdToken(googleToken);
         if (idToken != null) {
             Payload payload = idToken.getPayload();
             String email = payload.getEmail();
@@ -281,8 +287,10 @@ public class AuthenticationService {
             User user = userRepository.findByEmail(email);
             return user != null;
         }
-        throw new RuntimeException("google id token is null");
+        throw new AccessIsDeniedException("Invalid id token");
     }
+
+
 
     public JwtResponse refreshToken(String refreshToken) {
         return refreshTokenService.findByToken(refreshToken)
@@ -306,7 +314,7 @@ public class AuthenticationService {
         refreshTokenService.deleteTokenByUserId(jwtService.getId(token));
     }
 
-    private GoogleIdToken getGoogleIdToken(GoogleOauthRequest request) throws GeneralSecurityException, IOException {
+    private GoogleIdToken getGoogleIdToken(String googleToken) throws GeneralSecurityException, IOException {
         HttpTransport transport = new com.google.api.client.http.javanet.NetHttpTransport();
         JsonFactory jsonFactory = com.google.api.client.json.gson.GsonFactory.getDefaultInstance();
 
@@ -314,6 +322,6 @@ public class AuthenticationService {
                 .setAudience(Collections.singletonList(googleClientId))
                 .build();
 
-        return verifier.verify(request.getGoogleToken());
+        return verifier.verify(googleToken);
     }
 }

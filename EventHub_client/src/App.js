@@ -9,6 +9,7 @@ import EditUserProfile from "./pages/Home/EditUserProfile/EditUserProfile";
 import EventInfoSideBar from "./pages/Home/EventInfoSideBar/EventInfoSideBar.jsx";
 import ConfirmEmail from "./pages/Home/SignUp/EmailVerification/ConfirmEmail.jsx";
 import ResetPassword from "./pages/Home/ResetPassword/ResetPassword.jsx";
+import GoogleSignUp from "./pages/Home/SignUp/GoogleSignUp/GoogleSignUp.jsx";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/profile/:username" element={<UserProfile />} />
             <Route path="/profile/edit" element={<EditUserProfile />} />
             <Route path="/register" element={<SignUp />} />
+            <Route path="/google-register" element={<GoogleSignUp />} />
             <Route path="/login" element={<LogIn />} />
             <Route
               path="/confirm/:confirmationToken"

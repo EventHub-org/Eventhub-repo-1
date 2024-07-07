@@ -42,14 +42,14 @@ public class RegisterMapper {
 
         return userRequest;
     }
-    public RegisterRequest googlePayloadToRegisterRequest(GoogleIdToken.Payload payload) {
+    public RegisterRequest googlePayloadToRegisterRequest(GoogleIdToken.Payload payload, String username) {
 
         return RegisterRequest.builder()
                 .email(payload.getEmail())
                 .firstName((String) payload.get("given_name"))
                 .lastName((String) payload.get("family_name"))
                 .provider("Google")
-                .username((String) payload.get("given_name") + (String) payload.get("family_name"))
+                .username(username)
                 .photoUrl((String) payload.get("picture"))
                 .isVerified(payload.getEmailVerified())
                 .build();
