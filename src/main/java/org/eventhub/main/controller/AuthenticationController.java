@@ -48,6 +48,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@Validated @RequestBody UserRequestCreate userRequest, BindingResult result) throws IOException {
+        log.info("Registering...");
         if (result.hasErrors()) {
             throw new ResponseStatusException(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
@@ -125,6 +126,8 @@ public class AuthenticationController {
 
     @GetMapping("/refreshToken")
     public ResponseEntity<String> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        log.info("Refreshing token");
+
         String refreshToken = null;
 
         // Get cookies from the request
@@ -159,6 +162,7 @@ public class AuthenticationController {
     public ResponseEntity<OperationResponse> logout(@RequestHeader("Authorization") String token, HttpServletResponse response) {
         authService.logout(token);
         removeRefreshTokenCookies(response);
+        log.info("Logged out");
         return new ResponseEntity<>(new OperationResponse("Refresh token deleted successfully"), HttpStatus.OK);
     }
 
