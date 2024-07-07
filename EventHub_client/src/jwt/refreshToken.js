@@ -1,32 +1,18 @@
 import axios from "../api/axios";
 
-export const refreshToken = async (token) => {
+export const refreshToken = async () => {
   const DATA_URL = "/authentication/refreshToken";
 
-  const accessToken = localStorage.getItem("token");
+  const authAxios = axios.create({
+    headers: {
+      ...{ Authorization: null },
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "content-type",
+      "Access-Control-Allow-Credentials": "true",
+    },
+  });
 
-  try {
-    const response = await axios.post(
-      DATA_URL,
-      {
-        token,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
-      }
-    );
+  const response = await authAxios.get(DATA_URL);
 
-    const newAccessToken = response?.data?.accessToken;
-    const expiryDate = response?.data?.expiryDate;
-
-    localStorage.setItem("token", newAccessToken);
-    localStorage.setItem("expDate", expiryDate);
-
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  return response.data;
 };

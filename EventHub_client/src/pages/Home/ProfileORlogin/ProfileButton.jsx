@@ -1,7 +1,6 @@
 // MenuButton.jsx
 import React, { useState, useEffect, useContext } from "react";
 import { Dropdown, Menu } from "antd";
-import useAuth from "../../../hooks/useAuth";
 import { useLocation } from "react-router-dom";
 
 import {
@@ -43,7 +42,6 @@ const MenuButton = () => {
 
   const handleMenuClick = async (e) => {
     if (e.key === "profile") {
-      console.log("Profile clicked");
     } else if (e.key === "logout") {
       await logout();
     }

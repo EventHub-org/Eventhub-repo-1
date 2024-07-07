@@ -5,6 +5,7 @@ import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.eventhub.main.dto.*;
 import org.eventhub.main.exception.AccessIsDeniedException;
+import org.eventhub.main.exception.NotValidRefreshTokenException;
 import org.eventhub.main.exception.PasswordException;
 import org.eventhub.main.exception.ResponseStatusException;
 import org.eventhub.main.mapper.RegisterMapper;
@@ -279,8 +280,8 @@ public class AuthenticationService {
         }
     }
 
-    public JwtResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
-        return refreshTokenService.findByToken(refreshTokenRequest.getToken())
+    public JwtResponse refreshToken(String refreshToken) {
+        return refreshTokenService.findByToken(refreshToken)
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
@@ -290,10 +291,10 @@ public class AuthenticationService {
                     String accessToken = jwtService.generateToken(extraClaims, user);
                     return JwtResponse.builder()
                             .accessToken(accessToken)
-                            .refreshToken(refreshTokenRequest.getToken())
+                            .refreshToken(refreshToken)
                             .expiryDate(jwtService.expDate(accessToken))
                             .build();
-                }).orElseThrow(() -> new RuntimeException(
+                }).orElseThrow(() -> new NotValidRefreshTokenException(
                         "Refresh token is not in database"));
     }
 

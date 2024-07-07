@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "../../../../api/axios";
 import styles from "./SignIn.module.css";
 import { Link, Navigate, Redirect, useAsyncError } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +33,6 @@ const SignIn = ({ forgotPassword, setIsLoading }) => {
         setIsVerified(false);
       } else {
         navigateToHome("/");
-        window.location.reload();
         message.success("Login successful!");
       }
     } finally {
@@ -49,7 +47,6 @@ const SignIn = ({ forgotPassword, setIsLoading }) => {
 
       message.success("Login successful!");
       navigateToHome("/");
-      window.location.reload();
       //setNavigate(true);
     } catch (err) {
       if (!err.response) {

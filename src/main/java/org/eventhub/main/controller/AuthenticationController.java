@@ -1,10 +1,16 @@
 package org.eventhub.main.controller;
 
 import groovy.util.logging.Slf4j;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.eventhub.main.config.AuthenticationService;
 import org.eventhub.main.dto.*;
+import org.eventhub.main.exception.AccessIsDeniedException;
+import org.eventhub.main.exception.NotValidRefreshTokenException;
 import org.eventhub.main.exception.ResponseStatusException;
+import org.eventhub.main.model.RefreshToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.eventhub.main.model.User;
@@ -42,6 +48,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@Validated @RequestBody UserRequestCreate userRequest, BindingResult result) throws IOException {
+        log.info("Registering...");
         if (result.hasErrors()) {
             throw new ResponseStatusException(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
@@ -73,32 +80,111 @@ public class AuthenticationController {
     }
 
     @PostMapping("forgot-password")
-    public ResponseEntity<JwtResponse> resetPassword(@Validated @RequestBody PasswordResetRequest request, BindingResult result) {
+    public ResponseEntity<String> resetPassword(@Validated @RequestBody PasswordResetRequest request, HttpServletResponse response, BindingResult result) {
+        log.info("**/reset password, token = " + request.getToken());
+
         if(result.hasErrors()){
             throw new ResponseStatusException(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        log.info("**/reset password, token = " + request.getToken());
-        return ResponseEntity.ok(authService.confirmResetPassword(request));
+
+        JwtResponse jwtResponse = authService.confirmResetPassword(request);
+
+        setRefreshTokenCookies(jwtResponse, response);
+
+        return ResponseEntity.ok(jwtResponse.getAccessToken());
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+    public ResponseEntity<String> login(@RequestBody AuthenticationRequest request, HttpServletResponse response) {
+        log.info("Logging in");
+
+        JwtResponse jwtResponse = authService.login(request);
+
+        log.info("Logged in");
+
+        setRefreshTokenCookies(jwtResponse, response);
+
+        return ResponseEntity.ok(jwtResponse.getAccessToken());
     }
     @PostMapping("/google")
-    public ResponseEntity<GoogleJwtResponse> googleAuthentication(@RequestBody GoogleOauthRequest request) throws GeneralSecurityException, IOException {
+    public ResponseEntity<GoogleJwtResponse> googleAuthentication(@RequestBody GoogleOauthRequest request, HttpServletResponse response) throws GeneralSecurityException, IOException {
         log.info("Authorizing with google");
-        return ResponseEntity.ok(authService.googleLogin(request));
+
+        GoogleJwtResponse jwtResponse = authService.googleLogin(request);
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", jwtResponse.getRefreshToken());
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(false); // Set to true in production
+        refreshTokenCookie.setPath("/"); // Define the path where the cookie is accessible
+        refreshTokenCookie.setMaxAge((int) jwtResponse.getExpiryDate().toInstant().getEpochSecond());
+
+        // Add the cookie to the response
+        response.addCookie(refreshTokenCookie);
+
+        return ResponseEntity.ok(jwtResponse);
     }
 
-    @PostMapping("/refreshToken")
-    public ResponseEntity<JwtResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-        return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
+    @GetMapping("/refreshToken")
+    public ResponseEntity<String> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        log.info("Refreshing token");
+
+        String refreshToken = null;
+
+        // Get cookies from the request
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("refreshToken".equals(cookie.getName())) {
+                    refreshToken = cookie.getValue();
+                }
+            }
+        }
+
+        if (refreshToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No refresh token");
+        }
+
+        JwtResponse jwtResponse;
+        try {
+             jwtResponse = authService.refreshToken(refreshToken);
+        }
+        catch (NotValidRefreshTokenException ex) {
+            removeRefreshTokenCookies(response);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+        }
+
+
+        return ResponseEntity.ok(jwtResponse.getAccessToken());
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<OperationResponse> logout(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<OperationResponse> logout(@RequestHeader("Authorization") String token, HttpServletResponse response) {
         authService.logout(token);
+        removeRefreshTokenCookies(response);
+        log.info("Logged out");
         return new ResponseEntity<>(new OperationResponse("Refresh token deleted successfully"), HttpStatus.OK);
+    }
+
+    private void setRefreshTokenCookies(JwtResponse jwtResponse, HttpServletResponse response) {
+        Cookie refreshTokenCookie = new Cookie("refreshToken", jwtResponse.getRefreshToken());
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(false); // Set to true in production
+        refreshTokenCookie.setPath("/"); // Define the path where the cookie is accessible
+        refreshTokenCookie.setMaxAge((int) jwtResponse.getExpiryDate().toInstant().getEpochSecond());
+
+        // Add the cookie to the response
+        response.addCookie(refreshTokenCookie);
+
+        log.info("Added cookie, val: " + jwtResponse.getRefreshToken());
+
+    }
+    private void removeRefreshTokenCookies(HttpServletResponse response) {
+        Cookie refreshTokenCookie = new Cookie("refreshToken", "");
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(0);
+        response.addCookie(refreshTokenCookie);
+
+        log.info("Refresh token cookies removed");
     }
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, redirect } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getUserByUsername } from "../../../api/getUserByUsername";
 import { message } from "antd";
 import UserImages from "../../../components/UserImages/UserImages";

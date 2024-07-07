@@ -51,12 +51,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> jwtExpiredException(ExpiredJwtException ex) {
-        log.error("JWT expired exception: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
-    }
-
-    @ExceptionHandler
     public ResponseEntity<?> handlePasswordException(PasswordException ex) {
         log.error("Bad request with user password: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());

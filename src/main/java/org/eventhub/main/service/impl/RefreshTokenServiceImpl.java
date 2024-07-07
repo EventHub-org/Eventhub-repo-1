@@ -1,6 +1,7 @@
 package org.eventhub.main.service.impl;
 
 import org.eventhub.main.config.JwtService;
+import org.eventhub.main.exception.NotValidRefreshTokenException;
 import org.eventhub.main.model.RefreshToken;
 import org.eventhub.main.repository.RefreshTokenRepository;
 import org.eventhub.main.repository.UserRepository;
@@ -30,7 +31,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(user)
                 .token(UUID.randomUUID().toString())
-                .expiryDate(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .expiryDate(new Date(System.currentTimeMillis() + 1000 * 60 * 45))
+//                .expiryDate(new Date(System.currentTimeMillis() + 1000 * 25 * 1))
                 .build();
         return refreshTokenRepository.save(refreshToken);
     }
@@ -44,7 +46,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     public RefreshToken verifyExpiration(RefreshToken token) {
         if(token.getExpiryDate().compareTo(Date.from(Instant.now())) < 0) {
             refreshTokenRepository.delete(token);
-            throw new RuntimeException(token.getToken() + " Refresh token was expired . Please make a sigh in request");
+            throw new NotValidRefreshTokenException("Refresh token was expired . Please make a sign in request");
         }
         return token;   
     }
