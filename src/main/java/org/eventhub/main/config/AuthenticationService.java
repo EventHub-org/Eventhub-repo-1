@@ -271,7 +271,8 @@ public class AuthenticationService {
         }
     }
 
-    public boolean isUserRegistered(GoogleOauthRequest request) throws GeneralSecurityException, IOException {
+    public boolean isUserRegistered(String googleToken) throws GeneralSecurityException, IOException {
+        GoogleOauthRequest request = new GoogleOauthRequest(googleToken);
         GoogleIdToken idToken = getGoogleIdToken(request);
         if (idToken != null) {
             Payload payload = idToken.getPayload();

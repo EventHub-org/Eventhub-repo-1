@@ -10,6 +10,10 @@ import { checkEmail } from "../../SignUp/Registration/validation";
 import AuthContext from "../../../../context/authProvider";
 import EmailVerification from "../../SignUp/EmailVerification/EmailVerification";
 import withLoading from "../../../../utils/hoc/withLoading/withLoading";
+import {
+  getIsUserRegistered,
+  isUserRegistered,
+} from "../../../../api/getIsUserRegistered";
 
 const SignIn = ({ forgotPassword, setIsLoading }) => {
   const { login, googleAuth } = useContext(AuthContext);
@@ -25,6 +29,11 @@ const SignIn = ({ forgotPassword, setIsLoading }) => {
 
     try {
       setIsLoading(true);
+      const isUserRegistered = await getIsUserRegistered(googleToken);
+      if (isUserRegistered) {
+        alert("yess");
+      }
+
       const res = await googleAuth(googleToken);
       const email = res?.data?.email;
       const accessToken = res?.data?.accessToken;

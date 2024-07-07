@@ -123,9 +123,9 @@ public class AuthenticationController {
 
         return ResponseEntity.ok(jwtResponse);
     }
-    @GetMapping("/is-registered")
-    public ResponseEntity<Boolean> isUserRegistered(@RequestBody GoogleOauthRequest request) throws GeneralSecurityException, IOException {
-        return ResponseEntity.ok(authService.isUserRegistered(request));
+    @GetMapping("{google_token}/is-registered")
+    public ResponseEntity<Boolean> isUserRegistered(@PathVariable("google_token") String googleToken) throws GeneralSecurityException, IOException {
+        return ResponseEntity.ok(authService.isUserRegistered(googleToken));
     }
 
 
