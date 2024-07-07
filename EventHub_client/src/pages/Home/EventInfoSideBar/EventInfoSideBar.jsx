@@ -31,7 +31,6 @@ import { getUserParticipants } from "../../../api/getUserParticipants";
 import { leaveEvent } from "../../../api/leaveEvent";
 import useStore from "../../../hooks/useStore";
 
-import useLogin from "../../../hooks/useLogin";
 import GoBackButton from "../../../components/Buttons/GoBackButton/GoBackButton";
 import withLoading from "../../../utils/hoc/withLoading/withLoading";
 import { AnimatePresence } from "framer-motion";
