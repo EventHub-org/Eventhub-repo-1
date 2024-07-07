@@ -123,6 +123,12 @@ public class AuthenticationController {
 
         return ResponseEntity.ok(jwtResponse);
     }
+    @GetMapping("/is-registered")
+    public ResponseEntity<Boolean> isUserRegistered(@RequestBody GoogleOauthRequest request) throws GeneralSecurityException, IOException {
+        return ResponseEntity.ok(authService.isUserRegistered(request));
+    }
+
+
 
     @GetMapping("/refreshToken")
     public ResponseEntity<String> refreshToken(HttpServletRequest request, HttpServletResponse response) {

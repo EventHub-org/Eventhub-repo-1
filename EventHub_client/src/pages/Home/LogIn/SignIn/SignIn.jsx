@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import styles from "./SignIn.module.css";
-import { Link, Navigate, Redirect, useAsyncError } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input, message } from "antd";
+import { Button, Form, Input, message } from "antd";
 import CloseWindowButton from "../../../../components/Buttons/CloseWindowButton/CloseWindowButton";
 import { GoogleLogin } from "@react-oauth/google";
 import { checkEmail } from "../../SignUp/Registration/validation";

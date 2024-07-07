@@ -202,16 +202,7 @@ public class AuthenticationService {
                 .build();
     }
     public GoogleJwtResponse googleLogin(GoogleOauthRequest request) throws GeneralSecurityException, IOException {
-        HttpTransport transport = new com.google.api.client.http.javanet.NetHttpTransport();
-        JsonFactory jsonFactory = com.google.api.client.json.gson.GsonFactory.getDefaultInstance();
-
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-                .setAudience(Collections.singletonList(googleClientId))
-                .build();
-
-        logger.info("Verified google client");
-
-        GoogleIdToken idToken = verifier.verify(request.getGoogleToken());
+        GoogleIdToken idToken = getGoogleIdToken(request);
         if (idToken != null) {
             Payload payload = idToken.getPayload();
             String email = payload.getEmail();
@@ -280,6 +271,18 @@ public class AuthenticationService {
         }
     }
 
+    public boolean isUserRegistered(GoogleOauthRequest request) throws GeneralSecurityException, IOException {
+        GoogleIdToken idToken = getGoogleIdToken(request);
+        if (idToken != null) {
+            Payload payload = idToken.getPayload();
+            String email = payload.getEmail();
+
+            User user = userRepository.findByEmail(email);
+            return user != null;
+        }
+        throw new RuntimeException("google id token is null");
+    }
+
     public JwtResponse refreshToken(String refreshToken) {
         return refreshTokenService.findByToken(refreshToken)
                 .map(refreshTokenService::verifyExpiration)
@@ -300,5 +303,16 @@ public class AuthenticationService {
 
     public void logout(String token) {
         refreshTokenService.deleteTokenByUserId(jwtService.getId(token));
+    }
+
+    private GoogleIdToken getGoogleIdToken(GoogleOauthRequest request) throws GeneralSecurityException, IOException {
+        HttpTransport transport = new com.google.api.client.http.javanet.NetHttpTransport();
+        JsonFactory jsonFactory = com.google.api.client.json.gson.GsonFactory.getDefaultInstance();
+
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
+                .setAudience(Collections.singletonList(googleClientId))
+                .build();
+
+        return verifier.verify(request.getGoogleToken());
     }
 }
