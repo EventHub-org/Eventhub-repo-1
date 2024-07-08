@@ -189,7 +189,7 @@ export const AuthProvider = ({ children }) => {
         }
       );
 
-      const token = res?.data?.accessToken;
+      const token = res?.data;
 
       setAccessToken(token);
     } catch (err) {
@@ -214,7 +214,7 @@ export const AuthProvider = ({ children }) => {
         }
       );
 
-      const token = res?.data?.accessToken;
+      const token = res?.data;
 
       setAccessToken(token);
     } catch (err) {

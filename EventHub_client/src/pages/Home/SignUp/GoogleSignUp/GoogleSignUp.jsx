@@ -5,27 +5,36 @@ import { useNavigate } from "react-router-dom";
 import { UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message } from "antd";
 import CloseWindowButton from "../../../../components/Buttons/CloseWindowButton/CloseWindowButton";
-import { checkEmail } from "../../SignUp/Registration/validation";
 import AuthContext from "../../../../context/authProvider";
 import withLoading from "../../../../utils/hoc/withLoading/withLoading";
+import { getIsGmailVerified } from "../../../../api/getIsGmailVerified";
+import { registerNotVerifiedGmailUser } from "../../../../api/registerNotVerifiedGmailUser";
+import EmailVerification from "../EmailVerification/EmailVerification";
 
-const SignIn = ({ forgotPassword, setIsLoading }) => {
+const SignIn = ({ setIsLoading }) => {
   const { googleRegister } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
   const [navigate, setNavigate] = useState(false);
   const [isVerified, setIsVerified] = useState(true);
+  const [emailToVerify, setEmailToVerify] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const navigateTo = useNavigate();
 
   const onFinish = async () => {
     try {
       setIsLoading(true);
-      await googleRegister(searchParams.get("googleToken"), username);
-
-      message.success("Login successful!");
-      navigateTo("/");
-      //setNavigate(true);
+      const googleToken = searchParams.get("googleToken");
+      const isGmailVerified = await getIsGmailVerified(googleToken);
+      if (isGmailVerified) {
+        await googleRegister(googleToken, username);
+        navigateTo("/");
+        message.success("Login successful!");
+      } else {
+        const res = await registerNotVerifiedGmailUser(googleToken, username);
+        setEmailToVerify(res.data);
+        setIsVerified(false);
+      }
     } catch (err) {
       if (!err.response) {
         // Помилка з'єднання з сервером
@@ -95,7 +104,7 @@ const SignIn = ({ forgotPassword, setIsLoading }) => {
     return <Navigate to="/" />;
   }
 
-  return (
+  return isVerified ? (
     <div className={styles.container}>
       <div className={styles.InnerContainer}>
         <div className={styles.Buttons}>
@@ -140,6 +149,8 @@ const SignIn = ({ forgotPassword, setIsLoading }) => {
         </Form>
       </div>
     </div>
+  ) : (
+    <EmailVerification email={emailToVerify} />
   );
 };
 export default withLoading(SignIn);

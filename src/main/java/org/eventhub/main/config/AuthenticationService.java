@@ -198,10 +198,8 @@ public class AuthenticationService {
                 .expiryDate(jwtService.expDate(accessToken))
                 .build();
     }
-    public GoogleJwtResponse googleLogin(GoogleOauthRequest request) throws GeneralSecurityException, IOException {
-        logger.info("google token: " + request.getGoogleToken());
+    public JwtResponse googleLogin(GoogleLoginRequest request) throws GeneralSecurityException, IOException {
         GoogleIdToken idToken = getGoogleIdToken(request.getGoogleToken());
-        logger.info("google id token: " + idToken);
         if (idToken != null) {
             Payload payload = idToken.getPayload();
             String email = payload.getEmail();
@@ -228,8 +226,7 @@ public class AuthenticationService {
                     refreshToken = refreshTokenService.createRefreshToken(email);
                 }
 
-                return GoogleJwtResponse.builder()
-                        .email(email)
+                return JwtResponse.builder()
                         .accessToken(accessToken)
                         .refreshToken(refreshToken.getToken())
                         .expiryDate(jwtService.expDate(accessToken))
@@ -239,19 +236,15 @@ public class AuthenticationService {
         }
         throw new AccessIsDeniedException("Invalid id token");
     }
-    public GoogleJwtResponse googleRegister(GoogleRegisterRequest request) throws GeneralSecurityException, IOException {
-        logger.info("token google: " + request.getGoogleToken());
-        logger.info("username google: " + request.getUsername());
+    public JwtResponse googleRegister(GoogleRegisterRequest request) throws GeneralSecurityException, IOException {
         GoogleIdToken idToken = getGoogleIdToken(request.getGoogleToken());
         if (idToken != null) {
             Payload payload = idToken.getPayload();
             String email = payload.getEmail();
 
-            boolean emailVerified = payload.getEmailVerified();
             RegisterRequest registerRequest = registerMapper.googlePayloadToRegisterRequest(payload, request.getUsername());
             UserRequestCreate userRequest = registerMapper.requestToEntity(registerRequest, new UserRequestCreate());
 
-            if (emailVerified) {
                 logger.info("Registering verified(email) google user");
 
                 userService.create(userRequest);
@@ -262,18 +255,26 @@ public class AuthenticationService {
 
                 String accessToken = jwtService.generateToken(extraClaims, userToCreate);
                 RefreshToken refreshToken = refreshTokenService.createRefreshToken(email);
-                return GoogleJwtResponse.builder()
-                        .email(email)
+                return JwtResponse.builder()
                         .accessToken(accessToken)
                         .refreshToken(refreshToken.getToken())
                         .expiryDate(jwtService.expDate(accessToken))
                         .build();
-            }
+        }
+        throw new AccessIsDeniedException("Invalid id token");
+    }
+    public User notVerifiedGmailRegister(GoogleRegisterRequest request) throws GeneralSecurityException, IOException {
+        GoogleIdToken idToken = getGoogleIdToken(request.getGoogleToken());
+        if (idToken != null) {
+            Payload payload = idToken.getPayload();
+            String email = payload.getEmail();
 
-            register(userRequest);
-            return GoogleJwtResponse.builder()
-                    .email(email)
-                    .build();
+            RegisterRequest registerRequest = registerMapper.googlePayloadToRegisterRequest(payload, request.getUsername());
+            UserRequestCreate userRequest = registerMapper.requestToEntity(registerRequest, new UserRequestCreate());
+
+                logger.info("Registering not verified(email) google user");
+
+                return register(userRequest);
         }
         throw new AccessIsDeniedException("Invalid id token");
     }
@@ -286,6 +287,14 @@ public class AuthenticationService {
 
             User user = userRepository.findByEmail(email);
             return user != null;
+        }
+        throw new AccessIsDeniedException("Invalid id token");
+    }
+    public boolean isGmailVerified(String googleToken) throws GeneralSecurityException, IOException {
+        GoogleIdToken idToken = getGoogleIdToken(googleToken);
+        if (idToken != null) {
+            Payload payload = idToken.getPayload();
+            return payload.getEmailVerified();
         }
         throw new AccessIsDeniedException("Invalid id token");
     }

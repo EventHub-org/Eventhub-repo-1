@@ -11,6 +11,7 @@ import AuthContext from "../../../../context/authProvider";
 import EmailVerification from "../../SignUp/EmailVerification/EmailVerification";
 import withLoading from "../../../../utils/hoc/withLoading/withLoading";
 import { getIsUserRegistered } from "../../../../api/getIsUserRegistered";
+import { getIsGmailVerified } from "../../../../api/getIsGmailVerified";
 
 const SignIn = ({ forgotPassword, setIsLoading }) => {
   const { login, googleLogin } = useContext(AuthContext);

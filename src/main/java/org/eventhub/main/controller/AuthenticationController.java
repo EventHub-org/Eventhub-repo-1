@@ -7,10 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.eventhub.main.config.AuthenticationService;
 import org.eventhub.main.dto.*;
-import org.eventhub.main.exception.AccessIsDeniedException;
 import org.eventhub.main.exception.NotValidRefreshTokenException;
 import org.eventhub.main.exception.ResponseStatusException;
-import org.eventhub.main.model.RefreshToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.eventhub.main.model.User;
@@ -27,8 +25,7 @@ import java.security.GeneralSecurityException;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -107,46 +104,63 @@ public class AuthenticationController {
         return ResponseEntity.ok(jwtResponse.getAccessToken());
     }
     @PostMapping("/google-login")
-    public ResponseEntity<GoogleJwtResponse> googleLogin(@RequestBody GoogleOauthRequest request, HttpServletResponse response) throws GeneralSecurityException, IOException {
+    public ResponseEntity<String> googleLogin(@RequestBody GoogleLoginRequest request, HttpServletResponse response) {
         log.info("Logging in with google..");
+        try {
+            JwtResponse jwtResponse = authService.googleLogin(request);
 
-        GoogleJwtResponse jwtResponse = authService.googleLogin(request);
+            setRefreshTokenCookies(jwtResponse, response);
 
-        Cookie refreshTokenCookie = new Cookie("refreshToken", jwtResponse.getRefreshToken());
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(false); // Set to true in production
-        refreshTokenCookie.setPath("/"); // Define the path where the cookie is accessible
-        refreshTokenCookie.setMaxAge((int) jwtResponse.getExpiryDate().toInstant().getEpochSecond());
-
-        // Add the cookie to the response
-        response.addCookie(refreshTokenCookie);
-
-        return ResponseEntity.ok(jwtResponse);
+            return ResponseEntity.ok(jwtResponse.getAccessToken());
+        }
+        catch (IOException | GeneralSecurityException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
     @PostMapping("/google-register")
-    public ResponseEntity<GoogleJwtResponse> googleRegister(@RequestBody GoogleRegisterRequest request, HttpServletResponse response) throws GeneralSecurityException, IOException {
+    public ResponseEntity<String> googleRegister(@RequestBody GoogleRegisterRequest request, HttpServletResponse response) {
         log.info("Registering user with google..");
+        try {
+            JwtResponse jwtResponse = authService.googleRegister(request);
 
-        GoogleJwtResponse jwtResponse = authService.googleRegister(request);
+            setRefreshTokenCookies(jwtResponse, response);
 
-        Cookie refreshTokenCookie = new Cookie("refreshToken", jwtResponse.getRefreshToken());
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(false); // Set to true in production
-        refreshTokenCookie.setPath("/"); // Define the path where the cookie is accessible
-        refreshTokenCookie.setMaxAge((int) jwtResponse.getExpiryDate().toInstant().getEpochSecond());
+            return ResponseEntity.ok(jwtResponse.getAccessToken());
+        }
+        catch (IOException | GeneralSecurityException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+    @PostMapping("/not-verified-gmail-register")
+    public ResponseEntity<String> googleRegister(@RequestBody GoogleRegisterRequest request) {
+        try{
+            User user = authService.notVerifiedGmailRegister(request);
+            return ResponseEntity.ok(user.getEmail());
+        }
+        catch (IOException | GeneralSecurityException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
 
-        // Add the cookie to the response
-        response.addCookie(refreshTokenCookie);
-
-        return ResponseEntity.ok(jwtResponse);
     }
     @GetMapping("{google_token}/is-registered")
-    public ResponseEntity<Boolean> isUserRegistered(@PathVariable("google_token") String googleToken) throws GeneralSecurityException, IOException {
-        return ResponseEntity.ok(authService.isUserRegistered(googleToken));
+    public ResponseEntity<Boolean> isUserRegistered(@PathVariable("google_token") String googleToken) {
+        try {
+            return ResponseEntity.ok(authService.isUserRegistered(googleToken));
+        }
+        catch (IOException | GeneralSecurityException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+        }
+
     }
-
-
-
+    @GetMapping("{google_token}/is-gmail-verified")
+    public ResponseEntity<Boolean> isGmailVerified(@PathVariable("google_token") String googleToken) {
+        try {
+            return ResponseEntity.ok(authService.isGmailVerified(googleToken));
+        }
+        catch (IOException | GeneralSecurityException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+        }
+    }
     @GetMapping("/refreshToken")
     public ResponseEntity<String> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         log.info("Refreshing token");
