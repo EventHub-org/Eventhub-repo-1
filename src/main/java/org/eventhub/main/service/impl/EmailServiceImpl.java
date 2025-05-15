@@ -1,127 +1,53 @@
 package org.eventhub.main.service.impl;
 
-import com.sendgrid.Method;
-import com.sendgrid.Request;
-import com.sendgrid.Response;
-import com.sendgrid.SendGrid;
-import com.sendgrid.helpers.mail.Mail;
-import com.sendgrid.helpers.mail.objects.Content;
-import com.sendgrid.helpers.mail.objects.Email;
-import com.sendgrid.helpers.mail.objects.Personalization;
-import org.eventhub.main.dto.EmailRequest;
-import org.eventhub.main.dto.UserResponse;
-import org.eventhub.main.dto.UserResponseBriefInfo;
-import org.eventhub.main.model.Event;
-import org.eventhub.main.model.User;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import lombok.AllArgsConstructor;
 import org.eventhub.main.service.EmailService;
-import org.eventhub.main.service.EventService;
-import org.eventhub.main.service.UserService;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
 @Service
+@AllArgsConstructor
 public class EmailServiceImpl implements EmailService {
-    private final SendGrid sendGrid;
-    private final Email emailFrom;
-    private final String url;
+    private final JavaMailSender mailSender;
+    private final TemplateEngine templateEngine;
 
-    public EmailServiceImpl(){
-        this.sendGrid = new SendGrid(System.getenv("sendgrid_key"));
-        this.emailFrom = new Email(System.getenv("email"));
-        this.url = "http://localhost:3000/";
+    public void sendVerificationEmail(String to, String verificationUrl) {
+        Map<String, Object> variables = Map.of("verificationUrl", verificationUrl);
+        sendEmail(to, "verification_template", "Verify your email", variables);
     }
 
-    private Response sendEmail(Mail mail) throws IOException {
-        Request request = new Request();
-
-        request.setMethod(Method.POST);
-        request.setEndpoint("mail/send");
-        request.setBody(mail.build());
-        return this.sendGrid.api(request);
+    public void sendForgotPasswordEmail(String to, String forgotPasswordUrl) {
+        Map<String, Object> variables = Map.of("forgotPasswordUrl", forgotPasswordUrl);
+        sendEmail(to, "forgot_password_template", "Reset your password", variables);
     }
 
-    private Response sendEmailAboutEvent(List<User> users, String eventTitle, String url, String template) throws IOException {
-        Mail mail = new Mail();
-        mail.setFrom(this.emailFrom);
-        mail.setTemplateId(template);
+    private void sendEmail(String to, String templateName, String subject, Map<String, Object> variables) {
+        String content = createEmailTemplate(variables, templateName);
 
-        for (User user : users) {
-            this.sendEmailToParticipant(user, eventTitle, url, mail);
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+
+        try {
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(content, true);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
         }
 
-        return this.sendEmail(mail);
+        mailSender.send(mimeMessage);
     }
 
-    private void sendEmailToParticipant(User user, String eventTitle, String url, Mail mail) throws IOException{
-        Personalization personalization = new Personalization();
-        personalization.addTo(new Email(user.getEmail()));
-
-        personalization.addDynamicTemplateData("first_name", user.getFirstName());
-        personalization.addDynamicTemplateData("event_title", eventTitle);
-        personalization.addDynamicTemplateData("url", url);
-
-        mail.addPersonalization(personalization);
+    private String createEmailTemplate(Map<String, Object> vars, String templateName) {
+        Context context = new Context();
+        context.setVariables(vars);
+        return templateEngine.process(templateName, context);
     }
-    private Response sendSecurityEmail(EmailRequest emailRequest, String verificationEndPoint, String template) throws IOException {
-        Mail mail = new Mail();
-        mail.setFrom(this.emailFrom);
-
-        Personalization personalization = new Personalization();
-        personalization.addTo(new Email(emailRequest.getTo()));
-
-        personalization.addDynamicTemplateData("first_name", emailRequest.getName());
-        personalization.addDynamicTemplateData("eventhub", this.url);
-        personalization.addDynamicTemplateData("url",verificationEndPoint);
-
-        mail.addPersonalization(personalization);
-        mail.setTemplateId(System.getenv(template));
-
-        return this.sendEmail(mail);
-    }
-    @Override
-    public Response sendVerificationEmail(String token, EmailRequest emailRequest) throws IOException {
-        String verificationEndPoint = this.url + "confirm/" + token;
-        return this.sendSecurityEmail(emailRequest, verificationEndPoint, "verification_template");
-    }
-
-    @Override
-    public Response sendResetPasswordEmail(String token, EmailRequest emailRequest) throws IOException {
-        String verificationEndPoint = this.url + "reset-password/" + token;
-        return this.sendSecurityEmail(emailRequest, verificationEndPoint, "reset_password_template");
-    }
-
-    @Override
-    public Response sendEmailAboutUpdate(List<User>users, UUID eventId, String title) throws IOException {
-        return this.sendEmailAboutEvent(users, title,this.url + "event/" + eventId,System.getenv("update_template"));
-    }
-
-    @Override
-    public Response sendEventCancellationEmail(List<User> users, String eventTitle)throws IOException{
-        return this.sendEmailAboutEvent(users,eventTitle, this.url,System.getenv("cancellation_template"));
-    }
-
-    @Override
-    public Response sendApprovalEmail(User user, UUID eventId, String title) throws IOException {
-        Mail mail = new Mail();
-        mail.setFrom(this.emailFrom);
-        mail.setTemplateId(System.getenv("approval_template"));
-
-        this.sendEmailToParticipant(user, title, this.url + "event/" + eventId, mail);
-        return this.sendEmail(mail);
-    }
-
-    @Override
-    public Response sendExclusionEmail(User user, String title) throws IOException {
-        Mail mail = new Mail();
-        mail.setFrom(this.emailFrom);
-        mail.setTemplateId(System.getenv("exclusion_template"));
-
-        this.sendEmailToParticipant(user, title, this.url, mail);
-        return this.sendEmail(mail);
-    }
-
-
 }

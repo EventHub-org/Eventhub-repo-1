@@ -30,45 +30,45 @@ public class EmailEventHandler {
         this.eventService = eventService;
     }
 
-    @EventListener
-    @Async
-    public void handleParticipantApproval(EmailParticipantApprovalEvent<UUID, UUID> emailParticipantEvent) throws IOException {
-        User user = this.userService.readByIdEntity(emailParticipantEvent.getUser());
-        Event event = this.eventService.readByIdEntity(emailParticipantEvent.getEvent());
-
-        if(!event.getOwner().getId().equals(user.getId())){
-            this.emailService.sendApprovalEmail(user, event.getId(), event.getTitle());
-        }
-    }
-
-    @EventListener
-    @Async
-    public void handleParticipantDelete(EmailParticipantDeleteEvent<UUID, UUID> emailParticipantDeleteEvent) throws IOException {
-        User user = this.userService.readByIdEntity(emailParticipantDeleteEvent.getUser());
-        String title = this.eventService.readByIdEntity(emailParticipantDeleteEvent.getEvent()).getTitle();
-
-        this.emailService.sendExclusionEmail(user, title);
-    }
-
-    @EventListener
-    @Async
-    public void handleEventUpdate(EmailUpdateEvent<EventFullInfoResponse> emailUpdateEvent) throws IOException {
-        EventFullInfoResponse event = emailUpdateEvent.getEvent();
-        String title = event.getTitle();
-        UUID eventId = event.getId();
-        List<User> users = this.userService.findApprovedUsersByEventId(eventId);
-        if(users != null && !users.isEmpty()){
-            this.emailService.sendEmailAboutUpdate(users, eventId, title);
-        }
-    }
-
-    @EventListener
-    @Async
-    public void handleEventDelete(EmailDeleteEvent<String, List<User>> emailDeleteEvent) throws IOException {
-        List<User> users = emailDeleteEvent.getParticipants();
-        if(users != null && !users.isEmpty()){
-            this.emailService.sendEventCancellationEmail(users, emailDeleteEvent.getEvent());
-        }
-    }
+//    @EventListener
+//    @Async
+//    public void handleParticipantApproval(EmailParticipantApprovalEvent<UUID, UUID> emailParticipantEvent) throws IOException {
+//        User user = this.userService.readByIdEntity(emailParticipantEvent.getUser());
+//        Event event = this.eventService.readByIdEntity(emailParticipantEvent.getEvent());
+//
+//        if(!event.getOwner().getId().equals(user.getId())){
+//            this.emailService.sendApprovalEmail(user, event.getId(), event.getTitle());
+//        }
+//    }
+//
+//    @EventListener
+//    @Async
+//    public void handleParticipantDelete(EmailParticipantDeleteEvent<UUID, UUID> emailParticipantDeleteEvent) throws IOException {
+//        User user = this.userService.readByIdEntity(emailParticipantDeleteEvent.getUser());
+//        String title = this.eventService.readByIdEntity(emailParticipantDeleteEvent.getEvent()).getTitle();
+//
+//        this.emailService.sendExclusionEmail(user, title);
+//    }
+//
+//    @EventListener
+//    @Async
+//    public void handleEventUpdate(EmailUpdateEvent<EventFullInfoResponse> emailUpdateEvent) throws IOException {
+//        EventFullInfoResponse event = emailUpdateEvent.getEvent();
+//        String title = event.getTitle();
+//        UUID eventId = event.getId();
+//        List<User> users = this.userService.findApprovedUsersByEventId(eventId);
+//        if(users != null && !users.isEmpty()){
+//            this.emailService.sendEmailAboutUpdate(users, eventId, title);
+//        }
+//    }
+//
+//    @EventListener
+//    @Async
+//    public void handleEventDelete(EmailDeleteEvent<String, List<User>> emailDeleteEvent) throws IOException {
+//        List<User> users = emailDeleteEvent.getParticipants();
+//        if(users != null && !users.isEmpty()){
+//            this.emailService.sendEventCancellationEmail(users, emailDeleteEvent.getEvent());
+//        }
+//    }
 
 }

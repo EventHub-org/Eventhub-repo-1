@@ -22,12 +22,11 @@ const ConfirmEmail = () => {
         }
       } finally {
         navigate("/");
-        window.location.reload();
       }
     };
 
     confirmUserEmail();
-  }, []);
+  }, [confirmationToken, confirmEmail, navigate]);
 };
 
 export default ConfirmEmail;

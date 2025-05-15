@@ -29,7 +29,6 @@ export const editEventPhotos = async (formData, event_id) => {
     `/events/${event_id}/photos/upload`,
     mergedPhotos
   );
-  console.log(response.data);
   return response.data;
 };
 

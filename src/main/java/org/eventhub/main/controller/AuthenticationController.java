@@ -66,9 +66,13 @@ public class AuthenticationController {
     }
 
     @GetMapping("/confirm-account")
-    public ResponseEntity<JwtResponse> confirm(@RequestParam("token")String confirmationToken) {
+    public ResponseEntity<String> confirm(@RequestParam("token")String confirmationToken, HttpServletResponse response) {
         log.info("**/confirm token(id) = " + confirmationToken);
-        return ResponseEntity.ok(authService.confirm(confirmationToken));
+        JwtResponse jwtResponse = authService.confirm(confirmationToken);
+
+        setRefreshTokenCookies(jwtResponse, response);
+
+        return ResponseEntity.ok(jwtResponse.getAccessToken());
     }
 
     @GetMapping("forgot-password")

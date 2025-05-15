@@ -62,6 +62,9 @@ public class AuthenticationService {
     @Value("${google.clientId}")
     private String googleClientId;
 
+    @Value("${client_url}")
+    private String clientUrl;
+
     private void scheduleConfirmationTask(String email) {
         int timeForVerification = 110;
         scheduler.schedule(() -> {
@@ -81,7 +84,8 @@ public class AuthenticationService {
         ConfirmationToken confirmationToken = confirmationTokenService.create(user);
         
         EmailRequest emailRequest = new EmailRequest(registerRequest.getEmail(),"Verify email", "Please, verify your email", registerRequest.getFirstName());
-        emailService.sendVerificationEmail(confirmationToken.getToken(), emailRequest);
+        String verificationUrl = this.clientUrl + "confirm/" + confirmationToken.getToken();
+        emailService.sendVerificationEmail(emailRequest.getTo(), verificationUrl);
 
         scheduleConfirmationTask(userResponse.getEmail());
         return user;
@@ -95,7 +99,8 @@ public class AuthenticationService {
         }
 
         EmailRequest emailRequest = new EmailRequest(email, "Verify email", "Please, verify your email", user.getFirstName());
-        emailService.sendVerificationEmail(user.getConfirmationToken().getToken(), emailRequest);
+        String verificationUrl = this.clientUrl + "confirm/" + user.getConfirmationToken().getToken();
+        emailService.sendVerificationEmail(emailRequest.getTo(), verificationUrl);
     }
 
     public JwtResponse confirm(String confirmationToken){
@@ -131,7 +136,8 @@ public class AuthenticationService {
         }
 
         EmailRequest emailRequest = new EmailRequest(email,"Reset password", "Please, reset your password", user.getFirstName());
-        emailService.sendResetPasswordEmail(user.getPasswordResetToken().getToken(),emailRequest);
+        String forgotPasswordUrl =this.clientUrl + "reset-password/" + user.getPasswordResetToken().getToken();
+        emailService.sendForgotPasswordEmail(emailRequest.getTo(), forgotPasswordUrl);
     }
     public JwtResponse confirmResetPassword(PasswordResetRequest request){
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

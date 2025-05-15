@@ -110,9 +110,9 @@ export const AuthProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-    const token = res?.data;
+    const accessToken = res?.data;
 
-    setAccessToken(token);
+    setAccessToken(accessToken);
   };
 
   const confirmResetPassword = async (data) => {
