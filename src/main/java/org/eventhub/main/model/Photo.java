@@ -17,15 +17,14 @@ import java.util.UUID;
 @Table(name="photos")
 public class Photo {
     @Id
-    //@GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private UUID id;
 
-    @NotBlank(message = "The 'URL' cannot be empty")
+    @NotBlank(message = "The 'Name' cannot be empty")
     @Column(name="photo_name")
     private String photoName;
 
     @NotBlank(message = "The 'URL' cannot be empty")
-    @Column(name="photo_url")
+    @Column(name="photo_url", columnDefinition = "TEXT")
     private String photoUrl;
 }

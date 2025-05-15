@@ -1,6 +1,6 @@
 import React from "react";
 import { SearchOutlined, CloseOutlined } from "@ant-design/icons";
-import styles from "./SearchInput.module.css";
+import styles from "./searchInput.module.css";
 
 const SearchInput = ({
   searchValue,
