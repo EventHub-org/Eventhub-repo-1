@@ -1,6 +1,5 @@
 package org.eventhub.main.service;
 
-
 import jakarta.persistence.EntityNotFoundException;
 import org.eventhub.main.dto.CategoryRequest;
 import org.eventhub.main.dto.CategoryResponse;
@@ -11,11 +10,13 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
-
+import java.util.UUID;
 
 @SpringBootTest
 public class CategoryServiceTest {
     private final CategoryService categoryService;
+    private static final UUID EXISTING_CATEGORY_ID = UUID.fromString("00000000-0000-0000-0000-000000000010");
+    private static final UUID NON_EXISTENT_CATEGORY_ID = UUID.fromString("00000000-0000-0000-0000-000000000100");
 
     @Autowired
     public CategoryServiceTest(CategoryService categoryService){
@@ -40,18 +41,18 @@ public class CategoryServiceTest {
     }
     @Test
     public void readByIdValidCategoryResponseTest(){
-        CategoryResponse response = categoryService.readById(10);
+        CategoryResponse response = categoryService.readById(EXISTING_CATEGORY_ID);
         Assertions.assertNotNull(response);
         Assertions.assertEquals("Sport", response.getName());
         Assertions.assertEquals(2, categoryService.getAll().size());
     }
     @Test
     public void readByIdInvalidCategoryResponseTest(){
-        Assertions.assertThrows(EntityNotFoundException.class, () -> categoryService.readById(100));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> categoryService.readById(NON_EXISTENT_CATEGORY_ID));
     }
     @Test
     public void readByIdEntityValidCategoryTest(){
-        Category category = categoryService.readByIdEntity(10);
+        Category category = categoryService.readByIdEntity(EXISTING_CATEGORY_ID);
         Assertions.assertNotNull(category);
         Assertions.assertEquals("Sport", category.getName());
         Assertions.assertEquals(2, categoryService.getAll().size());
@@ -71,11 +72,11 @@ public class CategoryServiceTest {
     }
     @Test
     void updateInvalidCategoryTest1(){
-        Assertions.assertThrows(NullDtoReferenceException.class, () -> categoryService.update(null, 10));
+        Assertions.assertThrows(NullDtoReferenceException.class, () -> categoryService.update(null, EXISTING_CATEGORY_ID));
     }
     @Test
     void updateInvalidCategoryTest2(){
-        Assertions.assertThrows(EntityNotFoundException.class, () -> categoryService.update(new CategoryRequest("Updated name"), 100));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> categoryService.update(new CategoryRequest("Updated name"), NON_EXISTENT_CATEGORY_ID));
     }
     @Test
     void deleteValidCategoryTest(){
@@ -94,7 +95,7 @@ public class CategoryServiceTest {
     }
     @Test
     void deleteInvalidCategoryTest(){
-        Assertions.assertThrows(EntityNotFoundException.class, () -> categoryService.delete(100));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> categoryService.delete(NON_EXISTENT_CATEGORY_ID));
     }
     @Test
     void getAllValidCategoryTest(){

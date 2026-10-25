@@ -13,10 +13,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 @SpringBootTest
 public class ParticipantServiceTest {
     private final ParticipantService participantService;
+    private static final UUID EXISTING_EVENT_ID = UUID.fromString("00000000-0000-0000-0000-000000000030");
+    private static final UUID EXISTING_USER_ID = UUID.fromString("00000000-0000-0000-0000-000000000010");
+    private static final UUID EXISTING_USER_ID_2 = UUID.fromString("00000000-0000-0000-0000-000000000011");
+    private static final UUID NON_EXISTENT_ID = UUID.fromString("00000000-0000-0000-0000-000000000100");
+    private static final UUID EXISTING_PARTICIPANT_ID = UUID.fromString("00000000-0000-0000-0000-000000000010");
 
     @Autowired
     public ParticipantServiceTest(ParticipantService participantService){
@@ -25,7 +31,7 @@ public class ParticipantServiceTest {
 
     @Test
     public void createValidParticipantTest(){
-        ParticipantRequest request = new ParticipantRequest(30L, 10L, false);
+        ParticipantRequest request = new ParticipantRequest(EXISTING_EVENT_ID, EXISTING_USER_ID, false);
         ParticipantResponse response = participantService.create(request);
 
         Assertions.assertNotNull(response);
@@ -39,13 +45,13 @@ public class ParticipantServiceTest {
 
     @Test
     public void createInvalidParticipantTest1(){
-        ParticipantRequest request = new ParticipantRequest(30L, 100L, false);
+        ParticipantRequest request = new ParticipantRequest(EXISTING_EVENT_ID, NON_EXISTENT_ID, false);
         Assertions.assertThrows(NullEntityReferenceException.class, () -> participantService.create(request));
     }
 
     @Test
     public void createInvalidParticipantTest2(){
-        ParticipantRequest request = new ParticipantRequest(100L, 30L, false);
+        ParticipantRequest request = new ParticipantRequest(NON_EXISTENT_ID, EXISTING_USER_ID, false);
         Assertions.assertThrows(NullEntityReferenceException.class, () -> participantService.create(request));
     }
 
@@ -56,12 +62,12 @@ public class ParticipantServiceTest {
 
     @Test
     public void readByIdValidParticipantTest(){
-        ParticipantResponse actual = participantService.readById(10);
+        ParticipantResponse actual = participantService.readById(EXISTING_PARTICIPANT_ID);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
         LocalDateTime localDateTime = LocalDateTime.parse("2020-11-16 14:00:04.810221", formatter);
 
-        ParticipantResponse expected = new ParticipantResponse(10L, localDateTime, false, 30L, 11L);
+        ParticipantResponse expected = new ParticipantResponse(EXISTING_PARTICIPANT_ID, localDateTime, false, EXISTING_EVENT_ID, EXISTING_USER_ID_2);
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(expected, actual);
         Assertions.assertEquals(5, participantService.getAll().size());
@@ -69,7 +75,7 @@ public class ParticipantServiceTest {
 
     @Test
     public void readByIdInvalidParticipantTest(){
-        Assertions.assertThrows(EntityNotFoundException.class, () -> participantService.readById(100));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> participantService.readById(NON_EXISTENT_ID));
     }
 
     @Test
@@ -77,21 +83,21 @@ public class ParticipantServiceTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
         LocalDateTime localDateTime = LocalDateTime.parse("2020-11-16 14:00:04.810221", formatter);
 
-        Participant actual = participantService.readByIdEntity(10);
+        Participant actual = participantService.readByIdEntity(EXISTING_PARTICIPANT_ID);
 
         Assertions.assertNotNull(actual);
-        Assertions.assertEquals(10L, actual.getId());
+        Assertions.assertEquals(EXISTING_PARTICIPANT_ID, actual.getId());
         Assertions.assertFalse(actual.isApproved());
-        Assertions.assertEquals(30L, actual.getEvent().getId());
-        Assertions.assertEquals(11L, actual.getUser().getId());
+        Assertions.assertEquals(EXISTING_EVENT_ID, actual.getEvent().getId());
+        Assertions.assertEquals(EXISTING_USER_ID_2, actual.getUser().getId());
         Assertions.assertEquals(localDateTime, actual.getCreatedAt());
         Assertions.assertEquals(5, participantService.getAll().size());
     }
 
     @Test
     public void updateValidParticipantTest(){
-        ParticipantResponse response = participantService.create(new ParticipantRequest(30L, 10L, false));
-        ParticipantRequest request = new ParticipantRequest(30L, 11L, true);
+        ParticipantResponse response = participantService.create(new ParticipantRequest(EXISTING_EVENT_ID, EXISTING_USER_ID, false));
+        ParticipantRequest request = new ParticipantRequest(EXISTING_EVENT_ID, EXISTING_USER_ID_2, true);
         ParticipantResponse actual = participantService.update(request, response.getId());
 
         Assertions.assertNotNull(actual);
@@ -103,27 +109,27 @@ public class ParticipantServiceTest {
 
     @Test
     public void updateInvalidParticipantTest1(){
-        Assertions.assertThrows(NullDtoReferenceException.class, () -> participantService.update(null, 10));
+        Assertions.assertThrows(NullDtoReferenceException.class, () -> participantService.update(null, EXISTING_PARTICIPANT_ID));
     }
 
     @Test
     void updateInvalidParticipantTest2(){
-        Assertions.assertThrows(EntityNotFoundException.class, () -> participantService.update(new ParticipantRequest(10L, 11L, true), 100));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> participantService.update(new ParticipantRequest(EXISTING_EVENT_ID, EXISTING_USER_ID_2, true), NON_EXISTENT_ID));
     }
 
     @Test
     void updateInvalidParticipantTest3(){
-        Assertions.assertThrows(NullEntityReferenceException.class, () -> participantService.update(new ParticipantRequest(100L, 11L, true), 10));
+        Assertions.assertThrows(NullEntityReferenceException.class, () -> participantService.update(new ParticipantRequest(NON_EXISTENT_ID, EXISTING_USER_ID_2, true), EXISTING_PARTICIPANT_ID));
     }
 
     @Test
     void updateInvalidParticipantTest4(){
-        Assertions.assertThrows(NullEntityReferenceException.class, () -> participantService.update(new ParticipantRequest(10L, 110L, true), 10));
+        Assertions.assertThrows(NullEntityReferenceException.class, () -> participantService.update(new ParticipantRequest(EXISTING_EVENT_ID, NON_EXISTENT_ID, true), EXISTING_PARTICIPANT_ID));
     }
 
     @Test
     void deleteValidParticipantTest(){
-        ParticipantRequest request = new ParticipantRequest(30L, 10L, false);
+        ParticipantRequest request = new ParticipantRequest(EXISTING_EVENT_ID, EXISTING_USER_ID, false);
         ParticipantResponse response = participantService.create(request);
 
         Assertions.assertNotNull(response);
@@ -136,12 +142,12 @@ public class ParticipantServiceTest {
 
     @Test
     void deleteInvalidParticipantTest(){
-        Assertions.assertThrows(EntityNotFoundException.class, () -> participantService.delete(100L));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> participantService.delete(NON_EXISTENT_ID));
     }
 
     @Test
     void getAllValidParticipantTest(){
-        ParticipantRequest request = new ParticipantRequest(30L, 10L, false);
+        ParticipantRequest request = new ParticipantRequest(EXISTING_EVENT_ID, EXISTING_USER_ID, false);
         ParticipantResponse response = participantService.create(request);
 
         Assertions.assertEquals(6, participantService.getAll().size());

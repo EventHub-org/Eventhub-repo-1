@@ -190,29 +190,6 @@ const Map = () => {
         options={defaultOption}
         onClick={handleMapClick}
       >
-        {/* <MarkerClusterer>
-  {(clusterer) =>
-    events.map((event) => {
-      console.log(clusterer); // Розмістіть console.log тут
-      return (
-        <Marker
-          key={event.id}
-          position={{
-            lat: Number(event.latitude),
-            lng: Number(event.longitude),
-          }}
-          icon={{
-            url: "/images/pin.svg",
-            scaledSize: new window.google.maps.Size(40, 40),
-          }}
-          onClick={() => onMarkerClick(event)}
-          clusterer={clusterer}
-        />
-      );
-    })
-  }
-</MarkerClusterer> */}
-
         {userLocation && (
           <Marker
             position={userLocation}
